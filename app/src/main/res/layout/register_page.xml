@@ -70,6 +70,7 @@
         android:layout_width="125dp"
         android:layout_height="19dp"
         android:layout_marginBottom="80dp"
+        android:buttonTint="#023859"
         android:text="Service Terms"
         app:layout_constraintBottom_toTopOf="@+id/button"
         app:layout_constraintStart_toStartOf="@+id/editTextTextEmailAddress3" />
@@ -79,6 +80,8 @@
         android:layout_width="208dp"
         android:layout_height="40dp"
         android:layout_marginBottom="30dp"
+        android:backgroundTint="#023859"
+        android:fontFamily="@font/inria_sans_bold"
         android:text="Register"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/editTextTextEmailAddress3"

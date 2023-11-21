@@ -10,9 +10,11 @@
         android:id="@+id/imageView"
         android:layout_width="177dp"
         android:layout_height="232dp"
-        app:srcCompat="@drawable/loog_register"
-        tools:layout_editor_absoluteX="117dp"
-        tools:layout_editor_absoluteY="35dp" />
+        android:layout_marginTop="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/loog_register" />
 
     <TextView
         android:id="@+id/textView"
@@ -21,59 +23,67 @@
         android:fontFamily="@font/inria_sans_bold_italic"
         android:text="Register"
         android:textSize="40sp"
-        tools:layout_editor_absoluteX="130dp"
-        tools:layout_editor_absoluteY="303dp" />
+        app:layout_constraintBottom_toTopOf="@+id/editTextTextEmailAddress"
+        app:layout_constraintEnd_toEndOf="@+id/imageView"
+        app:layout_constraintStart_toStartOf="@+id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <EditText
         android:id="@+id/editTextTextEmailAddress"
         android:layout_width="310dp"
         android:layout_height="48dp"
+        android:layout_marginBottom="10dp"
         android:ems="10"
         android:hint="E-mail"
         android:inputType="textEmailAddress"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="378dp" />
+        app:layout_constraintBottom_toTopOf="@+id/editTextTextEmailAddress2"
+        app:layout_constraintEnd_toEndOf="@+id/textView"
+        app:layout_constraintStart_toStartOf="@+id/textView" />
 
     <EditText
         android:id="@+id/editTextTextEmailAddress3"
         android:layout_width="310dp"
         android:layout_height="48dp"
+        android:layout_marginBottom="10dp"
         android:ems="10"
         android:hint="Username"
         android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="509dp" />
+        app:layout_constraintBottom_toTopOf="@+id/checkBox"
+        app:layout_constraintEnd_toEndOf="@+id/editTextTextEmailAddress2"
+        app:layout_constraintStart_toStartOf="@+id/editTextTextEmailAddress2" />
 
     <EditText
         android:id="@+id/editTextTextEmailAddress2"
         android:layout_width="310dp"
         android:layout_height="48dp"
+        android:layout_marginBottom="10dp"
         android:ems="10"
         android:hint="Password"
         android:inputType="text|textPassword"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="446dp" />
+        app:layout_constraintBottom_toTopOf="@+id/editTextTextEmailAddress3"
+        app:layout_constraintEnd_toEndOf="@+id/editTextTextEmailAddress"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/editTextTextEmailAddress" />
 
     <CheckBox
         android:id="@+id/checkBox"
         android:layout_width="125dp"
         android:layout_height="19dp"
+        android:layout_marginBottom="80dp"
         android:text="Service Terms"
-        tools:layout_editor_absoluteX="50dp"
-        tools:layout_editor_absoluteY="573dp" />
+        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintStart_toStartOf="@+id/editTextTextEmailAddress3" />
 
-    <logo
+    <Button
         android:id="@+id/button"
         android:layout_width="208dp"
         android:layout_height="40dp"
-        android:text="Button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:rippleColor="#000000"
-        tools:layout_editor_absoluteY="664dp" />
+        android:layout_marginBottom="30dp"
+        android:text="Register"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/editTextTextEmailAddress3"
+        app:layout_constraintStart_toStartOf="@+id/checkBox"
+        app:rippleColor="#000000" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

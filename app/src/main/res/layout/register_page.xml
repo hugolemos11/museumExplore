@@ -11,6 +11,7 @@
         android:layout_width="177dp"
         android:layout_height="232dp"
         android:layout_marginTop="40dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -20,6 +21,8 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
         android:fontFamily="@font/inria_sans_bold_italic"
         android:text="Register"
         android:textColor="#260F01"
@@ -43,7 +46,8 @@
         android:textColorLink="#000000"
         app:layout_constraintBottom_toTopOf="@+id/editTextTextEmailAddress2"
         app:layout_constraintEnd_toEndOf="@+id/textView"
-        app:layout_constraintStart_toStartOf="@+id/textView" />
+        app:layout_constraintStart_toStartOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <EditText
         android:id="@+id/editTextTextEmailAddress3"
@@ -51,7 +55,7 @@
         android:layout_height="48dp"
         android:layout_marginBottom="10dp"
         android:ems="10"
-        android:hint="Username"
+        android:hint="Password"
         android:inputType="text"
         android:textColor="#000000"
         android:textColorHighlight="#000000"
@@ -59,7 +63,8 @@
         android:textColorLink="#000000"
         app:layout_constraintBottom_toTopOf="@+id/checkBox"
         app:layout_constraintEnd_toEndOf="@+id/editTextTextEmailAddress2"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextEmailAddress2" />
+        app:layout_constraintStart_toStartOf="@+id/editTextTextEmailAddress2"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddress2" />
 
     <EditText
         android:id="@+id/editTextTextEmailAddress2"
@@ -67,7 +72,7 @@
         android:layout_height="48dp"
         android:layout_marginBottom="10dp"
         android:ems="10"
-        android:hint="Password"
+        android:hint="Username"
         android:inputType="text|textPassword"
         android:textColor="#000000"
         android:textColorHighlight="#000000"
@@ -76,18 +81,22 @@
         app:layout_constraintBottom_toTopOf="@+id/editTextTextEmailAddress3"
         app:layout_constraintEnd_toEndOf="@+id/editTextTextEmailAddress"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextEmailAddress" />
+        app:layout_constraintStart_toStartOf="@+id/editTextTextEmailAddress"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddress" />
 
     <CheckBox
         android:id="@+id/checkBox"
         android:layout_width="125dp"
         android:layout_height="19dp"
-        android:layout_marginBottom="80dp"
+        android:layout_marginEnd="235dp"
+        android:layout_marginBottom="70dp"
         android:buttonTint="#023859"
         android:text="Service Terms"
         android:textColor="#000000"
         app:layout_constraintBottom_toTopOf="@+id/button"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextEmailAddress3" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/editTextTextEmailAddress3"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddress3" />
 
     <Button
         android:id="@+id/button"
@@ -101,6 +110,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/editTextTextEmailAddress3"
         app:layout_constraintStart_toStartOf="@+id/checkBox"
+        app:layout_constraintTop_toBottomOf="@+id/checkBox"
         app:rippleColor="#000000" />
 
 

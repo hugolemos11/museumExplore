@@ -32,13 +32,13 @@
             android:fontFamily="@font/inria_sans_bold_italic"
             android:text="Login"
             android:textSize="40sp"
-            app:layout_constraintBottom_toTopOf="@+id/editTextTextEmailAddress"
+            app:layout_constraintBottom_toTopOf="@+id/editTextEmailAddress"
             app:layout_constraintEnd_toEndOf="@+id/imageView"
             app:layout_constraintStart_toStartOf="@+id/imageView"
             app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
         <EditText
-            android:id="@+id/editTextTextEmailAddress"
+            android:id="@+id/editTextEmailAddress"
             android:layout_width="310dp"
             android:layout_height="48dp"
             android:layout_marginBottom="10dp"
@@ -59,13 +59,13 @@
             android:hint="Password"
             android:inputType="text|textPassword"
             app:layout_constraintBottom_toTopOf="@+id/textView2"
-            app:layout_constraintEnd_toEndOf="@+id/editTextTextEmailAddress"
+            app:layout_constraintEnd_toEndOf="@+id/editTextEmailAddress"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/editTextTextEmailAddress"
-            app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddress" />
+            app:layout_constraintStart_toStartOf="@+id/editTextEmailAddress"
+            app:layout_constraintTop_toBottomOf="@+id/editTextEmailAddress" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/registerButton"
             android:layout_width="208dp"
             android:layout_height="40dp"
             android:layout_marginBottom="30dp"
@@ -102,7 +102,7 @@
             android:fontFamily="@font/inria_sans_regular"
             android:text="Forgot Password"
             android:textColor="#156799"
-            app:layout_constraintBottom_toTopOf="@+id/button"
+            app:layout_constraintBottom_toTopOf="@+id/registerButton"
             app:layout_constraintEnd_toEndOf="@+id/textView2"
             app:layout_constraintHorizontal_bias="0.495"
             app:layout_constraintStart_toStartOf="@+id/textView2"

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "805753243382",
+    "project_id": "museumexplore",
+    "storage_bucket": "museumexplore.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:805753243382:android:c3abc9bb09c29ed580ced7",
+        "android_client_info": {
+          "package_name": "com.example.museumexplore"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBe0RwjH0I75VDHL4hZVXNncBLebXRCw9E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

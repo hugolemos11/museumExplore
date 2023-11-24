@@ -45,12 +45,7 @@
             android:ems="10"
             android:hint="E-mail"
             android:inputType="textEmailAddress"
-<<<<<<< HEAD
-            android:background="@drawable/borda_edittext"
-            app:layout_constraintBottom_toTopOf="@+id/editTextUsername"
-=======
             app:layout_constraintBottom_toTopOf="@+id/editTextPassword"
->>>>>>> c1d2187c6803d2b74ff5ed016071b6b71cefe4a4
             app:layout_constraintEnd_toEndOf="@+id/textView"
             app:layout_constraintStart_toStartOf="@+id/textView"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -63,7 +58,6 @@
             android:ems="10"
             android:hint="Password"
             android:inputType="text|textPassword"
-            android:background="@drawable/borda_edittext"
             app:layout_constraintBottom_toTopOf="@+id/textView2"
             app:layout_constraintEnd_toEndOf="@+id/editTextEmailAddress"
             app:layout_constraintHorizontal_bias="0.0"

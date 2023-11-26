@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Museum Explore</string>
+    <string name="adquira_seu_bilhete_ja">Adquira seu bilhete já</string>
+    <string name="bilheteria">Bilheteria</string>
 </resources>

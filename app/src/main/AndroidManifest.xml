@@ -12,11 +12,14 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MuseumExplore"
+        android:theme="@style/Base.Theme.MuseumExplore"
         tools:targetApi="31">
         <activity
-            android:name=".LoginActivity"
-            android:exported="true" >
+            android:name=".TopBarActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MuseumDetailsActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,13 +27,14 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".LoginActivity"
+            android:exported="true"></activity>
+        <activity
             android:name=".RegisterActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
-            android:exported="false" />
+            android:exported="true"></activity>
     </application>
 
 </manifest>

@@ -12,10 +12,14 @@ import com.google.firebase.auth.FirebaseAuth
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: LoginPageBinding
     private lateinit var auth : FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = LoginPageBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Initialize 'auth' here
+        auth = FirebaseAuth.getInstance()
 
         binding.loginButton.setOnClickListener {
             val email = binding.editTextEmailAddress.toString()

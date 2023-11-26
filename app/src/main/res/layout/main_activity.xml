@@ -50,13 +50,18 @@
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
     <GridView
+        android:id="@+id/gridViewMuseums"
         android:layout_width="0dp"
         android:layout_height="569dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="17dp"
-        android:layout_marginEnd="15dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginBottom="1dp"
+        android:columnWidth="170dp"
         android:numColumns="2"
+        android:scrollbarStyle="outsideOverlay"
+        android:stretchMode="spacingWidth"
+        android:verticalSpacing="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        museums.add(Museum("Museumxzy"))
+        museums.add(Museum("Museumxzy 111111111111"))
         museums.add(Museum("Museumxyz"))
         museums.add(Museum("Museumxzy1"))
         museums.add(Museum("Museumxyz1"))

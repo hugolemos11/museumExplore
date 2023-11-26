@@ -35,17 +35,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginEnd="12dp"
-                android:layout_marginBottom="8dp"
                 android:text="Museumxyz"
                 android:textColor="#FFFFFF"
+                android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@+id/imageView5"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/imageView3" />
 
             <ImageView
                 android:id="@+id/imageView11"
-                android:layout_width="13dp"
-                android:layout_height="13dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:layout_marginBottom="12dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView10"
@@ -54,8 +54,8 @@
 
             <ImageView
                 android:id="@+id/imageView10"
-                android:layout_width="13dp"
-                android:layout_height="13dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:layout_marginBottom="12dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView5"
@@ -64,8 +64,8 @@
 
             <ImageView
                 android:id="@+id/imageView5"
-                android:layout_width="13dp"
-                android:layout_height="13dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:layout_marginBottom="12dp"
                 app:layout_constraintBottom_toBottomOf="@+id/imageView3"
                 app:layout_constraintEnd_toStartOf="@+id/imageView10"
@@ -75,8 +75,8 @@
 
             <ImageView
                 android:id="@+id/imageView8"
-                android:layout_width="13dp"
-                android:layout_height="13dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:layout_marginBottom="12dp"
                 app:layout_constraintBottom_toBottomOf="@+id/imageView3"
                 app:layout_constraintEnd_toStartOf="@+id/imageView5"
@@ -86,8 +86,8 @@
 
             <ImageView
                 android:id="@+id/imageView4"
-                android:layout_width="13dp"
-                android:layout_height="13dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:layout_marginStart="12dp"
                 android:layout_marginBottom="12dp"
                 app:layout_constraintBottom_toBottomOf="@+id/imageView3"

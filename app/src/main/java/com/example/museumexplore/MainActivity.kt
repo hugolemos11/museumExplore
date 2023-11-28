@@ -19,14 +19,14 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        museums.add(Museum("Museumxzy 111111111111"))
-        museums.add(Museum("Museumxyz"))
-        museums.add(Museum("Museumxzy1"))
-        museums.add(Museum("Museumxyz1"))
-        museums.add(Museum("Museumxzy2"))
-        museums.add(Museum("Museumxyz2"))
-        museums.add(Museum("Museumxzy3"))
-        museums.add(Museum("Museumxyz3"))
+        museums.add(Museum("aa", "Museumxzy 111111111111"))
+        museums.add(Museum("ab", "Museumxyz"))
+        museums.add(Museum("ac", "Museumxzy1"))
+        museums.add(Museum("ba", "Museumxyz1"))
+        museums.add(Museum("bb", "Museumxzy2"))
+        museums.add(Museum("bc", "Museumxyz2"))
+        museums.add(Museum("ca", "Museumxzy3"))
+        museums.add(Museum("cb", "Museumxyz3"))
 
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -48,13 +48,14 @@ class MainActivity : AppCompatActivity() {
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
             val rootView = MuseumDisplayBinding.inflate(layoutInflater)
+
             rootView.textViewMuseumName.text = museums[position].name
 
-            /*rootView.root.setOnClickListener{
-                val intent = Intent(this@MainActivity, ProductActivity::class.java)
-                intent.putExtra(ProductActivity.EXTRA_ID, shoppingLists[position].id)
-                resultLauncher.launch(intent)
-            }*/
+            rootView.root.setOnClickListener{
+                val intent = Intent(this@MainActivity, MuseumDetailsActivity::class.java)
+                intent.putExtra(MuseumDetailsActivity.EXTRA_NAME, museums[position].name)
+                startActivity(intent)
+            }
 
             return rootView.root
         }

@@ -32,6 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:text="@string/bilheteria"
+        android:textSize="14dp"
         app:layout_constraintBottom_toBottomOf="@+id/imageView9"
         app:layout_constraintEnd_toEndOf="@+id/textView6"
         app:layout_constraintStart_toStartOf="@+id/textView6" />
@@ -43,12 +44,13 @@
         android:layout_marginBottom="10dp"
         android:text="@string/adquira_seu_bilhete_ja"
         android:textColor="#FFFFFF"
+        android:textSize="15dp"
         app:layout_constraintBottom_toTopOf="@+id/button2"
-        app:layout_constraintEnd_toEndOf="@+id/textView7"
-        app:layout_constraintStart_toStartOf="@+id/textView7" />
+        app:layout_constraintEnd_toEndOf="@+id/textViewMuseumName"
+        app:layout_constraintStart_toStartOf="@+id/textViewMuseumName" />
 
     <TextView
-        android:id="@+id/textView7"
+        android:id="@+id/textViewMuseumName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -56,10 +58,28 @@
         android:layout_marginEnd="20dp"
         android:text="Museu xyz"
         android:textColor="#FFFFFF"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topBar" />
 
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/carousel_recycler_view"
+        android:layout_width="0dp"
+        android:layout_height="125dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="5dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        app:layoutManager="com.google.android.material.carousel.CarouselLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView9"
+        tools:itemCount="3"
+        tools:listitem="@layout/images_carousel" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

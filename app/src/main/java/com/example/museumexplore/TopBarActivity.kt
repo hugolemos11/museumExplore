@@ -1,5 +1,6 @@
 package com.example.museumexplore
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
@@ -20,7 +21,9 @@ open class TopBarActivity : AppCompatActivity() {
     fun setupDrawerButton(drawerIcon: ImageView) {
         drawerIcon.setOnClickListener {
             // Open drawer
-            Toast.makeText(this, "Test", Toast.LENGTH_LONG).show()
+            //Toast.makeText(this, "Test", Toast.LENGTH_LONG).show()
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
         }
     }
 }

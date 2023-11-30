@@ -9,8 +9,9 @@ import android.widget.BaseAdapter
 import com.example.museumexplore.databinding.MainActivityBinding
 import com.example.museumexplore.databinding.MuseumDisplayBinding
 import com.example.museumexplore.modules.Museum
+import com.google.android.material.navigation.NavigationView
 
-class MainActivity : AppCompatActivity() {
+abstract class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     var museums = arrayListOf<Museum>()
 
@@ -31,6 +32,8 @@ class MainActivity : AppCompatActivity() {
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.gridViewMuseums.adapter = adapter
+
+
     }
 
     inner class MuseumAdapter : BaseAdapter() {

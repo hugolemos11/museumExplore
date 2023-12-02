@@ -1,12 +1,13 @@
 package com.example.museumexplore
 
+
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.ImageView
 import com.example.museumexplore.databinding.MuseumDetailsBinding
-import com.example.museumexplore.modules.EventAdpater
-import com.example.museumexplore.modules.ImageAdapter
 import com.example.museumexplore.modules.EventsModel
+import com.example.museumexplore.modules.EventsPagerAdapter
+import com.example.museumexplore.modules.ImageAdapter
 import com.google.android.material.carousel.CarouselLayoutManager
 import com.google.android.material.carousel.CarouselSnapHelper
 import com.google.android.material.carousel.HeroCarouselStrategy
@@ -19,11 +20,11 @@ class MuseumDetailsActivity : TopBarActivity() {
     private val museumImagesAdapter = ImageAdapter(museumImagesList, this)
     private val artWorksList = ArrayList<Int>()
     private val artWorksAdapter = ImageAdapter(artWorksList, this)
-    private val eventsList = ArrayList<EventsModel>()
-    private val eventsAdapter = EventAdpater(eventsList, this)
+    private val eventList = ArrayList<EventsModel>()
+    private val adapter = EventsPagerAdapter(eventList, this)
 
-    //val snapHelper = CarouselSnapHelper()
-    val layoutManager = CarouselLayoutManager(HeroCarouselStrategy())
+    val snapHelper = CarouselSnapHelper()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -32,7 +33,8 @@ class MuseumDetailsActivity : TopBarActivity() {
 
         binding.apply {
 
-            //carouselRecyclerViewMuseumImages.layoutManager = layoutManager
+            carouselRecyclerViewMuseumImages.layoutManager = CarouselLayoutManager(HeroCarouselStrategy())
+            //snapHelper.attachToRecyclerView(carouselRecyclerViewMuseumImages)
             carouselRecyclerViewMuseumImages.adapter = museumImagesAdapter
 
             museumImagesList.add(R.drawable.group_30)
@@ -42,7 +44,8 @@ class MuseumDetailsActivity : TopBarActivity() {
             museumImagesList.add(R.drawable.group_30)
             museumImagesList.add(R.drawable.group_30)
 
-            //carouselRecyclerViewArtWorksImages.layoutManager = layoutManager
+            carouselRecyclerViewArtWorksImages.layoutManager = CarouselLayoutManager(HeroCarouselStrategy())
+            snapHelper.attachToRecyclerView(carouselRecyclerViewArtWorksImages)
             carouselRecyclerViewArtWorksImages.adapter = artWorksAdapter
 
             artWorksList.add(R.drawable.group_30)
@@ -52,18 +55,14 @@ class MuseumDetailsActivity : TopBarActivity() {
             artWorksList.add(R.drawable.group_30)
             artWorksList.add(R.drawable.group_30)
 
-            carouselRecyclerViewEvents.layoutManager = layoutManager
-            carouselRecyclerViewEvents.adapter = eventsAdapter
+            eventList.add(EventsModel(R.drawable.logo_extense, "Event 1", "Description for Event 1"))
+            eventList.add(EventsModel(R.drawable.group_30, "Event 2", "Description for Event 2"))
 
-            eventsList.add(EventsModel(R.drawable.group_30, "Teste", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."))
-            eventsList.add(EventsModel(R.drawable.group_30, "Teste", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."))
-            eventsList.add(EventsModel(R.drawable.group_30, "Teste", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."))
-            eventsList.add(EventsModel(R.drawable.group_30, "Teste", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."))
-            eventsList.add(EventsModel(R.drawable.group_30, "Teste", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."))
-            eventsList.add(EventsModel(R.drawable.group_30, "Teste", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."))
-            eventsList.add(EventsModel(R.drawable.group_30, "Teste", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."))
-
+            viewPagerEvents.adapter = adapter
         }
+
+
+
 
         val backArrow = findViewById<ImageView>(R.id.BackArrowIcon)
         val drawer = findViewById<ImageView>(R.id.drawerIcon)

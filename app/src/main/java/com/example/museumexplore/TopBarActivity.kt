@@ -26,7 +26,7 @@ abstract class TopBarActivity : AppCompatActivity(), NavigationView.OnNavigation
     fun setupDrawerButton(drawerIcon: ImageView, ) {
         drawerIcon.setOnClickListener {
             // Open drawer
-            //Toast.makeText(this, "Test", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Test", Toast.LENGTH_LONG).show()
             /*val drawerLayout: DrawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
 
             val toolbar = findViewById<Toolbar>(R.id.toolbar)

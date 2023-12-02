@@ -6,11 +6,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.museumexplore.databinding.ImagesCarouselBinding
 
-class ImageAdapter(val list: ArrayList<ImagesModel>, val context: Context) : RecyclerView.Adapter<ImageAdapter.ItemViewHolder>() {
+class ImageAdapter(val list: ArrayList<Int>, val context: Context) : RecyclerView.Adapter<ImageAdapter.ItemViewHolder>() {
     inner class ItemViewHolder(val binding: ImagesCarouselBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(model: ImagesModel) {
+        fun bind(model: Int) {
             binding.apply {
-                carouselImageView.setImageResource(model.imageId)
+                carouselImageView.setImageResource(model)
             }
         }
     }

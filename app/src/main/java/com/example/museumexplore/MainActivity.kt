@@ -9,9 +9,8 @@ import android.widget.BaseAdapter
 import com.example.museumexplore.databinding.MainActivityBinding
 import com.example.museumexplore.databinding.MuseumDisplayBinding
 import com.example.museumexplore.modules.Museum
-import com.google.android.material.navigation.NavigationView
 
-abstract class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity() {
 
     var museums = arrayListOf<Museum>()
 
@@ -20,14 +19,14 @@ abstract class MainActivity : AppCompatActivity(), NavigationView.OnNavigationIt
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        museums.add(Museum("aa", "Museumxzy 111111111111"))
-        museums.add(Museum("ab", "Museumxyz"))
-        museums.add(Museum("ac", "Museumxzy1"))
-        museums.add(Museum("ba", "Museumxyz1"))
-        museums.add(Museum("bb", "Museumxzy2"))
-        museums.add(Museum("bc", "Museumxyz2"))
-        museums.add(Museum("ca", "Museumxzy3"))
-        museums.add(Museum("cb", "Museumxyz3"))
+        museums.add(Museum("aa", "Museumxzy", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."))
+        museums.add(Museum("ab", "Museumxyz", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."))
+        museums.add(Museum("ac", "Museumxzy1", ""))
+        museums.add(Museum("ba", "Museumxyz1", ""))
+        museums.add(Museum("bb", "Museumxzy2", ""))
+        museums.add(Museum("bc", "Museumxyz2", ""))
+        museums.add(Museum("ca", "Museumxzy3", ""))
+        museums.add(Museum("cb", "Museumxyz3", ""))
 
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -57,6 +56,7 @@ abstract class MainActivity : AppCompatActivity(), NavigationView.OnNavigationIt
             rootView.root.setOnClickListener{
                 val intent = Intent(this@MainActivity, MuseumDetailsActivity::class.java)
                 intent.putExtra(MuseumDetailsActivity.EXTRA_NAME, museums[position].name)
+                intent.putExtra(MuseumDetailsActivity.EXTRA_DESCRIPTION, museums[position].description)
                 startActivity(intent)
             }
 

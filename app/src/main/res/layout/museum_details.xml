@@ -1,85 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
-    <include
-        android:id="@+id/topBar"
-        layout="@layout/top_bar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="always">
 
-    <ImageView
-        android:id="@+id/imageView9"
-        android:layout_width="0dp"
-        android:layout_height="225dp"
-        android:scaleType="centerCrop"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/topBar"
-        app:srcCompat="@drawable/group_30" />
+        <include
+            android:id="@+id/topBar"
+            layout="@layout/top_bar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:text="@string/bilheteria"
-        android:textSize="14dp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView9"
-        app:layout_constraintEnd_toEndOf="@+id/textView6"
-        app:layout_constraintStart_toStartOf="@+id/textView6" />
+        <ImageView
+            android:id="@+id/museumImage"
+            android:layout_width="0dp"
+            android:layout_height="225dp"
+            android:layout_marginBottom="15dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toTopOf="@+id/carousel_recycler_view_museum_images"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/topBar"
+            app:srcCompat="@drawable/group_30" />
 
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:text="@string/adquira_seu_bilhete_ja"
-        android:textColor="#FFFFFF"
-        android:textSize="15dp"
-        app:layout_constraintBottom_toTopOf="@+id/button2"
-        app:layout_constraintEnd_toEndOf="@+id/textViewMuseumName"
-        app:layout_constraintStart_toStartOf="@+id/textViewMuseumName" />
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:backgroundTint="@color/blueMuseum"
+            android:text="@string/bilheteria"
+            android:textSize="14dp"
+            app:layout_constraintBottom_toBottomOf="@+id/museumImage"
+            app:layout_constraintEnd_toEndOf="@+id/textView6"
+            app:layout_constraintStart_toStartOf="@+id/textView6" />
 
-    <TextView
-        android:id="@+id/textViewMuseumName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="20dp"
-        android:text="Museu xyz"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/topBar" />
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/adquira_seu_bilhete_ja"
+            android:textColor="#FFFFFF"
+            android:textSize="15dp"
+            app:layout_constraintBottom_toTopOf="@+id/button2"
+            app:layout_constraintEnd_toEndOf="@+id/textViewMuseumName"
+            app:layout_constraintStart_toStartOf="@+id/textViewMuseumName" />
+
+        <TextView
+            android:id="@+id/textViewMuseumName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:text="Museu xyz"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/topBar" />
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/carousel_recycler_view"
-        android:layout_width="0dp"
-        android:layout_height="125dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="5dp"
-        android:clipChildren="false"
-        android:clipToPadding="false"
-        android:orientation="horizontal"
-        app:layoutManager="com.google.android.material.carousel.CarouselLayoutManager"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView9"
-        tools:itemCount="3"
-        tools:listitem="@layout/images_carousel" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/carousel_recycler_view_museum_images"
+            android:layout_width="0dp"
+            android:layout_height="125dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="15dp"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:orientation="horizontal"
+            app:layoutManager="com.google.android.material.carousel.CarouselLayoutManager"
+            app:layout_constraintBottom_toTopOf="@+id/textViewDescription"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/museumImage"
+            tools:listitem="@layout/images_carousel" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/textViewDescription"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="15dp"
+            android:text="TextView"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/carousel_recycler_view_art_works_images"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/carousel_recycler_view_museum_images" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/carousel_recycler_view_art_works_images"
+            android:layout_width="0dp"
+            android:layout_height="110dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:orientation="horizontal"
+            app:layoutManager="com.google.android.material.carousel.CarouselLayoutManager"
+            app:layout_constraintBottom_toTopOf="@+id/textView3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewDescription"
+            tools:listitem="@layout/images_carousel" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:text="Eventos"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/carousel_recycler_view_events"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/carousel_recycler_view_art_works_images" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/carousel_recycler_view_events"
+            android:layout_width="0dp"
+            android:layout_height="125dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="5dp"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:orientation="horizontal"
+            app:layoutManager="com.google.android.material.carousel.CarouselLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView3"
+            tools:listitem="@layout/events_carousel" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

@@ -5,13 +5,12 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.widget.ImageView
 import com.example.museumexplore.databinding.MuseumDetailsBinding
+import com.example.museumexplore.modules.EventAdpater
 import com.example.museumexplore.modules.EventsModel
-import com.example.museumexplore.modules.EventsPagerAdapter
 import com.example.museumexplore.modules.ImageAdapter
 import com.google.android.material.carousel.CarouselLayoutManager
 import com.google.android.material.carousel.CarouselSnapHelper
 import com.google.android.material.carousel.HeroCarouselStrategy
-
 
 class MuseumDetailsActivity : TopBarActivity() {
 
@@ -21,7 +20,8 @@ class MuseumDetailsActivity : TopBarActivity() {
     private val artWorksList = ArrayList<Int>()
     private val artWorksAdapter = ImageAdapter(artWorksList, this)
     private val eventList = ArrayList<EventsModel>()
-    private val adapter = EventsPagerAdapter(eventList, this)
+    //private val adapter = EventsPagerAdapter(eventList, this)
+    private val eventsAdapter = EventAdpater(eventList, this)
 
     val snapHelper = CarouselSnapHelper()
 
@@ -33,32 +33,33 @@ class MuseumDetailsActivity : TopBarActivity() {
 
         binding.apply {
 
-            carouselRecyclerViewMuseumImages.layoutManager = CarouselLayoutManager(HeroCarouselStrategy())
-            //snapHelper.attachToRecyclerView(carouselRecyclerViewMuseumImages)
+            //carouselRecyclerViewMuseumImages.layoutManager = CarouselLayoutManager(HeroCarouselStrategy())
+            snapHelper.attachToRecyclerView(carouselRecyclerViewMuseumImages)
             carouselRecyclerViewMuseumImages.adapter = museumImagesAdapter
 
-            museumImagesList.add(R.drawable.group_30)
-            museumImagesList.add(R.drawable.group_30)
-            museumImagesList.add(R.drawable.group_30)
-            museumImagesList.add(R.drawable.group_30)
-            museumImagesList.add(R.drawable.group_30)
-            museumImagesList.add(R.drawable.group_30)
+            museumImagesList.add(R.drawable.rectangle_368)
+            museumImagesList.add(R.drawable.rectangle_369)
+            museumImagesList.add(R.drawable.rectangle_370)
+            museumImagesList.add(R.drawable.rectangle_371)
+            museumImagesList.add(R.drawable.rectangle_372)
 
-            carouselRecyclerViewArtWorksImages.layoutManager = CarouselLayoutManager(HeroCarouselStrategy())
+            //carouselRecyclerViewArtWorksImages.layoutManager = CarouselLayoutManager(HeroCarouselStrategy())
             snapHelper.attachToRecyclerView(carouselRecyclerViewArtWorksImages)
             carouselRecyclerViewArtWorksImages.adapter = artWorksAdapter
 
-            artWorksList.add(R.drawable.group_30)
-            artWorksList.add(R.drawable.group_30)
-            artWorksList.add(R.drawable.group_30)
-            artWorksList.add(R.drawable.group_30)
-            artWorksList.add(R.drawable.group_30)
-            artWorksList.add(R.drawable.group_30)
+            artWorksList.add(R.drawable.rectangle_368)
+            artWorksList.add(R.drawable.rectangle_369)
+            artWorksList.add(R.drawable.rectangle_370)
+            artWorksList.add(R.drawable.rectangle_371)
+            artWorksList.add(R.drawable.rectangle_372)
 
-            eventList.add(EventsModel(R.drawable.logo_extense, "Event 1", "Description for Event 1"))
-            eventList.add(EventsModel(R.drawable.group_30, "Event 2", "Description for Event 2"))
+            snapHelper.attachToRecyclerView(carouselRecyclerViewEvents)
+            carouselRecyclerViewEvents.adapter = eventsAdapter
 
-            viewPagerEvents.adapter = adapter
+            eventList.add(EventsModel(R.drawable.rectangle_375, "Event 1", "Description for Event 1"))
+            eventList.add(EventsModel(R.drawable.rectangle_376, "Event 2", "Description for Event 2"))
+
+            //viewPagerEvents.adapter = adapter
         }
 
 

@@ -7,12 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
+import com.example.museumexplore.databinding.EventsCarouselBinding
 import com.example.museumexplore.databinding.EventsPageBinding
 import com.example.museumexplore.databinding.MuseumDetailsBinding
 
-/*class EventAdpater(val list: ArrayList<EventsModel>, val context: Context) : RecyclerView.Adapter<EventAdpater.ItemViewHolder>() {
-    inner class ItemViewHolder(val binding: EventsCarouselBinding) : RecyclerView.ViewHolder(binding.root) {
+class EventAdpater(val list: ArrayList<EventsModel>, val context: Context) : RecyclerView.Adapter<EventAdpater.ItemViewHolder>() {
+    inner class ItemViewHolder(val binding: EventsCarouselBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(model: EventsModel) {
             binding.apply {
                 imageViewEvent.setImageResource(model.imageId)
@@ -23,7 +26,13 @@ import com.example.museumexplore.databinding.MuseumDetailsBinding
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventAdpater.ItemViewHolder {
-        return ItemViewHolder(EventsCarouselBinding.inflate(LayoutInflater.from(context), parent, false))
+        return ItemViewHolder(
+            EventsCarouselBinding.inflate(
+                LayoutInflater.from(context),
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: EventAdpater.ItemViewHolder, position: Int) {
@@ -31,13 +40,14 @@ import com.example.museumexplore.databinding.MuseumDetailsBinding
         holder.bind(model)
     }
 
-    override fun getItemCount() = list.size*/
+    override fun getItemCount() = list.size
+}
 
 
 
 
 
-class EventsPagerAdapter(val events: List<EventsModel>, val context: Context) :
+/*class EventsPagerAdapter(val events: List<EventsModel>, val context: Context) :
     PagerAdapter() {
 
     private lateinit var binding: EventsPageBinding
@@ -69,4 +79,4 @@ class EventsPagerAdapter(val events: List<EventsModel>, val context: Context) :
         return view === `object`
     }
 
-}
+}*/

@@ -77,8 +77,8 @@
             android:id="@+id/carousel_recycler_view_museum_images"
             android:layout_width="0dp"
             android:layout_height="125dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
             android:layout_marginBottom="15dp"
             android:clipChildren="false"
             android:clipToPadding="false"
@@ -88,7 +88,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/museumImage"
-            tools:itemCount="3"
+            tools:itemCount="2"
             tools:listitem="@layout/images_carousel" />
 
         <TextView
@@ -109,8 +109,9 @@
             android:id="@+id/relativeLayout"
             android:layout_width="0dp"
             android:layout_height="110dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
+            android:layout_marginStart="45dp"
+            android:layout_marginEnd="45dp"
+            android:backgroundTint="#00FFFFFF"
             app:layout_constraintBottom_toTopOf="@+id/textView3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -125,8 +126,8 @@
                 android:orientation="horizontal"
                 app:layoutManager="com.google.android.material.carousel.CarouselLayoutManager"
                 app:layout_constraintHorizontal_bias="1.0"
-                tools:itemCount="3"
-                tools:listitem="@layout/images_carousel"/>
+                tools:itemCount="2"
+                tools:listitem="@layout/images_carousel" />
 
             <Button
                 android:id="@+id/button4"
@@ -151,11 +152,11 @@
             android:text="Eventos"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/viewPagerEvents"
+            app:layout_constraintBottom_toTopOf="@+id/carousel_recycler_view_events"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
 
-        <!--<androidx.recyclerview.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/carousel_recycler_view_events"
             android:layout_width="0dp"
             android:layout_height="250dp"
@@ -166,24 +167,40 @@
             android:clipToPadding="false"
             android:orientation="horizontal"
             app:layoutManager="com.google.android.material.carousel.CarouselLayoutManager"
+            app:layout_constraintBottom_toTopOf="@+id/textView4"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView3"
             tools:itemCount="2"
-            tools:listitem="@layout/events_carousel" />-->
+            tools:listitem="@layout/events_carousel" />
 
-        <androidx.viewpager.widget.ViewPager
+
+        <!--<androidx.viewpager.widget.ViewPager
             android:id="@+id/viewPagerEvents"
             android:layout_width="0dp"
             android:layout_height="250dp"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="15dp"
-            android:layout_marginEnd="5dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="15dp"
+            app:layout_constraintBottom_toTopOf="@+id/textView4"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView3" />
+            app:layout_constraintTop_toBottomOf="@+id/textView3" />-->
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="15dp"
+            android:text="Localização"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/carousel_recycler_view_events" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

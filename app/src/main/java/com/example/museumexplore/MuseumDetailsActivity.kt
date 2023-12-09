@@ -1,6 +1,7 @@
 package com.example.museumexplore
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.ImageView
@@ -37,21 +38,19 @@ class MuseumDetailsActivity : TopBarActivity() {
             snapHelper.attachToRecyclerView(carouselRecyclerViewMuseumImages)
             carouselRecyclerViewMuseumImages.adapter = museumImagesAdapter
 
-            museumImagesList.add(R.drawable.rectangle_368)
-            museumImagesList.add(R.drawable.rectangle_369)
-            museumImagesList.add(R.drawable.rectangle_370)
-            museumImagesList.add(R.drawable.rectangle_371)
-            museumImagesList.add(R.drawable.rectangle_372)
+            museumImagesList.add(R.drawable.museu_interior1)
+            museumImagesList.add(R.drawable.museu_interior2)
+            museumImagesList.add(R.drawable.museu_interior3)
+            museumImagesList.add(R.drawable.museu_interior4)
 
             //carouselRecyclerViewArtWorksImages.layoutManager = CarouselLayoutManager(HeroCarouselStrategy())
             snapHelper.attachToRecyclerView(carouselRecyclerViewArtWorksImages)
             carouselRecyclerViewArtWorksImages.adapter = artWorksAdapter
 
-            artWorksList.add(R.drawable.rectangle_368)
-            artWorksList.add(R.drawable.rectangle_369)
-            artWorksList.add(R.drawable.rectangle_370)
-            artWorksList.add(R.drawable.rectangle_371)
-            artWorksList.add(R.drawable.rectangle_372)
+            artWorksList.add(R.drawable.museu_interior1)
+            artWorksList.add(R.drawable.museu_interior2)
+            artWorksList.add(R.drawable.museu_interior3)
+            artWorksList.add(R.drawable.museu_interior4)
 
             snapHelper.attachToRecyclerView(carouselRecyclerViewEvents)
             carouselRecyclerViewEvents.adapter = eventsAdapter
@@ -76,6 +75,10 @@ class MuseumDetailsActivity : TopBarActivity() {
         binding.textViewMuseumName.text = museumName
         binding.textViewDescription.text = museumDescription
 
+        binding.buttonCollection.setOnClickListener {
+            val intent = Intent(this, ArtWorksActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {

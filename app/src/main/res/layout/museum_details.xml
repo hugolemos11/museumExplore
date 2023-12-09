@@ -34,7 +34,7 @@
             app:srcCompat="@drawable/group_30" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/buttonTicket"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
@@ -53,7 +53,7 @@
             android:text="@string/adquira_seu_bilhete_ja"
             android:textColor="#FFFFFF"
             android:textSize="15dp"
-            app:layout_constraintBottom_toTopOf="@+id/button2"
+            app:layout_constraintBottom_toTopOf="@+id/buttonTicket"
             app:layout_constraintEnd_toEndOf="@+id/textViewMuseumName"
             app:layout_constraintStart_toStartOf="@+id/textViewMuseumName" />
 
@@ -130,12 +130,10 @@
                 tools:listitem="@layout/images_carousel" />
 
             <Button
-                android:id="@+id/button4"
+                android:id="@+id/buttonCollection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
                 android:backgroundTint="@color/nav"
                 android:text="Discover our Collection" />
 

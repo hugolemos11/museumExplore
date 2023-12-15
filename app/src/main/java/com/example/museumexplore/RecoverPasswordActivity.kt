@@ -4,6 +4,7 @@ import android.content.ContentValues.TAG
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import com.example.museumexplore.databinding.RecoverPasswordPageBinding
 import com.example.museumexplore.databinding.RegisterPageBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -26,7 +27,10 @@ class RecoverPasswordActivity : AppCompatActivity() {
             Firebase.auth.sendPasswordResetEmail(email)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
+                        Toast.makeText(this,  "Email Sent Successfully", Toast.LENGTH_LONG).show()
                         Log.d(TAG, "Email sent.")
+                    } else {
+                        Toast.makeText(this,  "Could Not Send Email", Toast.LENGTH_LONG).show()
                     }
                 }
         }

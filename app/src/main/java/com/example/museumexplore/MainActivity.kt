@@ -1,67 +1,93 @@
 package com.example.museumexplore
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.view.ViewGroup
-import android.widget.BaseAdapter
-import com.example.museumexplore.databinding.MainActivityBinding
-import com.example.museumexplore.databinding.MuseumDisplayBinding
-import com.example.museumexplore.modules.Museum
+import android.view.Gravity
+import android.view.MenuItem
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import com.example.museumexplore.ui.home.HomeFragment
+import com.google.android.material.navigation.NavigationView
 
-class MainActivity : AppCompatActivity() {
 
-    var museums = arrayListOf<Museum>()
-
-    private lateinit var binding: MainActivityBinding
-    private  var  adapter = MuseumAdapter()
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+    private lateinit var drawerLayout: DrawerLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        museums.add(Museum("aa", "Museumxzy", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."))
-        museums.add(Museum("ab", "Museumxyz", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."))
-        museums.add(Museum("ac", "Museumxzy1", ""))
-        museums.add(Museum("ba", "Museumxyz1", ""))
-        museums.add(Museum("bb", "Museumxzy2", ""))
-        museums.add(Museum("bc", "Museumxyz2", ""))
-        museums.add(Museum("ca", "Museumxzy3", ""))
-        museums.add(Museum("cb", "Museumxyz3", ""))
+        setContentView(R.layout.main_activity)
 
-        binding = MainActivityBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        binding.gridViewMuseums.adapter = adapter
+        drawerLayout = findViewById(R.id.drawer_layout)
 
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
 
+        val navigationView = findViewById<NavigationView>(R.id.nav_view)
+        navigationView.setNavigationItemSelectedListener(this)
+
+        val toggle = ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_nav, R.string.close_nav)
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
+
+        toolbar.setNavigationOnClickListener {
+            if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
+                drawerLayout.closeDrawer(GravityCompat.END)
+            } else {
+                drawerLayout.openDrawer(GravityCompat.END)
+            }
+        }
+
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.nav_host_fragment_activity_home, HomeFragment()).commit()
+            navigationView.setCheckedItem(R.id.navHome)
+        }
     }
 
-    inner class MuseumAdapter : BaseAdapter() {
-        override fun getCount(): Int {
-            return museums.size
-        }
+   /* override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val menuToUse: Int = R.menu.right_menu
 
-        override fun getItem(position: Int): Any {
-            return museums[position]
-        }
+        val inflater = menuInflater
+        inflater.inflate(menuToUse, menu)
 
-        override fun getItemId(position: Int): Long {
-            return 0
-        }
+        return super.onCreateOptionsMenu(menu)
+    }*/
 
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-            val rootView = MuseumDisplayBinding.inflate(layoutInflater)
-
-            rootView.textViewMuseumName.text = museums[position].name
-
-            rootView.root.setOnClickListener{
-                val intent = Intent(this@MainActivity, MuseumDetailsActivity::class.java)
-                intent.putExtra(MuseumDetailsActivity.EXTRA_NAME, museums[position].name)
-                intent.putExtra(MuseumDetailsActivity.EXTRA_DESCRIPTION, museums[position].description)
-                startActivity(intent)
+    /*override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.btnMyMenu) {
+            if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
+                drawerLayout.closeDrawer(GravityCompat.END)
+            } else {
+                drawerLayout.openDrawer(GravityCompat.END)
             }
-
-            return rootView.root
+            return true
         }
+        return false
+    }*/
 
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.navHome -> supportFragmentManager.beginTransaction()
+                .replace(R.id.nav_host_fragment_activity_home, HomeFragment()).commit()
+            /*R.id.nav_settings -> supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, SettingsFragment()).commit()
+            R.id.nav_share -> supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, ShareFragment()).commit()
+            R.id.nav_about -> supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, AboutFragment()).commit()
+            R.id.nav_logout -> Toast.makeText(this, "Logout!", Toast.LENGTH_SHORT).show()*/
+        }
+        drawerLayout.closeDrawer(GravityCompat.END)
+        return true
+    }
+    override fun onBackPressed() {
+        super.onBackPressed()
+        if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
+            drawerLayout.closeDrawer(GravityCompat.END)
+        } else {
+            onBackPressedDispatcher.onBackPressed()
+        }
     }
 }

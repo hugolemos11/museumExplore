@@ -1,17 +1,10 @@
 package com.example.museumexplore.modules
 
-import android.R
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager.widget.PagerAdapter
 import com.example.museumexplore.databinding.EventsCarouselBinding
-import com.example.museumexplore.databinding.EventsPageBinding
-import com.example.museumexplore.databinding.MuseumDetailsBinding
 
 class EventAdpater(val list: ArrayList<EventsModel>, val context: Context) : RecyclerView.Adapter<EventAdpater.ItemViewHolder>() {
     inner class ItemViewHolder(val binding: EventsCarouselBinding) :

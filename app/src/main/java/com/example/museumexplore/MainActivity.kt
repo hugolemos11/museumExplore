@@ -5,26 +5,26 @@ import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.app.TaskStackBuilder
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.navigation.findNavController
+import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.museumexplore.ui.home.HomeFragment
-import com.example.museumexplore.ui.profile.ProfileFragment
 import com.google.android.material.navigation.NavigationView
 
-
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+// , NavigationView.OnNavigationItemSelectedListener
+class MainActivity : AppCompatActivity(){
     private lateinit var drawerLayout: DrawerLayout
+    private lateinit var navController: NavController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.main_activity)
+
+
 
         drawerLayout = findViewById(R.id.drawer_layout)
 
@@ -45,20 +45,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
 
-        if (savedInstanceState == null) {
+        // Happens an error when using this
+        /*if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.nav_host_fragment, HomeFragment()).commit()
-        }
+        }*/
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val navController = navHostFragment.navController
+        navController = navHostFragment.navController
+
         NavigationUI.setupWithNavController(navigationView, navController)
 
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home,
-                R.id.navigation_museum_details,
-                R.id.navigation_settings // Add other destination IDs if needed
+                R.id.homeFragment,
+                R.id.museumDetailsFragment,
+               // R.id.navigation_settings // Add other destination IDs if needed
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -86,12 +88,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return false
     }*/
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+    /*override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.navHome -> supportFragmentManager.beginTransaction()
                 .replace(R.id.nav_host_fragment, HomeFragment()).commit()
             R.id.navSettings -> supportFragmentManager.beginTransaction()
-                .replace(R.id.navigation_settings, ProfileFragment()).commit()
+                .replace(R.id.nav_host_fragment, MuseumDetailsFragment()).commit()
             /*R.id.nav_share -> supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, ShareFragment()).commit()
             R.id.nav_about -> supportFragmentManager.beginTransaction()
@@ -109,5 +111,5 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         } else {
             onBackPressedDispatcher.onBackPressed()
         }
-    }
+    }*/
 }

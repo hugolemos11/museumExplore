@@ -80,7 +80,7 @@ class HomeFragment : Fragment() {
                 bundle.putString(MuseumDetailsFragment.EXTRA_DESCRIPTION, museums[position].description)
                 findNavController().navigate(R.id.action_navigation_home_to_museumDetailsFragment, bundle)*/
 
-                navController.navigate(R.id.action_navigation_home_to_museumDetailsFragment)
+                navController.navigate(R.id.action_homeFragment_to_museumDetailsFragment)
             }
 
             return rootView.root

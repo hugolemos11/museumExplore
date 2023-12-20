@@ -3,29 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@id/homeFragment">
 
     <fragment
-        android:id="@+id/navigation_home"
+        android:id="@+id/homeFragment"
         android:name="com.example.museumexplore.ui.home.HomeFragment"
-        android:label="Home"
+        android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_navigation_home_to_museumDetailsFragment"
-            app:destination="@id/navigation_museum_details"/>
+            android:id="@+id/action_homeFragment_to_museumDetailsFragment"
+            app:destination="@id/museumDetailsFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
     </fragment>
-
     <fragment
-        android:id="@+id/navigation_museum_details"
+        android:id="@+id/museumDetailsFragment"
         android:name="com.example.museumexplore.ui.home.MuseumDetailsFragment"
-        android:label="Museum Details"
-        tools:layout="@layout/fragment_museum_details" />
-
-    <fragment
-        android:id="@+id/navigation_settings"
-        android:name="com.example.museumexplore.ui.profile.ProfileFragment"
-        android:label="Profile"
-        tools:layout="@layout/fragment_profile" />
-
-
+        android:label="fragment_museum_details"
+        tools:layout="@layout/fragment_museum_details" >
+        <action
+            android:id="@+id/action_museumDetailsFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
+    </fragment>
 </navigation>

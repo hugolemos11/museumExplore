@@ -30,11 +30,7 @@
             android:name=".LoginActivity"
             android:exported="true">
 
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
         </activity>
         <activity
             android:name=".RegisterActivity"
@@ -43,9 +39,13 @@
             android:name=".MainActivity"
             android:theme="@style/Theme.MainActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustPan" >
+            android:windowSoftInputMode="adjustPan" > <!-- Makes that when the keyboard shows up the grid view don't follow -->
 
-            <!-- Makes that when the keyboard shows up the grid view don't follow -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".ui.home.HomeFragment"

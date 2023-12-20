@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation.findNavController
-import androidx.navigation.findNavController
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.example.museumexplore.R
 import com.example.museumexplore.databinding.FragmentHomeBinding
@@ -19,6 +19,8 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var navController: NavController
 
     var museums = arrayListOf<Museum>()
     private  var  adapter = MuseumAdapter()
@@ -39,6 +41,8 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        navController = Navigation.findNavController(view);
 
         museums.add(Museum("aa", "Museumxzy", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."))
         museums.add(Museum("ab", "Museumxyz", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."))
@@ -71,10 +75,12 @@ class HomeFragment : Fragment() {
             rootView.textViewMuseumName.text = museums[position].name
 
             rootView.root.setOnClickListener{
-                val bundle = Bundle()
+                /*val bundle = Bundle()
                 bundle.putString(MuseumDetailsFragment.EXTRA_NAME, museums[position].name)
                 bundle.putString(MuseumDetailsFragment.EXTRA_DESCRIPTION, museums[position].description)
-                findNavController().navigate(R.id.action_navigation_home_to_museumDetailsFragment, bundle)
+                findNavController().navigate(R.id.action_navigation_home_to_museumDetailsFragment, bundle)*/
+
+                navController.navigate(R.id.action_navigation_home_to_museumDetailsFragment)
             }
 
             return rootView.root

@@ -35,6 +35,8 @@ class MuseumDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMuseumDetailsBinding.inflate(inflater, container, false)
+        name = arguments?.getString(EXTRA_NAME)
+        description = arguments?.getString(EXTRA_DESCRIPTION)
         return binding.root
     }
 
@@ -45,8 +47,7 @@ class MuseumDetailsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        name = arguments?.getString(EXTRA_NAME)
-        description = arguments?.getString(EXTRA_DESCRIPTION)
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

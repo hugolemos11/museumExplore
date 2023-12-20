@@ -12,13 +12,20 @@
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_navigation_home_to_museumDetailsFragment"
-            app:destination="@id/museumDetailsFragment" />
+            app:destination="@id/navigation_museum_details"/>
     </fragment>
 
     <fragment
-        android:id="@+id/museumDetailsFragment"
+        android:id="@+id/navigation_museum_details"
         android:name="com.example.museumexplore.ui.home.MuseumDetailsFragment"
         android:label="Museum Details"
         tools:layout="@layout/fragment_museum_details" />
+
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:name="com.example.museumexplore.ui.profile.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile" />
+
 
 </navigation>

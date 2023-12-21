@@ -1,4 +1,4 @@
-package com.example.museumexplore
+/*package com.example.museumexplore
 
 import android.content.Intent
 import android.os.Bundle
@@ -72,4 +72,4 @@ class ArtWorksActivity : AppCompatActivity() {
         }
 
     }
-}
+}*/

@@ -1,4 +1,4 @@
-package com.example.museumexplore
+/*package com.example.museumexplore
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -39,4 +39,4 @@ class RegisterActivity : AppCompatActivity() {
                 }
         }
     }
-}
+}*/

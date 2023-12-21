@@ -74,9 +74,7 @@
                 museumImagesList.add(R.drawable.museu_interior3)
                 museumImagesList.add(R.drawable.museu_interior4)
 
-                carouselRecyclerViewArtWorksImages.layoutManager = CarouselLayoutManager(
-                    HeroCarouselStrategy()
-                )
+                carouselRecyclerViewArtWorksImages.layoutManager = CarouselLayoutManager(HeroCarouselStrategy())
                 artWorksAdapter = ImageAdapter(artWorksList, requireContext())
                 snapHelper.attachToRecyclerView(carouselRecyclerViewArtWorksImages)
                 carouselRecyclerViewArtWorksImages.adapter = artWorksAdapter

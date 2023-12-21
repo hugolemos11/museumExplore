@@ -1,4 +1,4 @@
-package com.example.museumexplore
+/*package com.example.museumexplore
 
 import android.content.ContentValues.TAG
 import android.content.Intent
@@ -54,4 +54,4 @@ class LoginActivity : AppCompatActivity() {
                 }
         }
     }
-}
+}*/

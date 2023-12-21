@@ -1,12 +1,13 @@
-package com.example.museumexplore
+/*package com.example.museumexplore
 
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.museumexplore.databinding.ArtWorksDetailsBinding
 
-class ArtWorksDetailsActivity : TopBarActivity() {
+class ArtWorksDetailsActivity : AppCompatActivity() {
 
     private lateinit var binding: ArtWorksDetailsBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,10 +38,6 @@ class ArtWorksDetailsActivity : TopBarActivity() {
         binding.textViewArtWorkDescription.text = description
     }
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        TODO("Not yet implemented")
-    }
-
     companion object{
         const val EXTRA_IMAGE = "extra_image"
         const val EXTRA_NAME = "extra_name"
@@ -49,4 +46,4 @@ class ArtWorksDetailsActivity : TopBarActivity() {
         const val EXTRA_CATEGORY = "extra_category"
         const val EXTRA_DESCRIPTION = "extra_description"
     }
-}
+}*/

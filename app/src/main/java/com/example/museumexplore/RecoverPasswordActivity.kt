@@ -1,4 +1,4 @@
-package com.example.museumexplore
+/*package com.example.museumexplore
 
 import android.content.ContentValues.TAG
 import androidx.appcompat.app.AppCompatActivity
@@ -35,4 +35,4 @@ class RecoverPasswordActivity : AppCompatActivity() {
                 }
         }
     }
-}
+}*/

@@ -24,13 +24,8 @@
             android:name=".ArtWorksDetailsActivity"
             android:exported="false" />
         <activity
-            android:name=".TopBarActivity"
-            android:exported="false" />
-        <activity
             android:name=".LoginActivity"
-            android:exported="true">
-
-
+            android:exported="false">
         </activity>
         <activity
             android:name=".RegisterActivity"
@@ -53,6 +48,22 @@
         <activity
             android:name=".ui.home.MuseumDetailsFragment"
             android:exported="false" />
+        <activity
+            android:name=".ui.home.ArtWorksFragment"
+            android:exported="false" />
+        <activity
+            android:name=".ui.home.ArtWorkDetailsFragment"
+            android:exported="false" />
+        <activity
+            android:name=".ui.autentication.LoginFragment"
+            android:exported="false" />
+        <activity
+            android:name=".ui.autentication.RecoverPasswordFragment"
+            android:exported="false" />
+        <activity
+            android:name=".ui.autentication.RegisterFragment"
+            android:exported="false" />
+
     </application>
 
 </manifest>

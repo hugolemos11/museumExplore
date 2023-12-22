@@ -7,6 +7,8 @@
     import android.view.ViewGroup
     import androidx.appcompat.app.AppCompatActivity
     import androidx.fragment.app.Fragment
+    import androidx.navigation.NavController
+    import androidx.navigation.Navigation
     import com.example.museumexplore.R
     import com.example.museumexplore.databinding.FragmentMuseumDetailsBinding
     import com.example.museumexplore.modules.EventAdpater
@@ -20,6 +22,8 @@
 
         private var _binding: FragmentMuseumDetailsBinding? = null
         private val binding get() = _binding!!
+
+        private lateinit var navController: NavController
 
         private val museumImagesList = ArrayList<Int>()
         private lateinit var museumImagesAdapter: ImageAdapter
@@ -49,18 +53,13 @@
             _binding = null
         }
 
-        override fun onCreate(savedInstanceState: Bundle?) {
-            super.onCreate(savedInstanceState)
-
-
-        }
-
         override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             super.onViewCreated(view, savedInstanceState)
 
             // Remove the title of fragment on the actionBar
             (activity as AppCompatActivity).supportActionBar?.title = ""
 
+            navController = Navigation.findNavController(view);
 
             binding.apply {
 
@@ -97,10 +96,9 @@
             binding.textViewMuseumName.text = name
             binding.textViewDescription.text = description
 
-            /*binding.buttonCollection.setOnClickListener {
-                val intent = Intent(this, ArtWorksActivity::class.java)
-                startActivity(intent)
-            }*/
+            binding.buttonCollection.setOnClickListener {
+                navController.navigate(R.id.action_museumDetailsFragment_to_artWorksFragment)
+            }
         }
 
         companion object{

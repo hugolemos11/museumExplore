@@ -3,68 +3,74 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/homeNavigation">
 
-    <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.example.museumexplore.ui.home.HomeFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
+    <navigation android:id="@+id/homeNavigation"
+        app:startDestination="@id/homeFragment">
+        <fragment
+            android:id="@+id/artWorksFragment"
+            android:name="com.example.museumexplore.ui.home.ArtWorksFragment"
+            android:label="fragment_art_works"
+            tools:layout="@layout/fragment_art_works">
+            <action
+                android:id="@+id/action_artWorksFragment_to_artWorkDetailsFragment"
+                app:destination="@id/artWorkDetailsFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/homeFragment"
+            android:name="com.example.museumexplore.ui.home.HomeFragment"
+            android:label="fragment_home"
+            tools:layout="@layout/fragment_home">
+            <action
+                android:id="@+id/action_homeFragment_to_museumDetailsFragment"
+                app:destination="@id/museumDetailsFragment"
+                app:enterAnim="@android:anim/fade_in"
+                app:exitAnim="@android:anim/fade_out" />
+        </fragment>
+        <fragment
+            android:id="@+id/museumDetailsFragment"
+            android:name="com.example.museumexplore.ui.home.MuseumDetailsFragment"
+            android:label="fragment_museum_details"
+            tools:layout="@layout/fragment_museum_details">
+            <action
+                android:id="@+id/action_museumDetailsFragment_to_artWorksFragment"
+                app:destination="@id/artWorksFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/artWorkDetailsFragment"
+            android:name="com.example.museumexplore.ui.home.ArtWorkDetailsFragment"
+            android:label="fragment_art_work_details"
+            tools:layout="@layout/fragment_art_work_details" />
         <action
-            android:id="@+id/action_homeFragment_to_museumDetailsFragment"
-            app:destination="@id/museumDetailsFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out" />
+            android:id="@+id/action_global_autenticationNavigation"
+            app:destination="@id/autenticationNavigation" />
+    </navigation>
+    <navigation android:id="@+id/autenticationNavigation"
+        app:startDestination="@id/loginFragment">
+        <fragment
+            android:id="@+id/recoverPasswordFragment"
+            android:name="com.example.museumexplore.ui.autentication.RecoverPasswordFragment"
+            android:label="fragment_recover_password"
+            tools:layout="@layout/fragment_recover_password" />
+        <fragment
+            android:id="@+id/registerFragment"
+            android:name="com.example.museumexplore.ui.autentication.RegisterFragment"
+            android:label="fragment_register"
+            tools:layout="@layout/fragment_register"/>
+        <fragment
+            android:id="@+id/loginFragment"
+            android:name="com.example.museumexplore.ui.autentication.LoginFragment"
+            android:label="fragment_login"
+            tools:layout="@layout/fragment_login">
+            <action
+                android:id="@+id/action_loginFragment_to_registerFragment"
+                app:destination="@id/registerFragment" />
+            <action
+                android:id="@+id/action_loginFragment_to_recoverPasswordFragment"
+                app:destination="@id/recoverPasswordFragment" />
+        </fragment>
         <action
-            android:id="@+id/action_homeFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/museumDetailsFragment"
-        android:name="com.example.museumexplore.ui.home.MuseumDetailsFragment"
-        android:label="fragment_museum_details"
-        tools:layout="@layout/fragment_museum_details" >
-        <action
-            android:id="@+id/action_museumDetailsFragment_to_artWorksFragment"
-            app:destination="@id/artWorksFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/artWorksFragment"
-        android:name="com.example.museumexplore.ui.home.ArtWorksFragment"
-        android:label="fragment_art_works"
-        tools:layout="@layout/fragment_art_works" >
-        <action
-            android:id="@+id/action_artWorksFragment_to_artWorkDetailsFragment"
-            app:destination="@id/artWorkDetailsFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/artWorkDetailsFragment"
-        android:name="com.example.museumexplore.ui.home.ArtWorkDetailsFragment"
-        android:label="fragment_art_work_details"
-        tools:layout="@layout/fragment_art_work_details" />
-    <fragment
-        android:id="@+id/loginFragment"
-        android:name="com.example.museumexplore.ui.autentication.LoginFragment"
-        android:label="fragment_login"
-        tools:layout="@layout/fragment_login" >
-        <action
-            android:id="@+id/action_loginFragment_to_registerFragment"
-            app:destination="@id/registerFragment" />
-        <action
-            android:id="@+id/action_loginFragment_to_recoverPasswordFragment"
-            app:destination="@id/recoverPasswordFragment" />
-        <action
-            android:id="@+id/action_loginFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/registerFragment"
-        android:name="com.example.museumexplore.ui.autentication.RegisterFragment"
-        android:label="fragment_register"
-        tools:layout="@layout/fragment_register" />
-    <fragment
-        android:id="@+id/recoverPasswordFragment"
-        android:name="com.example.museumexplore.ui.autentication.RecoverPasswordFragment"
-        android:label="fragment_recover_password"
-        tools:layout="@layout/fragment_recover_password" />
+            android:id="@+id/action_global_homeNavigation"
+            app:destination="@id/homeNavigation" />
+    </navigation>
 </navigation>

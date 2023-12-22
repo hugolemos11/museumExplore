@@ -10,13 +10,17 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.example.museumexplore.R
 import com.example.museumexplore.databinding.FragmentLoginBinding
+import com.example.museumexplore.databinding.FragmentRegisterBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class RegisterFragment : Fragment() {
 
-    private var _binding: FragmentLoginBinding? = null
+    private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var navController: NavController
@@ -28,7 +32,7 @@ class RegisterFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentLoginBinding.inflate(inflater, container, false)
+        _binding = FragmentRegisterBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -40,34 +44,25 @@ class RegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // Initialize 'auth' here
-        auth = FirebaseAuth.getInstance()
+        auth = Firebase.auth
 
-        binding.textViewRegister.setOnClickListener {
-            navController.navigate(R.id.action_loginFragment_to_registerFragment)
-        }
+        navController = Navigation.findNavController(view);
 
-        binding.textViewPassword.setOnClickListener {
-            navController.navigate(R.id.action_loginFragment_to_recoverPasswordFragment)
-        }
-
-        binding.loginButton.setOnClickListener {
+        binding.registerButton.setOnClickListener {
             val email = binding.editTextEmailAddress.text.toString()
+            val username = binding.editTextUsername.text.toString()
             val password = binding.editTextPassword.text.toString()
 
-            auth.signInWithEmailAndPassword(email, password)
+            auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(requireActivity()) { task ->
                     if (task.isSuccessful) {
-                        Log.d(TAG, "signInWithEmail:success")
                         val user = auth.currentUser
-                        navController.navigate(R.id.action_loginFragment_to_homeFragment)
+                        navController.navigate(R.id.action_global_homeNavigation)
                     } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w(TAG, "signInWithEmail:failure", task.exception)
                         Toast.makeText(
                             context,
-                            "Authentication failed.",
-                            Toast.LENGTH_SHORT,
-                        ).show()
+                            "Erro no registo",
+                            Toast.LENGTH_SHORT).show()
                     }
                 }
         }

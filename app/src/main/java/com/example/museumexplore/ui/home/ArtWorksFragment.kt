@@ -6,32 +6,38 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.example.museumexplore.R
+import com.example.museumexplore.databinding.ArtWorksDisplayBinding
+import com.example.museumexplore.databinding.FragmentArtWorksBinding
 import com.example.museumexplore.databinding.FragmentHomeBinding
 import com.example.museumexplore.databinding.MuseumDisplayBinding
+import com.example.museumexplore.modules.ArtWorks
 import com.example.museumexplore.modules.Museum
 
 
 class ArtWorksFragment : Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
+
+
+    private var _binding: FragmentArtWorksBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var navController: NavController
 
-    var museums = arrayListOf<Museum>()
-    private  var  adapter = MuseumAdapter()
+    var artWorks = arrayListOf<ArtWorks>()
+    private  var  adapter = ArtWorksAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        _binding = FragmentArtWorksBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -48,25 +54,24 @@ class ArtWorksFragment : Fragment() {
 
         navController = Navigation.findNavController(view);
 
-        museums.add(Museum("aa", "Museumxzy", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."))
-        museums.add(Museum("ab", "Museumxyz", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."))
-        museums.add(Museum("ac", "Museumxzy1", ""))
-        museums.add(Museum("ba", "Museumxyz1", ""))
-        museums.add(Museum("bb", "Museumxzy2", ""))
-        museums.add(Museum("bc", "Museumxyz2", ""))
-        museums.add(Museum("ca", "Museumxzy3", ""))
-        museums.add(Museum("cb", "Museumxyz3", ""))
+        artWorks.add(ArtWorks("aa", "ArtWork1", "Picasso", 1986 ,"Cubism", "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum." ,R.drawable.art_work1))
+        artWorks.add(ArtWorks("ab", "ArtWork2", "Picasso", 1986 ,"Cubism", "",R.drawable.art_work2))
+        artWorks.add(ArtWorks("ac", "ArtWork3", "Picasso", 1986 ,"Cubism", "",R.drawable.art_work3))
+        artWorks.add(ArtWorks("ba", "ArtWork4", "Picasso", 1986 ,"Cubism", "",R.drawable.art_work4))
+        artWorks.add(ArtWorks("bb", "ArtWork5", "Picasso", 1986 ,"Cubism", "",R.drawable.art_work1))
+        artWorks.add(ArtWorks("bc", "ArtWork6", "Picasso", 1986 ,"Cubism", "",R.drawable.art_work2))
 
         binding.gridViewMuseums.adapter = adapter
+
     }
 
-    inner class MuseumAdapter : BaseAdapter() {
+    inner class ArtWorksAdapter : BaseAdapter() {
         override fun getCount(): Int {
-            return museums.size
+            return artWorks.size
         }
 
         override fun getItem(position: Int): Any {
-            return museums[position]
+            return artWorks[position]
         }
 
         override fun getItemId(position: Int): Long {
@@ -74,17 +79,17 @@ class ArtWorksFragment : Fragment() {
         }
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-            val rootView = MuseumDisplayBinding.inflate(layoutInflater)
+            val rootView = ArtWorksDisplayBinding.inflate(layoutInflater)
 
-            rootView.textViewMuseumName.text = museums[position].name
+            val drawableId = artWorks[position].image
+            val drawable = ContextCompat.getDrawable(requireContext(), drawableId)
+
+            rootView.imageViewArtWork.setImageDrawable(drawable)
+            rootView.textViewArtWorkName.text = artWorks[position].artWorkName
+            rootView.textViewCategory.text = artWorks[position].category
 
             rootView.root.setOnClickListener{
-                /*val bundle = Bundle()
-                bundle.putString(MuseumDetailsFragment.EXTRA_NAME, museums[position].name)
-                bundle.putString(MuseumDetailsFragment.EXTRA_DESCRIPTION, museums[position].description)
-                findNavController().navigate(R.id.action_navigation_home_to_museumDetailsFragment, bundle)*/
-
-                navController.navigate(R.id.action_homeFragment_to_museumDetailsFragment)
+                navController.navigate(R.id.action_artWorksFragment_to_artWorkDetailsFragment)
             }
 
             return rootView.root

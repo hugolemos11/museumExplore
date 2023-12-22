@@ -81,13 +81,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navigationView.setupWithNavController(navController)
 
         navController.addOnDestinationChangedListener { nc: NavController, nd: NavDestination, args: Bundle? ->
-            if (nd.id == nc.graph.startDestinationId /*|| nd.id == R.id.museumDetailsFragment*/) {
+            if (nd.id == R.id.homeFragment /*|| nd.id == R.id.museumDetailsFragment*/) {
                 // Makes the menu Icon (left) disappear
-                supportActionBar?.setDisplayHomeAsUpEnabled(false);
-                supportActionBar?.setHomeButtonEnabled(false);
+                supportActionBar?.show()
+                supportActionBar?.setDisplayHomeAsUpEnabled(false)
+                supportActionBar?.setHomeButtonEnabled(false)
             } else if (nd.id == R.id.loginFragment || nd.id == R.id.recoverPasswordFragment || nd.id == R.id.registerFragment) {
                 // Hide the actionBar
                 supportActionBar?.hide()
+
             } else {
             toolbar.setNavigationOnClickListener {
                 onBackPressed()
@@ -132,7 +134,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     // If the current destination is HomeFragment, close the drawer
                     drawerLayout.closeDrawer(GravityCompat.END)
                 } else {
-                    navController.navigate(R.id.action_loginFragment_to_homeFragment)
+                    navController.navigate(R.id.action_global_homeNavigation)
                 }
             }
             R.id.navTicket -> {
@@ -149,7 +151,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     // If the current destination is HomeFragment, close the drawer
                     drawerLayout.closeDrawer(GravityCompat.END)
                 } else {
-                    navController.navigate(R.id.action_homeFragment_to_loginFragment)
+                    navController.navigate(R.id.action_global_autenticationNavigation)
                 }
             }
         }

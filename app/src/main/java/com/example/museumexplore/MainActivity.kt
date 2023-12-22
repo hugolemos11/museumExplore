@@ -3,6 +3,7 @@ package com.example.museumexplore
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -17,19 +18,24 @@ import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.museumexplore.databinding.MainActivityBinding
+import com.example.museumexplore.ui.autentication.LoginFragment
 import com.example.museumexplore.ui.home.HomeFragment
 import com.example.museumexplore.ui.home.MuseumDetailsFragment
 import com.google.android.material.navigation.NavigationView
 
 // , NavigationView.OnNavigationItemSelectedListener
-class MainActivity : AppCompatActivity(){
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var navigationView: NavigationView
+    private lateinit var binding: MainActivityBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.main_activity)
+        binding = MainActivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         drawerLayout = findViewById(R.id.drawer_layout)
 
@@ -40,16 +46,12 @@ class MainActivity : AppCompatActivity(){
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 
-        val navigationView = findViewById<NavigationView>(R.id.nav_view)
-
-
-
+        navigationView = binding.navView
 
 
         /*val toggle = ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_nav, R.string.close_nav)
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()*/
-
 
         /*toolbar.setNavigationOnClickListener {
             if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
@@ -64,13 +66,13 @@ class MainActivity : AppCompatActivity(){
             supportFragmentManager.beginTransaction()
                 .replace(R.id.nav_host_fragment, HomeFragment()).commit()
         }*/
-        NavigationUI.setupWithNavController(navigationView, navController)
+
 
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.homeFragment,
-                //R.id.museumDetailsFragment,
-               // R.id.navigation_settings // Add other destinatio  n IDs if needed
+                R.id.loginFragment,
+               // R.id.navigation_settings // Add other destination IDs if needed
             ),
             drawerLayout,
             fallbackOnNavigateUpListener = ::onSupportNavigateUp
@@ -79,17 +81,22 @@ class MainActivity : AppCompatActivity(){
         navigationView.setupWithNavController(navController)
 
         navController.addOnDestinationChangedListener { nc: NavController, nd: NavDestination, args: Bundle? ->
-            if (nd.id == R.id.homeFragment /*|| nd.id == R.id.museumDetailsFragment*/) {
+            if (nd.id == nc.graph.startDestinationId /*|| nd.id == R.id.museumDetailsFragment*/) {
                 // Makes the menu Icon (left) disappear
                 supportActionBar?.setDisplayHomeAsUpEnabled(false);
                 supportActionBar?.setHomeButtonEnabled(false);
+            } else if (nd.id == R.id.loginFragment || nd.id == R.id.recoverPasswordFragment || nd.id == R.id.registerFragment) {
+                // Hide the actionBar
+                supportActionBar?.hide()
             } else {
-
-                toolbar.setNavigationOnClickListener {
-                    onBackPressed()
-                }
+            toolbar.setNavigationOnClickListener {
+                onBackPressed()
             }
         }
+        }
+        //NavigationUI.setupWithNavController(navigationView, navController)
+
+        navigationView.setNavigationItemSelectedListener(this)
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -117,23 +124,40 @@ class MainActivity : AppCompatActivity(){
         return false
     }
 
-    /*override fun onNavigationItemSelected(item: MenuItem): Boolean {
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        // Handle navigation view item clicks here.
         when (item.itemId) {
-            R.id.navHome -> supportFragmentManager.beginTransaction()
-                .replace(R.id.nav_host_fragment, HomeFragment()).commit()
-            R.id.navSettings -> supportFragmentManager.beginTransaction()
-                .replace(R.id.nav_host_fragment, MuseumDetailsFragment()).commit()
-            /*R.id.nav_share -> supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, ShareFragment()).commit()
-            R.id.nav_about -> supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, AboutFragment()).commit()
-            R.id.nav_logout -> Toast.makeText(this, "Logout!", Toast.LENGTH_SHORT).show()*/
+            R.id.navHome -> {
+                if (navController.currentDestination?.id == R.id.homeFragment) {
+                    // If the current destination is HomeFragment, close the drawer
+                    drawerLayout.closeDrawer(GravityCompat.END)
+                } else {
+                    navController.navigate(R.id.action_loginFragment_to_homeFragment)
+                }
+            }
+            R.id.navTicket -> {
+
+            }
+            R.id.navScan -> {
+
+            }
+            R.id.navSettings -> {
+
+            }
+            R.id.navLogout -> {
+                if (navController.currentDestination?.id == R.id.loginFragment) {
+                    // If the current destination is HomeFragment, close the drawer
+                    drawerLayout.closeDrawer(GravityCompat.END)
+                } else {
+                    navController.navigate(R.id.action_homeFragment_to_loginFragment)
+                }
+            }
         }
         drawerLayout.closeDrawer(GravityCompat.END)
         return true
     }
 
-    override fun onBackPressed() {
+    /*  override fun onBackPressed() {
         super.onBackPressed()
         if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
             drawerLayout.closeDrawer(GravityCompat.END)

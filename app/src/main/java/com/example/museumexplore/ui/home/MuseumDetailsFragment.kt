@@ -1,6 +1,8 @@
     package com.example.museumexplore.ui.home
 
+    import android.graphics.BitmapFactory
     import android.os.Bundle
+    import android.util.Log
     import android.view.LayoutInflater
     import android.view.MenuItem
     import android.view.View
@@ -17,6 +19,8 @@
     import com.google.android.material.carousel.CarouselLayoutManager
     import com.google.android.material.carousel.CarouselSnapHelper
     import com.google.android.material.carousel.HeroCarouselStrategy
+    import com.google.firebase.ktx.Firebase
+    import com.google.firebase.storage.ktx.storage
 
     class MuseumDetailsFragment : Fragment() {
 
@@ -32,8 +36,12 @@
         private val eventList = ArrayList<EventsModel>()
         private lateinit var eventsAdapter: EventAdpater
         //private val adapter = EventsPagerAdapter(eventList, this)
+        private var id : String? = null
         private var name : String? = null
         private var description : String? = null
+        private var location : String? = null
+        private var rate : Int? = null
+        private var pathToImage : String? = null
 
         val snapHelper = CarouselSnapHelper()
 
@@ -53,13 +61,48 @@
             _binding = null
         }
 
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+
+        }
+
         override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             super.onViewCreated(view, savedInstanceState)
+
+            arguments?.let { bundle ->
+                id = bundle.getString("museumId")
+                name = bundle.getString("museumName")
+                description = bundle.getString("museumDescription")
+                location = bundle.getString("museumLocation")
+                rate = bundle.getInt("museumRate")
+                pathToImage = bundle.getString("museumPathToImage")
+            }
 
             // Remove the title of fragment on the actionBar
             (activity as AppCompatActivity).supportActionBar?.title = ""
 
             navController = Navigation.findNavController(view);
+
+            pathToImage?.let { imagePath ->
+                // Load the image from Firebase Storage
+                val storage = Firebase.storage
+                val storageRef = storage.reference
+                val pathReference = storageRef.child(imagePath)
+                val ONE_MEGABYTE: Long = 10 * 1024 * 1024
+                pathReference.getBytes(ONE_MEGABYTE).addOnSuccessListener { data ->
+                    val bitmap = BitmapFactory.decodeByteArray(data, 0, data.count())
+                    binding.museumImage.setImageBitmap(bitmap)
+                }.addOnFailureListener {
+                    // Handle any errors
+                    Log.e("MuseumDetailsFragment", "Failed to load image from Firebase Storage")
+                }
+            }
+            binding.textViewMuseumName.text = name
+            binding.textViewDescription.text = description
+
+            binding.buttonCollection.setOnClickListener {
+                navController.navigate(R.id.action_museumDetailsFragment_to_artWorksFragment)
+            }
 
             binding.apply {
 
@@ -91,13 +134,6 @@
                 eventList.add(EventsModel(R.drawable.rectangle_376, "Event 2", "Description for Event 2"))
 
                 //viewPagerEvents.adapter = adapter
-            }
-
-            binding.textViewMuseumName.text = name
-            binding.textViewDescription.text = description
-
-            binding.buttonCollection.setOnClickListener {
-                navController.navigate(R.id.action_museumDetailsFragment_to_artWorksFragment)
             }
         }
 

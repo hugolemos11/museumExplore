@@ -23,8 +23,6 @@ import com.example.museumexplore.ui.autentication.LoginFragment
 import com.example.museumexplore.ui.home.HomeFragment
 import com.example.museumexplore.ui.home.MuseumDetailsFragment
 import com.google.android.material.navigation.NavigationView
-
-// , NavigationView.OnNavigationItemSelectedListener
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navController: NavController

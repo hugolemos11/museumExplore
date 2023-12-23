@@ -15,10 +15,13 @@
     import com.example.museumexplore.databinding.FragmentMuseumDetailsBinding
     import com.example.museumexplore.modules.EventAdpater
     import com.example.museumexplore.modules.EventsModel
+    import com.example.museumexplore.modules.Image
     import com.example.museumexplore.modules.ImageAdapter
+    import com.example.museumexplore.modules.Museum
     import com.google.android.material.carousel.CarouselLayoutManager
     import com.google.android.material.carousel.CarouselSnapHelper
     import com.google.android.material.carousel.HeroCarouselStrategy
+    import com.google.firebase.firestore.ktx.firestore
     import com.google.firebase.ktx.Firebase
     import com.google.firebase.storage.ktx.storage
 
@@ -29,9 +32,9 @@
 
         private lateinit var navController: NavController
 
-        private val museumImagesList = ArrayList<Int>()
+        private val museumImagesList = arrayListOf<Image>()
         private lateinit var museumImagesAdapter: ImageAdapter
-        private val artWorksList = ArrayList<Int>()
+        private val artWorksList = arrayListOf<Image>()
         private lateinit var artWorksAdapter: ImageAdapter
         private val eventList = ArrayList<EventsModel>()
         private lateinit var eventsAdapter: EventAdpater
@@ -104,6 +107,43 @@
                 navController.navigate(R.id.action_museumDetailsFragment_to_artWorksFragment)
             }
 
+            val db = Firebase.firestore
+            db.collection("museums/$id/imagesCollectionMuseum")
+                .addSnapshotListener { snapshoot, error ->
+                    snapshoot?.documents?.let {
+                        this.museumImagesList.clear()
+                        for (document in it) {
+                            document.data?.let{ data ->
+                                this.museumImagesList.add(
+                                    Image.fromSnapshot(
+                                        document.id,
+                                        data
+                                    )
+                                )
+                            }
+                        }
+                        this.museumImagesAdapter.notifyDataSetChanged()
+                    }
+                }
+
+            db.collection("museums/$id/imagesCollectionArtWork")
+                .addSnapshotListener { snapshoot, error ->
+                    snapshoot?.documents?.let {
+                        this.artWorksList.clear()
+                        for (document in it) {
+                            document.data?.let{ data ->
+                                this.artWorksList.add(
+                                    Image.fromSnapshot(
+                                        document.id,
+                                        data
+                                    )
+                                )
+                            }
+                        }
+                        this.artWorksAdapter.notifyDataSetChanged()
+                    }
+                }
+
             binding.apply {
 
                 carouselRecyclerViewMuseumImages.layoutManager = CarouselLayoutManager(HeroCarouselStrategy())
@@ -111,27 +151,23 @@
                 snapHelper.attachToRecyclerView(carouselRecyclerViewMuseumImages)
                 carouselRecyclerViewMuseumImages.adapter = museumImagesAdapter
 
-                museumImagesList.add(R.drawable.museu_interior1)
-                museumImagesList.add(R.drawable.museu_interior2)
-                museumImagesList.add(R.drawable.museu_interior3)
-                museumImagesList.add(R.drawable.museu_interior4)
 
                 carouselRecyclerViewArtWorksImages.layoutManager = CarouselLayoutManager(HeroCarouselStrategy())
                 artWorksAdapter = ImageAdapter(artWorksList, requireContext())
                 snapHelper.attachToRecyclerView(carouselRecyclerViewArtWorksImages)
                 carouselRecyclerViewArtWorksImages.adapter = artWorksAdapter
 
-                artWorksList.add(R.drawable.museu_interior1)
+                /*artWorksList.add(R.drawable.museu_interior1)
                 artWorksList.add(R.drawable.museu_interior2)
                 artWorksList.add(R.drawable.museu_interior3)
-                artWorksList.add(R.drawable.museu_interior4)
+                artWorksList.add(R.drawable.museu_interior4)*/
 
                 eventsAdapter = EventAdpater(eventList, requireContext())
                 snapHelper.attachToRecyclerView(carouselRecyclerViewEvents)
                 carouselRecyclerViewEvents.adapter = eventsAdapter
 
-                eventList.add(EventsModel(R.drawable.rectangle_375, "Event 1", "Description for Event 1"))
-                eventList.add(EventsModel(R.drawable.rectangle_376, "Event 2", "Description for Event 2"))
+                /*eventList.add(EventsModel(R.drawable.rectangle_375, "Event 1", "Description for Event 1"))
+                eventList.add(EventsModel(R.drawable.rectangle_376, "Event 2", "Description for Event 2"))*/
 
                 //viewPagerEvents.adapter = adapter
             }

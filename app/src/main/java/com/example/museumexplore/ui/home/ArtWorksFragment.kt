@@ -54,12 +54,12 @@ class ArtWorksFragment : Fragment() {
 
         navController = Navigation.findNavController(view);
 
-        artWorks.add(ArtWorks("aa", "ArtWork1", "Picasso", 1986 ,"Cubism", "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum." ,R.drawable.art_work1))
+        /*artWorks.add(ArtWorks("aa", "ArtWork1", "Picasso", 1986 ,"Cubism", "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum." ,R.drawable.art_work1))
         artWorks.add(ArtWorks("ab", "ArtWork2", "Picasso", 1986 ,"Cubism", "",R.drawable.art_work2))
         artWorks.add(ArtWorks("ac", "ArtWork3", "Picasso", 1986 ,"Cubism", "",R.drawable.art_work3))
         artWorks.add(ArtWorks("ba", "ArtWork4", "Picasso", 1986 ,"Cubism", "",R.drawable.art_work4))
         artWorks.add(ArtWorks("bb", "ArtWork5", "Picasso", 1986 ,"Cubism", "",R.drawable.art_work1))
-        artWorks.add(ArtWorks("bc", "ArtWork6", "Picasso", 1986 ,"Cubism", "",R.drawable.art_work2))
+        artWorks.add(ArtWorks("bc", "ArtWork6", "Picasso", 1986 ,"Cubism", "",R.drawable.art_work2))*/
 
         binding.gridViewMuseums.adapter = adapter
 

@@ -11,8 +11,7 @@
         android:id="@+id/imageViewEvent"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/group_30" />
+        android:scaleType="centerCrop" />
 
     <TextView
         android:id="@+id/textViewEventTitle"

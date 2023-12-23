@@ -68,7 +68,7 @@ class ArtWorkDetailsFragment : Fragment() {
 
         //navController = Navigation.findNavController(view);
 
-        binding.imageViewArtWorkImage.setImageResource(R.drawable.art_work1)
+        //binding.imageViewArtWorkImage.setImageResource(R.drawable.art_work1)
     }
 
     companion object{

@@ -35,6 +35,9 @@
             <action
                 android:id="@+id/action_museumDetailsFragment_to_artWorksFragment"
                 app:destination="@id/artWorksFragment" />
+            <action
+                android:id="@+id/action_museumDetailsFragment_to_eventDetailsFragment"
+                app:destination="@id/eventDetailsFragment" />
         </fragment>
         <fragment
             android:id="@+id/artWorkDetailsFragment"
@@ -44,6 +47,11 @@
         <action
             android:id="@+id/action_global_autenticationNavigation"
             app:destination="@id/autenticationNavigation" />
+        <fragment
+            android:id="@+id/eventDetailsFragment"
+            android:name="com.example.museumexplore.ui.home.EventDetailsFragment"
+            android:label="fragment_event_details"
+            tools:layout="@layout/fragment_event_details" />
     </navigation>
     <navigation android:id="@+id/autenticationNavigation"
         app:startDestination="@id/loginFragment">

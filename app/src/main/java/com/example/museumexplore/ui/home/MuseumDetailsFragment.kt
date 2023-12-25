@@ -4,7 +4,6 @@
     import android.os.Bundle
     import android.util.Log
     import android.view.LayoutInflater
-    import android.view.MenuItem
     import android.view.View
     import android.view.ViewGroup
     import androidx.appcompat.app.AppCompatActivity
@@ -14,10 +13,9 @@
     import com.example.museumexplore.R
     import com.example.museumexplore.databinding.FragmentMuseumDetailsBinding
     import com.example.museumexplore.modules.EventAdpater
-    import com.example.museumexplore.modules.EventsModel
+    import com.example.museumexplore.modules.Event
     import com.example.museumexplore.modules.Image
     import com.example.museumexplore.modules.ImageAdapter
-    import com.example.museumexplore.modules.Museum
     import com.google.android.material.carousel.CarouselLayoutManager
     import com.google.android.material.carousel.CarouselSnapHelper
     import com.google.android.material.carousel.HeroCarouselStrategy
@@ -36,7 +34,7 @@
         private lateinit var museumImagesAdapter: ImageAdapter
         private val artWorksList = arrayListOf<Image>()
         private lateinit var artWorksAdapter: ImageAdapter
-        private val eventList = ArrayList<EventsModel>()
+        private val eventList = ArrayList<Event>()
         private lateinit var eventsAdapter: EventAdpater
         //private val adapter = EventsPagerAdapter(eventList, this)
         private var id : String? = null
@@ -54,19 +52,12 @@
             savedInstanceState: Bundle?
         ): View {
             _binding = FragmentMuseumDetailsBinding.inflate(inflater, container, false)
-            name = arguments?.getString(EXTRA_NAME)
-            description = arguments?.getString(EXTRA_DESCRIPTION)
             return binding.root
         }
 
         override fun onDestroyView() {
             super.onDestroyView()
             _binding = null
-        }
-
-        override fun onCreate(savedInstanceState: Bundle?) {
-            super.onCreate(savedInstanceState)
-
         }
 
         override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -104,13 +95,16 @@
             binding.textViewDescription.text = description
 
             binding.buttonCollection.setOnClickListener {
-                navController.navigate(R.id.action_museumDetailsFragment_to_artWorksFragment)
+                val bundle = Bundle()
+                bundle.putString("museumId", id)
+                bundle.putString("museumName", name)
+                navController.navigate(R.id.action_museumDetailsFragment_to_artWorksFragment, bundle)
             }
 
             val db = Firebase.firestore
             db.collection("museums/$id/imagesCollectionMuseum")
-                .addSnapshotListener { snapshoot, error ->
-                    snapshoot?.documents?.let {
+                .addSnapshotListener { snapshot, error ->
+                    snapshot?.documents?.let {
                         this.museumImagesList.clear()
                         for (document in it) {
                             document.data?.let{ data ->
@@ -127,8 +121,8 @@
                 }
 
             db.collection("museums/$id/imagesCollectionArtWork")
-                .addSnapshotListener { snapshoot, error ->
-                    snapshoot?.documents?.let {
+                .addSnapshotListener { snapshot, error ->
+                    snapshot?.documents?.let {
                         this.artWorksList.clear()
                         for (document in it) {
                             document.data?.let{ data ->
@@ -144,6 +138,24 @@
                     }
                 }
 
+            db.collection("museums/$id/events")
+                .addSnapshotListener { snapshot, error ->
+                    snapshot?.documents?.let {
+                        this.eventList.clear()
+                        for (document in it) {
+                            document.data?.let{ data ->
+                                this.eventList.add(
+                                    Event.fromSnapshot(
+                                        document.id,
+                                        data
+                                    )
+                                )
+                            }
+                        }
+                        this.eventsAdapter.notifyDataSetChanged()
+                    }
+                }
+
             binding.apply {
 
                 carouselRecyclerViewMuseumImages.layoutManager = CarouselLayoutManager(HeroCarouselStrategy())
@@ -151,30 +163,25 @@
                 snapHelper.attachToRecyclerView(carouselRecyclerViewMuseumImages)
                 carouselRecyclerViewMuseumImages.adapter = museumImagesAdapter
 
-
                 carouselRecyclerViewArtWorksImages.layoutManager = CarouselLayoutManager(HeroCarouselStrategy())
                 artWorksAdapter = ImageAdapter(artWorksList, requireContext())
                 snapHelper.attachToRecyclerView(carouselRecyclerViewArtWorksImages)
                 carouselRecyclerViewArtWorksImages.adapter = artWorksAdapter
 
-                /*artWorksList.add(R.drawable.museu_interior1)
-                artWorksList.add(R.drawable.museu_interior2)
-                artWorksList.add(R.drawable.museu_interior3)
-                artWorksList.add(R.drawable.museu_interior4)*/
-
-                eventsAdapter = EventAdpater(eventList, requireContext())
+                eventsAdapter = EventAdpater(eventList, requireContext()) {
+                    val bundle = Bundle()
+                    bundle.putString("eventId", it.id)
+                    bundle.putString("eventTitle", it.title)
+                    bundle.putString("eventDescription", it.description)
+                    bundle.putString("eventPathToImage", it.pathToImage)
+                    navController.navigate(R.id.action_museumDetailsFragment_to_eventDetailsFragment, bundle)
+                }
                 snapHelper.attachToRecyclerView(carouselRecyclerViewEvents)
                 carouselRecyclerViewEvents.adapter = eventsAdapter
 
-                /*eventList.add(EventsModel(R.drawable.rectangle_375, "Event 1", "Description for Event 1"))
-                eventList.add(EventsModel(R.drawable.rectangle_376, "Event 2", "Description for Event 2"))*/
-
                 //viewPagerEvents.adapter = adapter
             }
-        }
 
-        companion object{
-            const val EXTRA_NAME = "extra_name"
-            const val EXTRA_DESCRIPTION = "extra_description"
+
         }
     }

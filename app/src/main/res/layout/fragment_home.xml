@@ -9,28 +9,33 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textField"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
-        android:hint="Search..."
+        android:hint="Search"
         app:layout_constraintBottom_toTopOf="@+id/gridViewMuseums"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:startIconContentDescription="search"
-        app:startIconDrawable="@drawable/search">
+        app:startIconDrawable="@drawable/search"
+        app:startIconContentDescription="searchIcon"
+        app:endIconMode="clear_text"
+        app:boxStrokeColor="@color/blueMuseum"
+        app:boxStrokeWidth="2dp"
+        app:boxStrokeWidthFocused="2dp"
+        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Medium"
+        >
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text" />
+            />
 
-    </com.google.android.material.textfield.TextInputLayout>
-
+    </com.google.android.material.textfield.TextInputLayout>-->
 
     <GridView
         android:id="@+id/gridViewMuseums"

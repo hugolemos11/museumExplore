@@ -14,7 +14,7 @@
         android:layout_marginTop="15dp"
         android:layout_marginBottom="15dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/gridViewMuseums"
+        app:layout_constraintBottom_toTopOf="@+id/gridViewArtWorks"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -42,7 +42,7 @@
     </LinearLayout>
 
     <GridView
-        android:id="@+id/gridViewMuseums"
+        android:id="@+id/gridViewArtWorks"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="20dp"

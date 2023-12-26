@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:myapp="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/drawerIcon"
+        android:icon="@drawable/menu"
+        app:iconTint="@color/background"
+        android:title="Drawer Icon"
+        myapp:showAsAction="always"/>
+</menu>

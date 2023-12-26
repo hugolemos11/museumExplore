@@ -28,7 +28,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="1.0"
-                app:srcCompat="@drawable/art_work1" />
+                app:tint="#F1D7C1"/>
 
             <TextView
                 android:id="@+id/textViewArtWorkName"
@@ -36,24 +36,37 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginEnd="12dp"
+                android:maxLines="1"
                 android:text="Art Work Name"
                 android:textColor="#FFFFFF"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toTopOf="@+id/textViewCategory"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toTopOf="@+id/cardView2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <TextView
-                android:id="@+id/textViewCategory"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginBottom="12dp"
-                android:textColor="#FFFFFF"
-                android:text="Category"
-                android:textSize="12sp"
+                app:cardCornerRadius="10dp"
+                app:cardBackgroundColor="#A68263"
                 app:layout_constraintBottom_toBottomOf="@+id/imageViewArtWork"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent">
+
+                <TextView
+                    android:id="@+id/textViewCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Category"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="15dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageViewArtWork"
+                    app:layout_constraintStart_toStartOf="parent" />
+            </androidx.cardview.widget.CardView>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,34 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/nav"
-    android:gravity="end"
     android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="176dp"
+    android:gravity="bottom"
     android:padding="16dp"
+    android:background="@color/blueMuseum"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
-
     <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/group_30" />
-
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/mini_logo"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Android Knowledge"
         android:textColor="@color/white"
-        android:textStyle="bold" />
-
+        android:textStyle="bold"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
         android:text="contact@androidknowledge.com"
         android:textColor="@color/white"
-        android:textSize="14sp" />
-
+        android:textSize="14sp"
+        android:layout_marginBottom="16dp"/>
 </LinearLayout>
-

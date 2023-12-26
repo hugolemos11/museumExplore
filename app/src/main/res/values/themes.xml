@@ -4,7 +4,19 @@
         <!-- Customize your light theme here. -->
         <item name="colorPrimary">@color/background</item>
         <item name="colorPrimaryVariant">@color/background</item>
-        <item name="android:statusBarColor">@color/background</item>
+        <item name="android:statusBarColor">@color/blueMuseum</item>
+        <item name="android:windowBackground">@color/background</item>
+    </style>
+    <style name="Theme.MainActivity" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/background</item>
+        <item name="colorPrimaryVariant">@color/background</item>
+        <item name="android:statusBarColor">@color/blueMuseum</item>
+        <item name="android:windowBackground">@color/background</item>
+    </style>
+    <style name="Theme.ActionBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <!-- Drawer and Back Arrow icon color -->
+        <item name="colorControlNormal">@color/background</item>
+        <item name="android:background">@color/blueMuseum</item>
     </style>
 
 </resources>

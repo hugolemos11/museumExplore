@@ -18,8 +18,7 @@
             android:id="@+id/carousel_image_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="fitXY"
-            android:src="@drawable/group_30" />
+            android:scaleType="fitXY" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.carousel.MaskableFrameLayout>

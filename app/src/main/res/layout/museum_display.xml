@@ -21,13 +21,12 @@
                 android:layout_width="170dp"
                 android:layout_height="170dp"
                 android:scaleType="centerCrop"
-                android:tint="#F1D7C1"
                 android:tintMode="multiply"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/group_30" />
+                app:tint="#F1D7C1" />
 
             <TextView
                 android:id="@+id/textViewMuseumName"

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.home.ArtWorkDetailsFragment">
+
+    <ImageView
+        android:id="@+id/imageViewArtWorkImage"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewArtWorkName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:width="250dp"
+        android:textSize="32sp"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewArtWorkImage" />
+
+    <ImageView
+        android:id="@+id/imageViewPlayIcon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textViewArtWorkName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textViewArtWorkName"
+        app:layout_constraintTop_toTopOf="@+id/textViewArtWorkName"
+        app:srcCompat="@drawable/play"
+        android:contentDescription="Play" />
+
+    <TextView
+        android:id="@+id/textViewArtistNameYear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/textViewArtWorkName"
+        app:layout_constraintStart_toStartOf="@+id/textViewArtWorkName"
+        app:layout_constraintTop_toBottomOf="@+id/textViewArtWorkName" />
+
+    <TextView
+        android:id="@+id/textViewArtWorkCategory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        app:layout_constraintEnd_toEndOf="@+id/textViewArtistNameYear"
+        app:layout_constraintStart_toStartOf="@+id/textViewArtistNameYear"
+        app:layout_constraintTop_toBottomOf="@+id/textViewArtistNameYear" />
+
+    <TextView
+        android:id="@+id/textViewArtWorkDescription"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewArtWorkCategory" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

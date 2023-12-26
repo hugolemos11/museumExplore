@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools" >
 
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
 
     <application
         android:allowBackup="true"
@@ -13,31 +17,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.MuseumExplore"
-        tools:targetApi="31">
-        <activity
-            android:name=".RecoverPasswordActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ArtWorksActivity"
-            android:exported="false" />
-        <activity
-            android:name=".TopBarActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MuseumDetailsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".LoginActivity"
-            android:exported="false" />
-        <activity
-            android:name=".RegisterActivity"
-            android:exported="false" />
+        tools:targetApi="31" >
+
         <activity
             android:name=".MainActivity"
+            android:theme="@style/Theme.MainActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustPan">
-
-            <!-- Makes that when the keyboard shows up the grid view don't follow -->
+            android:windowSoftInputMode="adjustPan" > <!-- Makes that when the keyboard shows up the grid view don't follow -->
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -45,6 +31,38 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.museumexplore.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <activity
+            android:name=".ui.home.HomeFragment"
+            android:exported="false" />
+        <activity
+            android:name=".ui.home.MuseumDetailsFragment"
+            android:exported="false" />
+        <activity
+            android:name=".ui.home.ArtWorksFragment"
+            android:exported="false" />
+        <activity
+            android:name=".ui.home.ArtWorkDetailsFragment"
+            android:exported="false" />
+        <activity
+            android:name=".ui.autentication.LoginFragment"
+            android:exported="false" />
+        <activity
+            android:name=".ui.autentication.RecoverPasswordFragment"
+            android:exported="false" />
+        <activity
+            android:name=".ui.autentication.RegisterFragment"
+            android:exported="false" />
     </application>
 
 </manifest>

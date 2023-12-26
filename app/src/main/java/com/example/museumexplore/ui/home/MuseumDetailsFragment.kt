@@ -12,7 +12,7 @@
     import androidx.navigation.Navigation
     import com.example.museumexplore.R
     import com.example.museumexplore.databinding.FragmentMuseumDetailsBinding
-    import com.example.museumexplore.modules.EventAdpater
+    import com.example.museumexplore.modules.EventAdapter
     import com.example.museumexplore.modules.Event
     import com.example.museumexplore.modules.Image
     import com.example.museumexplore.modules.ImageAdapter
@@ -35,7 +35,7 @@
         private val artWorksList = arrayListOf<Image>()
         private lateinit var artWorksAdapter: ImageAdapter
         private val eventList = ArrayList<Event>()
-        private lateinit var eventsAdapter: EventAdpater
+        private lateinit var eventsAdapter: EventAdapter
         //private val adapter = EventsPagerAdapter(eventList, this)
         private var id : String? = null
         private var name : String? = null
@@ -44,7 +44,7 @@
         private var rate : Int? = null
         private var pathToImage : String? = null
 
-        val snapHelper = CarouselSnapHelper()
+        private val snapHelper = CarouselSnapHelper()
 
         override fun onCreateView(
             inflater: LayoutInflater,
@@ -75,7 +75,7 @@
             // Remove the title of fragment on the actionBar
             (activity as AppCompatActivity).supportActionBar?.title = ""
 
-            navController = Navigation.findNavController(view);
+            navController = Navigation.findNavController(view)
 
             pathToImage?.let { imagePath ->
                 // Load the image from Firebase Storage
@@ -103,7 +103,7 @@
 
             val db = Firebase.firestore
             db.collection("museums/$id/imagesCollectionMuseum")
-                .addSnapshotListener { snapshot, error ->
+                .addSnapshotListener { snapshot, _ ->
                     snapshot?.documents?.let {
                         this.museumImagesList.clear()
                         for (document in it) {
@@ -121,7 +121,7 @@
                 }
 
             db.collection("museums/$id/imagesCollectionArtWork")
-                .addSnapshotListener { snapshot, error ->
+                .addSnapshotListener { snapshot, _ ->
                     snapshot?.documents?.let {
                         this.artWorksList.clear()
                         for (document in it) {
@@ -139,7 +139,7 @@
                 }
 
             db.collection("museums/$id/events")
-                .addSnapshotListener { snapshot, error ->
+                .addSnapshotListener { snapshot, _ ->
                     snapshot?.documents?.let {
                         this.eventList.clear()
                         for (document in it) {
@@ -168,7 +168,7 @@
                 snapHelper.attachToRecyclerView(carouselRecyclerViewArtWorksImages)
                 carouselRecyclerViewArtWorksImages.adapter = artWorksAdapter
 
-                eventsAdapter = EventAdpater(eventList, requireContext()) {
+                eventsAdapter = EventAdapter(eventList, requireContext()) {
                     val bundle = Bundle()
                     bundle.putString("eventId", it.id)
                     bundle.putString("eventTitle", it.title)

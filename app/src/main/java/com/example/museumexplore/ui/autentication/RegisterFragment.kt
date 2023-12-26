@@ -1,9 +1,6 @@
 package com.example.museumexplore.ui.autentication
 
-import android.content.ContentValues.TAG
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.museumexplore.R
-import com.example.museumexplore.databinding.FragmentLoginBinding
 import com.example.museumexplore.databinding.FragmentRegisterBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -46,7 +42,7 @@ class RegisterFragment : Fragment() {
         // Initialize 'auth' here
         auth = Firebase.auth
 
-        navController = Navigation.findNavController(view);
+        navController = Navigation.findNavController(view)
 
         binding.registerButton.setOnClickListener {
             val email = binding.editTextEmailAddress.text.toString()
@@ -56,7 +52,6 @@ class RegisterFragment : Fragment() {
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(requireActivity()) { task ->
                     if (task.isSuccessful) {
-                        val user = auth.currentUser
                         navController.navigate(R.id.action_global_homeNavigation)
                     } else {
                         Toast.makeText(

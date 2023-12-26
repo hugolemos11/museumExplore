@@ -1,7 +1,6 @@
     package com.example.museumexplore.ui.autentication
 
     import android.content.ContentValues.TAG
-    import android.content.Intent
     import android.os.Bundle
     import android.util.Log
     import android.view.LayoutInflater
@@ -12,7 +11,9 @@
     import androidx.appcompat.app.AppCompatActivity
     import androidx.fragment.app.Fragment
     import androidx.navigation.NavController
+    import androidx.navigation.NavOptions
     import androidx.navigation.Navigation
+    import com.example.museumexplore.MainActivity
     import com.example.museumexplore.R
     import com.example.museumexplore.databinding.FragmentLoginBinding
     import com.google.firebase.auth.FirebaseAuth
@@ -45,7 +46,7 @@
             // Initialize 'auth' here
             auth = FirebaseAuth.getInstance()
 
-            navController = Navigation.findNavController(view);
+            navController = Navigation.findNavController(view)
 
             binding.textViewRegister.setOnClickListener {
                 navController.navigate(R.id.action_loginFragment_to_registerFragment)
@@ -63,8 +64,9 @@
                     .addOnCompleteListener(requireActivity()) { task ->
                         if (task.isSuccessful) {
                             Log.d(TAG, "signInWithEmail:success")
-                            val user = auth.currentUser
-                            navController.navigate(R.id.action_global_homeNavigation)
+
+                            val navOptions = NavOptions.Builder().setPopUpTo(R.id.loginFragment, true).build()
+                            navController.navigate(R.id.action_global_homeNavigation, null, navOptions)
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.exception)

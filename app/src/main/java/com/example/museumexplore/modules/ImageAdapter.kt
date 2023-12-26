@@ -11,7 +11,7 @@ import com.example.museumexplore.databinding.ImagesCarouselBinding
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 
-class ImageAdapter(val list: ArrayList<Image>, val context: Context) : RecyclerView.Adapter<ImageAdapter.ItemViewHolder>() {
+class ImageAdapter(private val list: ArrayList<Image>, val context: Context) : RecyclerView.Adapter<ImageAdapter.ItemViewHolder>() {
     inner class ItemViewHolder(val binding: ImagesCarouselBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(model: Bitmap) {
             binding.apply {

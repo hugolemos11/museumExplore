@@ -11,7 +11,7 @@ import com.example.museumexplore.databinding.EventsCarouselBinding
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 
-class EventAdpater(val list: ArrayList<Event>, val context: Context, val onItemClick: (Event) -> Unit) : RecyclerView.Adapter<EventAdpater.ItemViewHolder>() {
+class EventAdapter(private val list: ArrayList<Event>, val context: Context, val onItemClick: (Event) -> Unit) : RecyclerView.Adapter<EventAdapter.ItemViewHolder>() {
     inner class ItemViewHolder(val binding: EventsCarouselBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(model: Event, bitmap: Bitmap) {
@@ -27,7 +27,7 @@ class EventAdpater(val list: ArrayList<Event>, val context: Context, val onItemC
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventAdpater.ItemViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventAdapter.ItemViewHolder {
         return ItemViewHolder(
             EventsCarouselBinding.inflate(
                 LayoutInflater.from(context),
@@ -37,7 +37,7 @@ class EventAdpater(val list: ArrayList<Event>, val context: Context, val onItemC
         )
     }
 
-    override fun onBindViewHolder(holder: EventAdpater.ItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: EventAdapter.ItemViewHolder, position: Int) {
         val model = list[position]
         model.pathToImage?.let { imagePath ->
             // Load the image from Firebase Storage
@@ -59,41 +59,3 @@ class EventAdpater(val list: ArrayList<Event>, val context: Context, val onItemC
 
     override fun getItemCount() = list.size
 }
-
-
-
-
-
-/*class EventsPagerAdapter(val events: List<EventsModel>, val context: Context) :
-    PagerAdapter() {
-
-    private lateinit var binding: EventsPageBinding
-
-    override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        binding = EventsPageBinding.inflate(LayoutInflater.from(context))
-        val imageViewEvent = binding.imageViewEvent
-        val textViewEventTitle = binding.textViewEventTitle
-        val textViewEventDescription = binding.textViewEventDescription
-
-        // Assuming Event class has getImageResId(), getTitle(), and getDescription() methods
-        val currentEvent: EventsModel = events[position]
-        imageViewEvent.setImageResource(currentEvent.imageId)
-        textViewEventTitle.text = currentEvent.title
-        textViewEventDescription.text = currentEvent.description
-        container.addView(binding.root)
-        return binding.root
-    }
-
-    override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
-        container.removeView(`object` as View)
-    }
-
-    override fun getCount(): Int {
-        return events.size
-    }
-
-    override fun isViewFromObject(view: View, `object`: Any): Boolean {
-        return view === `object`
-    }
-
-}*/

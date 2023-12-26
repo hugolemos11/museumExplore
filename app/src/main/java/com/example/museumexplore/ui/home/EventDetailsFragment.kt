@@ -6,19 +6,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
-import com.example.museumexplore.R
-import com.example.museumexplore.databinding.FragmentArtWorkDetailsBinding
-import com.example.museumexplore.databinding.FragmentArtWorksBinding
 import com.example.museumexplore.databinding.FragmentEventDetailsBinding
-import com.example.museumexplore.databinding.FragmentHomeBinding
-import com.example.museumexplore.databinding.MuseumDisplayBinding
-import com.example.museumexplore.modules.Museum
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 
@@ -27,8 +17,6 @@ class EventDetailsFragment : Fragment() {
 
     private var _binding: FragmentEventDetailsBinding? = null
     private val binding get() = _binding!!
-
-    //private lateinit var navController: NavController
 
     private var id : String? = null
     private var eventTitle : String? = null
@@ -47,27 +35,6 @@ class EventDetailsFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        /*val artWorksName = intent.extras?.getString(EXTRA_NAME)
-        val artistName = intent.extras?.getString(EXTRA_ARTIST)
-        val year = intent.extras?.getInt(EXTRA_YEAR, 0)
-        val category = intent.extras?.getString(EXTRA_CATEGORY)
-        val description = intent.extras?.getString(EXTRA_DESCRIPTION)
-
-        // arranjar uma forma melhor
-        val drawableId = intent.extras?.getInt(EXTRA_IMAGE)?: 0
-        val drawable = ContextCompat.getDrawable(this, drawableId)
-
-        binding.imageViewArtWorkImage.setImageDrawable(drawable)
-        binding.textViewArtWorkName.text = artWorksName
-        binding.textViewArtistNameYear.text = artistName//"${artistName} ${year}"
-        binding.textViewArtWorkCategory.text =  category
-        binding.textViewArtWorkDescription.text = description*/
-
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

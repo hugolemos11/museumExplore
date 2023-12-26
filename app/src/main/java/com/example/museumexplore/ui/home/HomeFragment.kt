@@ -49,14 +49,14 @@ class HomeFragment : Fragment() {
         // Remove the title of fragment on the actionBar
         (activity as AppCompatActivity).supportActionBar?.title = ""
 
-        navController = Navigation.findNavController(view);
+        navController = Navigation.findNavController(view)
 
         binding.gridViewMuseums.adapter = adapter
 
         val db = Firebase.firestore
         db.collection("museums")
-            .addSnapshotListener { snapshoot, error ->
-                snapshoot?.documents?.let {
+            .addSnapshotListener { snapshot, _ ->
+                snapshot?.documents?.let {
                     this.museums.clear()
                     for (document in it) {
                         document.data?.let{ data ->

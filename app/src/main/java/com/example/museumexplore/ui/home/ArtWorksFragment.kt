@@ -13,9 +13,7 @@ import androidx.navigation.Navigation
 import com.example.museumexplore.R
 import com.example.museumexplore.databinding.ArtWorksDisplayBinding
 import com.example.museumexplore.databinding.FragmentArtWorksBinding
-import com.example.museumexplore.databinding.MuseumDisplayBinding
 import com.example.museumexplore.modules.ArtWorks
-import com.example.museumexplore.modules.Museum
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -59,14 +57,14 @@ class ArtWorksFragment : Fragment() {
         // Remove the title of fragment on the actionBar
         (activity as AppCompatActivity).supportActionBar?.title = ""
 
-        navController = Navigation.findNavController(view);
+        navController = Navigation.findNavController(view)
 
         binding.textViewMuseumName.text = museumName
         binding.gridViewArtWorks.adapter = adapter
 
         val db = Firebase.firestore
         db.collection("museums/$museumId/artWorks")
-            .addSnapshotListener { snapshot, error ->
+            .addSnapshotListener { snapshot, _ ->
                 snapshot?.documents?.let {
                     this.artWorksList.clear()
                     for (document in it) {
@@ -82,8 +80,6 @@ class ArtWorksFragment : Fragment() {
                     this.adapter.notifyDataSetChanged()
                 }
             }
-
-        //artWorksList.add(ArtWorks("aa", "ArtWork1", "Picasso", 1986 ,"Cubism", "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum." , "artWorksImages/art_work1.jpg"))
     }
 
     inner class ArtWorksAdapter : BaseAdapter() {

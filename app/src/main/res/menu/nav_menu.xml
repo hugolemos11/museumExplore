@@ -6,7 +6,8 @@
     >
 
     <group
-        android:checkableBehavior="single">
+        android:checkableBehavior="single"
+        android:gravity="end">
 
         <item
             android:id="@+id/navHome"

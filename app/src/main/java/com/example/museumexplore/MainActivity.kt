@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
@@ -152,6 +153,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             // Update the height in the layout parameters
             params.height = ViewGroup.LayoutParams.MATCH_PARENT
 
+            // Set the background color to the NavigationView
+            val backgroundColor = ContextCompat.getColor(this, R.color.nav)
+            navigationView.setBackgroundColor(backgroundColor)
+
             // Set the updated layout parameters to the NavigationView
             navigationView.layoutParams = params
         } else {
@@ -166,6 +171,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             // Set the updated layout parameters to the NavigationView
             navigationView.layoutParams = params
+
+            // Set the background color to the NavigationView
+            val backgroundColor = ContextCompat.getColor(this, R.color.blueMuseum)
+            navigationView.setBackgroundColor(backgroundColor)
 
             // Remove the header view
             navigationView.removeHeaderView(navigationView.getHeaderView(0))

@@ -1,6 +1,5 @@
 package com.example.museumexplore.ui.home
 
-import android.annotation.SuppressLint
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
@@ -77,7 +76,7 @@ class ArtWorkDetailsFragment : Fragment() {
         binding.apply {
             imageViewArtWorkImage
             textViewArtWorkName.text = artworkName
-            textViewArtistNameYear.text = "$artistName $artWorkYear"
+            textViewArtistNameYear.text = "$artistName, $artWorkYear"
             textViewArtWorkCategory.text = artWorkCategory
             textViewArtWorkDescription.text = artWorkDescription
         }

@@ -60,7 +60,7 @@ class EventDetailsFragment : Fragment() {
             val ONE_MEGABYTE: Long = 10 * 1024 * 1024
             pathReference.getBytes(ONE_MEGABYTE).addOnSuccessListener { data ->
                 val bitmap = BitmapFactory.decodeByteArray(data, 0, data.count())
-                binding.imageView6.setImageBitmap(bitmap)
+                binding.imageViewEventDetails.setImageBitmap(bitmap)
             }.addOnFailureListener {
                 // Handle any errors
                 Log.e("MuseumDetailsFragment", "Failed to load image from Firebase Storage")
@@ -68,8 +68,8 @@ class EventDetailsFragment : Fragment() {
         }
 
         binding.apply {
-            textViewEventTitlle.text = eventTitle
-            textViewEventDescription.text = eventDescription
+            textViewEventTitleDetails.text = eventTitle
+            textViewEventDescriptionDetails.text = eventDescription
         }
     }
 }

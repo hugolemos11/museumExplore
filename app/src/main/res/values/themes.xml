@@ -18,17 +18,25 @@
         <item name="colorControlNormal">@color/background</item>
         <item name="android:background">@color/blueMuseum</item>
     </style>
+
+    <!-- Text Themes -->
     <style name="Theme.TitleExtraLarge" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/blueMuseum</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">32sp</item>
     </style>
+    <style name="Theme.TitleWhiteExtraLarge" parent="Theme.TitleExtraLarge">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">30sp</item>
+    </style>
+    <style name="Theme.TicketPrice" parent="Theme.TitleWhiteExtraLarge">
+        <item name="android:textSize">54sp</item>
+    </style>
     <style name="Theme.TitleLarge" parent="Theme.TitleExtraLarge">
         <item name="android:textColor">@color/title</item>
         <item name="android:textSize">22sp</item>
     </style>
-    <style name="Theme.TitleWhiteLarge" parent="Theme.TitleExtraLarge">
-        <item name="android:textColor">@color/white</item>
+    <style name="Theme.TitleWhiteLarge" parent="Theme.TitleWhiteExtraLarge">
         <item name="android:textSize">22sp</item>
     </style>
     <style name="Theme.DescriptionTitle" parent="Theme.TitleLarge">
@@ -52,5 +60,28 @@
     </style>
     <style name="Theme.TitleBackGroundColorSmall" parent="Theme.TitleBackGroundColorMedium">
         <item name="android:textSize">14sp</item>
+    </style>
+    <style name="Theme.TitleWhiteExtraSmall" parent="Theme.TitleWhiteSmall">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <!-- Used on Carousels -->
+    <style name="RoundedContainer">
+        <item name="shapeAppearanceOverlay">@style/RoundedCorners</item>
+    </style>
+    <style name="RoundedCorners">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">24dp</item>
+    </style>
+
+    <!-- Button Themes -->
+    <style name="Theme.ButtonDefault" parent="ThemeOverlay.Material3.Button.ElevatedButton">
+        <item name="backgroundTint">@color/blueMuseum</item>
+        <item name="android:textColor">@color/background</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:height">40dp</item>
+        <item name="android:width">200dp</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.Small</item>
     </style>
 </resources>

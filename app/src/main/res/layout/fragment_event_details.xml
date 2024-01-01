@@ -7,7 +7,7 @@
     tools:context=".ui.home.EventDetailsFragment">
 
     <ImageView
-        android:id="@+id/imageView6"
+        android:id="@+id/imageViewEventDetails"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_marginStart="15dp"
@@ -19,22 +19,22 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textViewEventTitlle"
+        android:id="@+id/textViewEventTitleDetails"
         style="@style/Theme.DescriptionTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        app:layout_constraintStart_toStartOf="@+id/imageView6"
-        app:layout_constraintTop_toBottomOf="@+id/imageView6" />
+        app:layout_constraintStart_toStartOf="@+id/imageViewEventDetails"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewEventDetails" />
 
     <TextView
-        android:id="@+id/textViewEventDescription"
+        android:id="@+id/textViewEventDescriptionDetails"
         style="@style/Theme.Description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@+id/imageView6"
-        app:layout_constraintStart_toStartOf="@+id/textViewEventTitlle"
-        app:layout_constraintTop_toBottomOf="@+id/textViewEventTitlle" />
+        app:layout_constraintEnd_toEndOf="@+id/imageViewEventDetails"
+        app:layout_constraintStart_toStartOf="@+id/textViewEventTitleDetails"
+        app:layout_constraintTop_toBottomOf="@+id/textViewEventTitleDetails" />
 </androidx.constraintlayout.widget.ConstraintLayout>

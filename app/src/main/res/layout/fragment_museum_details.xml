@@ -63,21 +63,17 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/carousel_recycler_view_museum_images"
-                android:layout_width="0dp"
-                android:layout_height="125dp"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="15dp"
-                android:clipChildren="false"
-                android:clipToPadding="false"
-                android:orientation="horizontal"
-                app:layoutManager="com.google.android.material.carousel.CarouselLayoutManager"
                 app:layout_constraintBottom_toTopOf="@+id/textViewDescription"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/museumImage"
-                tools:itemCount="2"
-                tools:listitem="@layout/images_carousel" />
+                app:layoutManager="com.google.android.material.carousel.CarouselLayoutManager"
+                />
 
             <TextView
                 android:id="@+id/textViewDescription"
@@ -95,7 +91,7 @@
             <RelativeLayout
                 android:id="@+id/relativeLayout"
                 android:layout_width="0dp"
-                android:layout_height="110dp"
+                android:layout_height="125dp"
                 android:layout_marginStart="60dp"
                 android:layout_marginEnd="60dp"
                 android:backgroundTint="#00FFFFFF"
@@ -108,13 +104,8 @@
                     android:id="@+id/carousel_recycler_view_art_works_images"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:clipChildren="false"
-                    android:clipToPadding="false"
-                    android:orientation="horizontal"
                     app:layoutManager="com.google.android.material.carousel.CarouselLayoutManager"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    tools:itemCount="2"
-                    tools:listitem="@layout/images_carousel" />
+                    />
 
                 <Button
                     android:id="@+id/buttonCollection"
@@ -126,7 +117,6 @@
                     android:text="Discover our Collection" />
 
             </RelativeLayout>
-
 
             <TextView
                 android:id="@+id/textView3"
@@ -147,20 +137,31 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="20dp"
-                android:clipChildren="false"
-                android:clipToPadding="false"
-                android:orientation="horizontal"
                 app:layoutManager="com.google.android.material.carousel.CarouselLayoutManager"
                 app:layout_constraintBottom_toTopOf="@+id/textView4"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+            <!--<com.denzcoskun.imageslider.ImageSlider
+                android:id="@+id/eventsSlider"
+                android:layout_width="0dp"
+                android:layout_height="250dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="20dp"
+                app:layout_constraintBottom_toTopOf="@+id/textView4"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView3"
-                tools:itemCount="2"
-                tools:listitem="@layout/events_carousel" />
+                app:iss_period="1000"
+                app:iss_auto_cycle="true"
+                app:iss_delay="1000"
+                app:iss_corner_radius="10">
 
+            </com.denzcoskun.imageslider.ImageSlider>
 
-            <!--<androidx.viewpager.widget.ViewPager
+            <androidx.viewpager.widget.ViewPager
                 android:id="@+id/viewPagerEvents"
                 android:layout_width="0dp"
                 android:layout_height="250dp"

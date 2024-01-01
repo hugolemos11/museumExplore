@@ -17,4 +17,7 @@
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
+    <string name="comprar">Comprar</string>
+    <string name="Terms">Concordo com os termos de utilização e a política de privacidade</string>
+    <string name="bilheteira_digital">Bilheteira Digital</string>
 </resources>

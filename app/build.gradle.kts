@@ -2,7 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services")
-    //id("androidx.navigation.safeargs.kotlin")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -63,4 +63,17 @@ dependencies {
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-storage")
+
+    // coil
+    implementation("io.coil-kt:coil:2.5.0")
+
+    // Images Slide
+    implementation ("com.github.denzcoskun:ImageSlideshow:0.1.2")
+
+    // Glide
+    implementation("com.github.bumptech.glide:glide:4.14.2")
+    ksp("com.github.bumptech.glide:ksp:4.14.2")
+
+    // ViewPager
+    implementation("androidx.viewpager2:viewpager2:1.0.0")
 }

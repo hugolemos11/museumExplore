@@ -10,15 +10,22 @@
     import androidx.fragment.app.Fragment
     import androidx.navigation.NavController
     import androidx.navigation.Navigation
+    import com.bumptech.glide.Glide
+    import com.denzcoskun.imageslider.ImageSlider
+    import com.denzcoskun.imageslider.constants.ScaleTypes
+    import com.denzcoskun.imageslider.models.SlideModel
     import com.example.museumexplore.R
     import com.example.museumexplore.databinding.FragmentMuseumDetailsBinding
     import com.example.museumexplore.modules.EventAdapter
     import com.example.museumexplore.modules.Event
     import com.example.museumexplore.modules.Image
     import com.example.museumexplore.modules.ImageAdapter
+    import com.example.museumexplore.modules.Museum
+    import com.example.museumexplore.showToast
     import com.google.android.material.carousel.CarouselLayoutManager
     import com.google.android.material.carousel.CarouselSnapHelper
     import com.google.android.material.carousel.HeroCarouselStrategy
+    import com.google.firebase.firestore.FirebaseFirestore
     import com.google.firebase.firestore.ktx.firestore
     import com.google.firebase.ktx.Firebase
     import com.google.firebase.storage.ktx.storage
@@ -31,12 +38,8 @@
         private lateinit var navController: NavController
 
         private val museumImagesList = arrayListOf<Image>()
-        private lateinit var museumImagesAdapter: ImageAdapter
         private val artWorksList = arrayListOf<Image>()
-        private lateinit var artWorksAdapter: ImageAdapter
         private val eventList = ArrayList<Event>()
-        private lateinit var eventsAdapter: EventAdapter
-        //private val adapter = EventsPagerAdapter(eventList, this)
         private var id : String? = null
         private var name : String? = null
         private var description : String? = null
@@ -44,7 +47,7 @@
         private var rate : Int? = null
         private var pathToImage : String? = null
 
-        private val snapHelper = CarouselSnapHelper()
+        private val db = Firebase.firestore
 
         override fun onCreateView(
             inflater: LayoutInflater,
@@ -82,106 +85,89 @@
                 val storage = Firebase.storage
                 val storageRef = storage.reference
                 val pathReference = storageRef.child(imagePath)
-                val ONE_MEGABYTE: Long = 10 * 1024 * 1024
-                pathReference.getBytes(ONE_MEGABYTE).addOnSuccessListener { data ->
-                    val bitmap = BitmapFactory.decodeByteArray(data, 0, data.count())
-                    binding.museumImage.setImageBitmap(bitmap)
+                pathReference.downloadUrl.addOnSuccessListener { uri ->
+                    Glide.with(requireContext())
+                        .load(uri)
+                        .into(binding.museumImage)
                 }.addOnFailureListener {
                     // Handle any errors
-                    Log.e("MuseumDetailsFragment", "Failed to load image from Firebase Storage")
                 }
             }
-            binding.textViewMuseumName.text = name
-            binding.textViewDescription.text = description
 
-            binding.buttonCollection.setOnClickListener {
-                val bundle = Bundle()
-                bundle.putString("museumId", id)
-                bundle.putString("museumName", name)
-                navController.navigate(R.id.action_museumDetailsFragment_to_artWorksFragment, bundle)
-            }
-
-            val db = Firebase.firestore
-            db.collection("museums/$id/imagesCollectionMuseum")
-                .addSnapshotListener { snapshot, _ ->
-                    snapshot?.documents?.let {
-                        this.museumImagesList.clear()
-                        for (document in it) {
-                            document.data?.let{ data ->
-                                this.museumImagesList.add(
-                                    Image.fromSnapshot(
-                                        document.id,
-                                        data
-                                    )
-                                )
-                            }
-                        }
-                        this.museumImagesAdapter.notifyDataSetChanged()
-                    }
-                }
-
-            db.collection("museums/$id/imagesCollectionArtWork")
-                .addSnapshotListener { snapshot, _ ->
-                    snapshot?.documents?.let {
-                        this.artWorksList.clear()
-                        for (document in it) {
-                            document.data?.let{ data ->
-                                this.artWorksList.add(
-                                    Image.fromSnapshot(
-                                        document.id,
-                                        data
-                                    )
-                                )
-                            }
-                        }
-                        this.artWorksAdapter.notifyDataSetChanged()
-                    }
-                }
-
-            db.collection("museums/$id/events")
-                .addSnapshotListener { snapshot, _ ->
-                    snapshot?.documents?.let {
-                        this.eventList.clear()
-                        for (document in it) {
-                            document.data?.let{ data ->
-                                this.eventList.add(
-                                    Event.fromSnapshot(
-                                        document.id,
-                                        data
-                                    )
-                                )
-                            }
-                        }
-                        this.eventsAdapter.notifyDataSetChanged()
-                    }
-                }
 
             binding.apply {
+                textViewMuseumName.text = name
+                textViewDescription.text = description
 
-                carouselRecyclerViewMuseumImages.layoutManager = CarouselLayoutManager(HeroCarouselStrategy())
-                museumImagesAdapter = ImageAdapter(museumImagesList, requireContext())
-                snapHelper.attachToRecyclerView(carouselRecyclerViewMuseumImages)
-                carouselRecyclerViewMuseumImages.adapter = museumImagesAdapter
-
-                carouselRecyclerViewArtWorksImages.layoutManager = CarouselLayoutManager(HeroCarouselStrategy())
-                artWorksAdapter = ImageAdapter(artWorksList, requireContext())
-                snapHelper.attachToRecyclerView(carouselRecyclerViewArtWorksImages)
-                carouselRecyclerViewArtWorksImages.adapter = artWorksAdapter
-
-                eventsAdapter = EventAdapter(eventList, requireContext()) {
+                buttonCollection.setOnClickListener {
                     val bundle = Bundle()
-                    bundle.putString("eventId", it.id)
-                    bundle.putString("eventTitle", it.title)
-                    bundle.putString("eventDescription", it.description)
-                    bundle.putString("eventPathToImage", it.pathToImage)
-                    navController.navigate(R.id.action_museumDetailsFragment_to_eventDetailsFragment, bundle)
+                    bundle.putString("museumId", id)
+                    bundle.putString("museumName", name)
+                    navController.navigate(R.id.action_museumDetailsFragment_to_artWorksFragment, bundle)
                 }
-                snapHelper.attachToRecyclerView(carouselRecyclerViewEvents)
-                carouselRecyclerViewEvents.adapter = eventsAdapter
 
-                //viewPagerEvents.adapter = adapter
+                CarouselSnapHelper().attachToRecyclerView(carouselRecyclerViewMuseumImages)
+                CarouselSnapHelper().attachToRecyclerView(carouselRecyclerViewArtWorksImages)
+                CarouselSnapHelper().attachToRecyclerView(carouselRecyclerViewEvents)
+
+                buttonTicket.setOnClickListener {
+                    val bundle = Bundle()
+                    bundle.putString("museumId", id)
+                    bundle.putString("museumName", name)
+                    navController.navigate(R.id.action_museumDetailsFragment_to_ticketFragment, bundle)
+                }
             }
-
-
+            fetchMuseumImagesData()
+            fetchArtWorkImagesData()
+            fetchEventsData()
+        }
+        private fun fetchMuseumImagesData() {
+            db.collection("museums/$id/imagesCollectionMuseum")
+                .get()
+                .addOnSuccessListener { museumImages ->
+                    for (museumImage in museumImages) {
+                        val image = Image.fromSnapshot(museumImage.id, museumImage.data)
+                        this.museumImagesList.add(image)
+                    }
+                    binding.carouselRecyclerViewMuseumImages.adapter = ImageAdapter(museumImagesList, requireContext())
+                }
+                .addOnFailureListener {
+                    showToast("An error occurred: ${it.localizedMessage}", requireContext())
+                }
+        }
+        private fun fetchArtWorkImagesData() {
+            db.collection("museums/$id/imagesCollectionArtWork")
+                .get()
+                .addOnSuccessListener { documents ->
+                    for (document in documents) {
+                        val image = Image.fromSnapshot(document.id, document.data)
+                        this.artWorksList.add(image)
+                    }
+                    binding.carouselRecyclerViewArtWorksImages.adapter = ImageAdapter(artWorksList, requireContext())
+                }
+                .addOnFailureListener {
+                    showToast("An error occurred: ${it.localizedMessage}", requireContext())
+                }
+        }
+        private fun fetchEventsData() {
+            db.collection("museums/$id/events")
+                .get()
+                .addOnSuccessListener { documents ->
+                    for (document in documents) {
+                        val event = Event.fromSnapshot(document.id, document.data)
+                        this.eventList.add(event)
+                    }
+                    binding.carouselRecyclerViewEvents.adapter = EventAdapter(eventList, requireContext()) {
+                        val bundle = Bundle()
+                        bundle.putString("eventId", it.id)
+                        bundle.putString("eventTitle", it.title)
+                        bundle.putString("eventDescription", it.description)
+                        bundle.putString("eventPathToImage", it.pathToImage)
+                        navController.navigate(R.id.action_museumDetailsFragment_to_eventDetailsFragment, bundle)
+                    }
+                }
+                .addOnFailureListener {
+                    showToast("An error occurred: ${it.localizedMessage}", requireContext())
+                }
         }
     }

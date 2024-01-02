@@ -2,6 +2,7 @@ package com.example.museumexplore.ui.home
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,8 +10,10 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.museumexplore.databinding.FragmentArtWorkDetailsBinding
+import com.example.museumexplore.showToast
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import java.util.Locale
 
 
 class ArtWorkDetailsFragment : Fragment() {
@@ -25,6 +28,8 @@ class ArtWorkDetailsFragment : Fragment() {
     private var artWorkCategory : String? = null
     private var artWorkYear : Int? = null
     private var artWorkPathToImage : String? = null
+
+    private lateinit var textToSpeech: TextToSpeech
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -79,6 +84,24 @@ class ArtWorkDetailsFragment : Fragment() {
             textViewArtistNameYear.text = "$artistName, $artWorkYear"
             textViewArtWorkCategory.text = artWorkCategory
             textViewArtWorkDescription.text = artWorkDescription
+        }
+
+        textToSpeech = TextToSpeech(requireContext()) {status ->
+            if (status == TextToSpeech.SUCCESS) {
+                val result = textToSpeech.setLanguage(Locale.getDefault())
+                if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                    showToast("Language not supported", requireContext())
+                }
+            }
+        }
+
+        binding.imageViewPlayIcon.setOnClickListener {
+            textToSpeech.speak(
+                binding.textViewArtWorkDescription.text.toString().trim(),
+                TextToSpeech.QUEUE_FLUSH,
+                null,
+                null
+            )
         }
     }
 }

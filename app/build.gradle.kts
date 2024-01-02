@@ -68,7 +68,7 @@ dependencies {
     implementation("io.coil-kt:coil:2.5.0")
 
     // Images Slide
-    implementation ("com.github.denzcoskun:ImageSlideshow:0.1.2")
+    //implementation ("com.github.denzcoskun:ImageSlideshow:0.1.2")
 
     // Glide
     implementation("com.github.bumptech.glide:glide:4.14.2")
@@ -76,4 +76,8 @@ dependencies {
 
     // ViewPager
     implementation("androidx.viewpager2:viewpager2:1.0.0")
+
+    // MapBox
+    implementation("com.mapbox.maps:android:11.0.0")
+    implementation("com.mapbox.extension:maps-compose:11.0.0")
 }

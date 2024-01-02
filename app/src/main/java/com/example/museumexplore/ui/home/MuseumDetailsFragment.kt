@@ -7,28 +7,26 @@
     import android.view.View
     import android.view.ViewGroup
     import androidx.appcompat.app.AppCompatActivity
+    import androidx.core.view.get
     import androidx.fragment.app.Fragment
     import androidx.navigation.NavController
     import androidx.navigation.Navigation
     import com.bumptech.glide.Glide
-    import com.denzcoskun.imageslider.ImageSlider
-    import com.denzcoskun.imageslider.constants.ScaleTypes
-    import com.denzcoskun.imageslider.models.SlideModel
     import com.example.museumexplore.R
     import com.example.museumexplore.databinding.FragmentMuseumDetailsBinding
     import com.example.museumexplore.modules.EventAdapter
     import com.example.museumexplore.modules.Event
     import com.example.museumexplore.modules.Image
     import com.example.museumexplore.modules.ImageAdapter
-    import com.example.museumexplore.modules.Museum
+    import com.example.museumexplore.modules.Location
     import com.example.museumexplore.showToast
-    import com.google.android.material.carousel.CarouselLayoutManager
     import com.google.android.material.carousel.CarouselSnapHelper
-    import com.google.android.material.carousel.HeroCarouselStrategy
-    import com.google.firebase.firestore.FirebaseFirestore
     import com.google.firebase.firestore.ktx.firestore
     import com.google.firebase.ktx.Firebase
     import com.google.firebase.storage.ktx.storage
+    import com.mapbox.geojson.Point
+    import com.mapbox.maps.CameraOptions
+    import com.mapbox.maps.MapboxMap
 
     class MuseumDetailsFragment : Fragment() {
 
@@ -39,13 +37,14 @@
 
         private val museumImagesList = arrayListOf<Image>()
         private val artWorksList = arrayListOf<Image>()
-        private val eventList = ArrayList<Event>()
+        private val eventList = arrayListOf<Event>()
         private var id : String? = null
         private var name : String? = null
         private var description : String? = null
-        private var location : String? = null
         private var rate : Int? = null
         private var pathToImage : String? = null
+
+        private lateinit var mapBoxMap : MapboxMap
 
         private val db = Firebase.firestore
 
@@ -70,7 +69,6 @@
                 id = bundle.getString("museumId")
                 name = bundle.getString("museumName")
                 description = bundle.getString("museumDescription")
-                location = bundle.getString("museumLocation")
                 rate = bundle.getInt("museumRate")
                 pathToImage = bundle.getString("museumPathToImage")
             }
@@ -120,13 +118,15 @@
             fetchMuseumImagesData()
             fetchArtWorkImagesData()
             fetchEventsData()
+            fetchLocationData()
         }
+
         private fun fetchMuseumImagesData() {
             db.collection("museums/$id/imagesCollectionMuseum")
                 .get()
-                .addOnSuccessListener { museumImages ->
-                    for (museumImage in museumImages) {
-                        val image = Image.fromSnapshot(museumImage.id, museumImage.data)
+                .addOnSuccessListener { documents ->
+                    for (document in documents) {
+                        val image = Image.fromSnapshot(document.id, document.data)
                         this.museumImagesList.add(image)
                     }
                     binding.carouselRecyclerViewMuseumImages.adapter = ImageAdapter(museumImagesList, requireContext())
@@ -169,5 +169,35 @@
                 .addOnFailureListener {
                     showToast("An error occurred: ${it.localizedMessage}", requireContext())
                 }
+        }
+
+        private fun fetchLocationData() {
+            db.collection("museums/$id/location")
+                .get()
+                .addOnSuccessListener { documents ->
+                    if (!documents.isEmpty) {
+                        val document = documents.first()
+                        val location = Location.fromSnapshot(document.id, document.data)
+                        configMap(location)
+                    } else {
+                        showToast("No document found", requireContext())
+                    }
+                }
+                .addOnFailureListener {
+                    showToast("An error occurred: ${it.localizedMessage}", requireContext())
+                }
+        }
+
+        private fun configMap(location: Location) {
+            var mapView = binding.mapView
+
+            mapView.mapboxMap.setCamera(
+                CameraOptions.Builder()
+                    .center(Point.fromLngLat(location.longitude, location.latitude))
+                    .pitch(3.0)
+                    .zoom(12.0)
+                    .bearing(0.0)
+                    .build()
+            )
         }
     }

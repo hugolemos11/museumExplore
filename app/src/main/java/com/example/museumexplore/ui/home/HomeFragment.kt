@@ -120,7 +120,6 @@ class HomeFragment : Fragment() {
                 bundle.putString("museumId", museums[position].id)
                 bundle.putString("museumName", museums[position].name)
                 bundle.putString("museumDescription", museums[position].description)
-                bundle.putString("museumLocation", museums[position].location)
                 bundle.putInt("museumRate", museums[position].rate)
                 bundle.putString("museumPathToImage", museums[position].pathToImage)
                 navController.navigate(R.id.action_homeFragment_to_museumDetailsFragment, bundle)

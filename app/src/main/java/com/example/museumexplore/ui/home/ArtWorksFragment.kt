@@ -1,6 +1,5 @@
 package com.example.museumexplore.ui.home
 
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,9 +13,9 @@ import com.example.museumexplore.R
 import com.example.museumexplore.databinding.ArtWorksDisplayBinding
 import com.example.museumexplore.databinding.FragmentArtWorksBinding
 import com.example.museumexplore.modules.ArtWorks
+import com.example.museumexplore.setImage
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
 
 
 class ArtWorksFragment : Fragment() {
@@ -27,7 +26,7 @@ class ArtWorksFragment : Fragment() {
     private lateinit var navController: NavController
 
     var artWorksList = arrayListOf<ArtWorks>()
-    private var  adapter = ArtWorksAdapter()
+    private var adapter = ArtWorksAdapter()
 
     private var museumId: String? = null
     private var museumName: String? = null
@@ -68,7 +67,7 @@ class ArtWorksFragment : Fragment() {
                 snapshot?.documents?.let {
                     this.artWorksList.clear()
                     for (document in it) {
-                        document.data?.let{ data ->
+                        document.data?.let { data ->
                             this.artWorksList.add(
                                 ArtWorks.fromSnapshot(
                                     document.id,
@@ -101,21 +100,13 @@ class ArtWorksFragment : Fragment() {
             rootView.textViewArtWorkName.text = artWorksList[position].name
             rootView.textViewCategory.text = artWorksList[position].category
 
-            artWorksList[position].pathToImage?.let {
-                val storage = Firebase.storage
-                val storageRef = storage.reference
-                val pathReference = storageRef.child(it)
-                val ONE_MEGABYTE: Long = 10 * 1024 * 1024
-                pathReference.getBytes(ONE_MEGABYTE).addOnSuccessListener { data ->
-                    val bitmap = BitmapFactory.decodeByteArray(data, 0, data.count())
-                    rootView.imageViewArtWork.setImageBitmap(bitmap)
-                }.addOnFailureListener {
-                    // Handle any errors
-                }
+            setImage(
+                artWorksList[position].pathToImage,
+                rootView.imageViewArtWork,
+                requireContext()
+            )
 
-            }
-
-            rootView.root.setOnClickListener{
+            rootView.root.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putString("artWorkId", artWorksList[position].id)
                 bundle.putString("artWorkName", artWorksList[position].name)
@@ -124,7 +115,10 @@ class ArtWorksFragment : Fragment() {
                 bundle.putString("artWorkCategory", artWorksList[position].category)
                 bundle.putInt("artWorkYear", artWorksList[position].year)
                 bundle.putString("artWorkPathToImage", artWorksList[position].pathToImage)
-                navController.navigate(R.id.action_artWorksFragment_to_artWorkDetailsFragment, bundle)
+                navController.navigate(
+                    R.id.action_artWorksFragment_to_artWorkDetailsFragment,
+                    bundle
+                )
             }
 
             return rootView.root

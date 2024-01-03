@@ -12,14 +12,12 @@
     <ImageView
         android:id="@+id/imageViewUserImage"
         android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:src="@drawable/mini_logo" />
+        android:layout_height="64dp" />
 
     <TextView
         android:id="@+id/textViewUserName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Android Knowledge"
         android:textColor="@color/white"
         android:textStyle="bold" />
 
@@ -28,7 +26,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:text="contact@androidknowledge.com"
         android:textColor="@color/white"
         android:textSize="14sp" />
 

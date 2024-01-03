@@ -43,10 +43,15 @@ class RecoverPasswordFragment : Fragment() {
             Firebase.auth.sendPasswordResetEmail(email)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        Toast.makeText(requireContext(),  "Email Sent Successfully", Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "Email Sent Successfully",
+                            Toast.LENGTH_LONG
+                        ).show()
                         Log.d(TAG, "Email sent.")
                     } else {
-                        Toast.makeText(requireContext(),  "Could Not Send Email", Toast.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(), "Could Not Send Email", Toast.LENGTH_LONG)
+                            .show()
                     }
                 }
         }

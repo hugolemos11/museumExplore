@@ -57,7 +57,8 @@ class RegisterFragment : Fragment() {
                         Toast.makeText(
                             context,
                             "Erro no registo",
-                            Toast.LENGTH_SHORT).show()
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
         }

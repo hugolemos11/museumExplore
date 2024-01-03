@@ -28,7 +28,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="1.0"
-                app:tint="#F1D7C1"/>
+                app:tint="#F1D7C1" />
 
             <TextView
                 android:id="@+id/textViewArtWorkName"
@@ -48,8 +48,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginBottom="12dp"
-                app:cardCornerRadius="10dp"
                 app:cardBackgroundColor="@color/nav"
+                app:cardCornerRadius="10dp"
                 app:layout_constraintBottom_toBottomOf="@+id/imageViewArtWork"
                 app:layout_constraintStart_toStartOf="parent">
 

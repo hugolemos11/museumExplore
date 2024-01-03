@@ -6,10 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.museumexplore.R
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
+import com.example.museumexplore.setImage
 
 class ImageAdapter(private val list: List<Image>, private val context: Context) :
     RecyclerView.Adapter<ImageAdapter.ItemViewHolder>() {
@@ -27,18 +25,7 @@ class ImageAdapter(private val list: List<Image>, private val context: Context) 
     override fun onBindViewHolder(holder: ImageAdapter.ItemViewHolder, position: Int) {
         val model = list[position]
 
-        model.pathToImage?.let { imagePath ->
-            val storage = Firebase.storage
-            val storageRef = storage.reference
-            val pathReference = storageRef.child(imagePath)
-            pathReference.downloadUrl.addOnSuccessListener { uri ->
-                Glide.with(context)
-                    .load(uri)
-                    .into(holder.carouselImageView)
-            }.addOnFailureListener {
-                // Handle any errors
-            }
-        }
+        setImage(model.pathToImage, holder.carouselImageView, context)
     }
 
     override fun getItemCount() = list.size

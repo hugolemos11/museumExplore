@@ -16,6 +16,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
@@ -41,7 +42,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 
         navigationView = binding.navView
@@ -50,7 +52,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             setOf(
                 R.id.homeFragment,
                 R.id.loginFragment,
-               // R.id.navigation_settings // Add other destination IDs if needed
+                // R.id.navigation_settings // Add other destination IDs if needed
             ),
             drawerLayout,
             fallbackOnNavigateUpListener = ::onSupportNavigateUp
@@ -70,10 +72,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         updateDrawerContent()
                     }
                 }
+
                 R.id.loginFragment, R.id.recoverPasswordFragment, R.id.registerFragment -> {
                     // Hide the actionBar
                     supportActionBar?.hide()
                 }
+
                 else -> {
                     toolbar.setNavigationOnClickListener {
                         onBackPressed()
@@ -81,7 +85,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
         }
-        //NavigationUI.setupWithNavController(navigationView, navController)
+        NavigationUI.setupWithNavController(navigationView, navController)
 
         navigationView.setNavigationItemSelectedListener(this)
     }
@@ -90,8 +94,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-   override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-       // Method for placing the Menu Icon on the OptionsMenu, which is supposed to be a Three-Dot Icon
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        // Method for placing the Menu Icon on the OptionsMenu, which is supposed to be a Three-Dot Icon
         val menuToUse: Int = R.menu.drawer_icon_right
 
         val inflater = menuInflater
@@ -190,24 +194,30 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         // If the current destination is HomeFragment, close the drawer
                         drawerLayout.closeDrawer(GravityCompat.END)
                     }
-                    R.id.museumDetailsFragment, R.id.artWorksFragment, R.id.artWorkDetailsFragment -> {
+
+                    R.id.museumDetailsFragment, R.id.artWorksFragment, R.id.artWorkDetailsFragment, R.id.eventDetailsFragment, R.id.ticketFragment -> {
                         // Pop the back stack to navigate to homeFragment
                         navController.popBackStack(R.id.homeFragment, false)
                     }
+
                     else -> {
                         navController.navigate(R.id.action_global_homeNavigation)
                     }
                 }
             }
+
             R.id.navTicket -> {
 
             }
+
             R.id.navScan -> {
 
             }
+
             R.id.navSettings -> {
 
             }
+
             R.id.navLogout -> {
                 // Method used to terminate the Firebase authentication session
                 auth.signOut()
@@ -215,6 +225,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 // Update the Drawer to  the UnAuthenticated user drawer
                 updateDrawerContent()
             }
+
             R.id.navLogin -> {
                 if (navController.currentDestination?.id == R.id.loginFragment) {
                     // If the current destination is HomeFragment, close the drawer

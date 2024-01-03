@@ -1,33 +1,29 @@
 package com.example.museumexplore.ui.home
 
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.museumexplore.databinding.FragmentArtWorkDetailsBinding
+import com.example.museumexplore.setImage
 import com.example.museumexplore.showToast
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
 import java.util.Locale
-
 
 class ArtWorkDetailsFragment : Fragment() {
 
     private var _binding: FragmentArtWorkDetailsBinding? = null
     private val binding get() = _binding!!
 
-    private var id : String? = null
-    private var artworkName : String? = null
-    private var artistName : String? = null
-    private var artWorkDescription : String? = null
-    private var artWorkCategory : String? = null
-    private var artWorkYear : Int? = null
-    private var artWorkPathToImage : String? = null
+    private var id: String? = null
+    private var artworkName: String? = null
+    private var artistName: String? = null
+    private var artWorkDescription: String? = null
+    private var artWorkCategory: String? = null
+    private var artWorkYear: Int? = null
+    private var artWorkPathToImage: String? = null
 
     private lateinit var textToSpeech: TextToSpeech
 
@@ -51,8 +47,6 @@ class ArtWorkDetailsFragment : Fragment() {
         // Remove the title of fragment on the actionBar
         (activity as AppCompatActivity).supportActionBar?.title = ""
 
-        //navController = Navigation.findNavController(view);
-
         arguments?.let { bundle ->
             id = bundle.getString("artWorkId")
             artworkName = bundle.getString("artWorkName")
@@ -63,30 +57,26 @@ class ArtWorkDetailsFragment : Fragment() {
             artWorkPathToImage = bundle.getString("artWorkPathToImage")
         }
 
-        artWorkPathToImage?.let { imagePath ->
-            // Load the image from Firebase Storage
-            val storage = Firebase.storage
-            val storageRef = storage.reference
-            val pathReference = storageRef.child(imagePath)
-            val ONE_MEGABYTE: Long = 10 * 1024 * 1024
-            pathReference.getBytes(ONE_MEGABYTE).addOnSuccessListener { data ->
-                val bitmap = BitmapFactory.decodeByteArray(data, 0, data.count())
-                binding.imageViewArtWorkImage.setImageBitmap(bitmap)
-            }.addOnFailureListener {
-                // Handle any errors
-                Log.e("MuseumDetailsFragment", "Failed to load image from Firebase Storage")
-            }
-        }
+        setImage(artWorkPathToImage, binding.imageViewArtWorkImage, requireContext())
 
         binding.apply {
-            imageViewArtWorkImage
             textViewArtWorkName.text = artworkName
             textViewArtistNameYear.text = "$artistName, $artWorkYear"
             textViewArtWorkCategory.text = artWorkCategory
             textViewArtWorkDescription.text = artWorkDescription
         }
 
-        textToSpeech = TextToSpeech(requireContext()) {status ->
+        configTextToSpeech()
+    }
+
+    private fun configTextToSpeech() {
+        val artWorkName = "Art Work: ${binding.textViewArtWorkName.text}".trim()
+        val artistAndYear = "Artist and Year: ${binding.textViewArtistNameYear.text}".trim()
+        val description = "Description: ${binding.textViewArtWorkDescription.text}".trim()
+
+        val textToRead = "$artWorkName. $artistAndYear. $description"
+
+        textToSpeech = TextToSpeech(requireContext()) { status ->
             if (status == TextToSpeech.SUCCESS) {
                 val result = textToSpeech.setLanguage(Locale.getDefault())
                 if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
@@ -97,7 +87,7 @@ class ArtWorkDetailsFragment : Fragment() {
 
         binding.imageViewPlayIcon.setOnClickListener {
             textToSpeech.speak(
-                binding.textViewArtWorkDescription.text.toString().trim(),
+                textToRead,
                 TextToSpeech.QUEUE_FLUSH,
                 null,
                 null

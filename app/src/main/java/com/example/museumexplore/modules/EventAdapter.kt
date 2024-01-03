@@ -10,10 +10,15 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.museumexplore.R
+import com.example.museumexplore.setImage
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 
-class EventAdapter(private val list: List<Event>, val context: Context, val onItemClick: (Event) -> Unit) :
+class EventAdapter(
+    private val list: List<Event>,
+    val context: Context,
+    val onItemClick: (Event) -> Unit
+) :
     RecyclerView.Adapter<EventAdapter.ItemViewHolder>() {
     inner class ItemViewHolder(val view: View) :
         RecyclerView.ViewHolder(view) {
@@ -32,23 +37,13 @@ class EventAdapter(private val list: List<Event>, val context: Context, val onIt
     override fun onBindViewHolder(holder: EventAdapter.ItemViewHolder, position: Int) {
         val model = list[position]
 
-        model.pathToImage?.let { imagePath ->
-            val storage = Firebase.storage
-            val storageRef = storage.reference
-            val pathReference = storageRef.child(imagePath)
-            pathReference.downloadUrl.addOnSuccessListener { uri ->
-                Log.e("URI", "${uri}")
-                Glide.with(context)
-                    .load(uri)
-                    .into(holder.imageViewEvent)
-                holder.textViewEventTitle.text = model.title
-                holder.textViewEventDescription.text = model.description
-                holder.itemView.setOnClickListener {
-                    onItemClick(model)
-                }
-            }.addOnFailureListener {
-                // Handle any errors
-            }
+        setImage(model.pathToImage, holder.imageViewEvent, context)
+
+        holder.textViewEventTitle.text = model.title
+        holder.textViewEventDescription.text = model.description
+
+        holder.itemView.setOnClickListener {
+            onItemClick(model)
         }
     }
 

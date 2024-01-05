@@ -12,8 +12,10 @@ import androidx.navigation.Navigation
 import com.example.museumexplore.R
 import com.example.museumexplore.databinding.FragmentHomeBinding
 import com.example.museumexplore.databinding.MuseumDisplayBinding
+import com.example.museumexplore.modules.ArtWorks
 import com.example.museumexplore.modules.Museum
 import com.example.museumexplore.setImage
+import com.example.museumexplore.showToast
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -25,8 +27,9 @@ class HomeFragment : Fragment() {
 
     private lateinit var navController: NavController
 
-    var museums = arrayListOf<Museum>()
-    private var adapter = MuseumAdapter()
+    private var museumsList = arrayListOf<Museum>()
+
+    private val db = Firebase.firestore
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,35 +53,37 @@ class HomeFragment : Fragment() {
 
         navController = Navigation.findNavController(view)
 
-        binding.gridViewMuseums.adapter = adapter
+        fetchMuseumsData()
+    }
 
-        val db = Firebase.firestore
+    private fun fetchMuseumsData() {
         db.collection("museums")
-            .addSnapshotListener { snapshot, _ ->
-                snapshot?.documents?.let {
-                    this.museums.clear()
-                    for (document in it) {
-                        document.data?.let { data ->
-                            this.museums.add(
-                                Museum.fromSnapshot(
-                                    document.id,
-                                    data
-                                )
-                            )
-                        }
-                    }
-                    this.adapter.notifyDataSetChanged()
+            .get()
+            .addOnSuccessListener { documents ->
+                // clear de List for don't duplicate de data
+                museumsList.clear()
+
+                for (document in documents) {
+                    val museum = Museum.fromSnapshot(document.id, document.data)
+                    this.museumsList.add(museum)
                 }
+                binding.gridViewMuseums.adapter =
+                    MuseumAdapter()
+
+                MuseumAdapter().notifyDataSetChanged()
+            }
+            .addOnFailureListener {
+                showToast("An error occurred: ${it.localizedMessage}", requireContext())
             }
     }
 
     inner class MuseumAdapter : BaseAdapter() {
         override fun getCount(): Int {
-            return museums.size
+            return museumsList.size
         }
 
         override fun getItem(position: Int): Any {
-            return museums[position]
+            return museumsList[position]
         }
 
         override fun getItemId(position: Int): Long {
@@ -88,17 +93,17 @@ class HomeFragment : Fragment() {
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
             val rootView = MuseumDisplayBinding.inflate(layoutInflater)
 
-            rootView.textViewMuseumName.text = museums[position].name
+            rootView.textViewMuseumName.text = museumsList[position].name
 
-            setImage(museums[position].pathToImage, rootView.imageView3, requireContext())
+            setImage(museumsList[position].pathToImage, rootView.imageView3, requireContext())
 
             rootView.root.setOnClickListener {
                 val bundle = Bundle()
-                bundle.putString("museumId", museums[position].id)
-                bundle.putString("museumName", museums[position].name)
-                bundle.putString("museumDescription", museums[position].description)
-                bundle.putInt("museumRate", museums[position].rate)
-                bundle.putString("museumPathToImage", museums[position].pathToImage)
+                bundle.putString("museumId", museumsList[position].id)
+                bundle.putString("museumName", museumsList[position].name)
+                bundle.putString("museumDescription", museumsList[position].description)
+                bundle.putInt("museumRate", museumsList[position].rate)
+                bundle.putString("museumPathToImage", museumsList[position].pathToImage)
                 navController.navigate(R.id.action_homeFragment_to_museumDetailsFragment, bundle)
             }
 

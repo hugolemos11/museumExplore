@@ -34,7 +34,7 @@ class TicketAdapter(private val list: ArrayList<Ticket>, private val context: Co
 
         setImage(model.pathToImage, holder.imageViewTicket, context)
 
-        holder.textViewTicketType.text = model.title
+        holder.textViewTicketType.text = model.type
         holder.textViewTicketPrice.text = "${model.price}€"
         holder.textViewTicketDescription.text = model.description
     }

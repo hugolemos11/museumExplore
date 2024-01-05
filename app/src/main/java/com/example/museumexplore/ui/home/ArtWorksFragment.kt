@@ -1,6 +1,7 @@
 package com.example.museumexplore.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import com.example.museumexplore.databinding.ArtWorksDisplayBinding
 import com.example.museumexplore.databinding.FragmentArtWorksBinding
 import com.example.museumexplore.modules.ArtWorks
 import com.example.museumexplore.setImage
+import com.example.museumexplore.showToast
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -27,6 +29,8 @@ class ArtWorksFragment : Fragment() {
 
     var artWorksList = arrayListOf<ArtWorks>()
     private var adapter = ArtWorksAdapter()
+
+    private val db = Firebase.firestore
 
     private var museumId: String? = null
     private var museumName: String? = null
@@ -59,25 +63,30 @@ class ArtWorksFragment : Fragment() {
         navController = Navigation.findNavController(view)
 
         binding.textViewMuseumName.text = museumName
-        binding.gridViewArtWorks.adapter = adapter
 
-        val db = Firebase.firestore
-        db.collection("museums/$museumId/artWorks")
-            .addSnapshotListener { snapshot, _ ->
-                snapshot?.documents?.let {
-                    this.artWorksList.clear()
-                    for (document in it) {
-                        document.data?.let { data ->
-                            this.artWorksList.add(
-                                ArtWorks.fromSnapshot(
-                                    document.id,
-                                    data
-                                )
-                            )
-                        }
-                    }
-                    this.adapter.notifyDataSetChanged()
+        fetchArtWorksData()
+    }
+
+    private fun fetchArtWorksData() {
+        db.collection("artWorks")
+            .whereEqualTo("museumId", "$museumId")
+            .get()
+            .addOnSuccessListener { documents ->
+                // clear de List for don't duplicate de data
+                artWorksList.clear()
+
+                for (document in documents) {
+                    val artWork = ArtWorks.fromSnapshot(document.id, document.data)
+                    this.artWorksList.add(artWork)
+                    Log.e("teste2", "$artWork")
                 }
+                binding.gridViewArtWorks.adapter =
+                    ArtWorksAdapter()
+
+                ArtWorksAdapter().notifyDataSetChanged()
+            }
+            .addOnFailureListener {
+                showToast("An error occurred: ${it.localizedMessage}", requireContext())
             }
     }
 

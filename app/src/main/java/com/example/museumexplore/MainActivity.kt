@@ -1,6 +1,7 @@
 package com.example.museumexplore
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -21,8 +22,13 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.museumexplore.databinding.MainActivityBinding
+import com.example.museumexplore.modules.User
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var drawerLayout: DrawerLayout
@@ -30,7 +36,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navigationView: NavigationView
     private lateinit var binding: MainActivityBinding
+
     private val auth = FirebaseAuth.getInstance()
+    private val db = Firebase.firestore
+
+    private var user : User? = null
+
+    private lateinit var headerImage : ImageView
+    private lateinit var headerUserName : TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -130,7 +144,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             // You can get the user's information using currentUser
             val uid = currentUser.uid
             val email = currentUser.email
-            // ... other user information
+
+            fetchUserData(uid)
 
             // Inflate the menu and set it for the NavigationView
             menuInflater.inflate(R.menu.nav_menu_autenticated, navigationView.menu)
@@ -142,13 +157,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             // Set navigation header with user data
             val headerView = navigationView.getHeaderView(0)
-            val headerImage = headerView.findViewById<ImageView>(R.id.imageViewUserImage)
-            val headerUserName = headerView.findViewById<TextView>(R.id.textViewUserName)
+            headerImage = headerView.findViewById<ImageView>(R.id.imageViewUserImage)
+            headerUserName = headerView.findViewById<TextView>(R.id.textViewUserName)
             val headerUserEmail = headerView.findViewById<TextView>(R.id.textViewUserEmail)
 
-            // Set image and text in the header (customize as needed)
-            headerImage.setImageResource(R.drawable.menu)
-            headerUserName.text = uid
+            // Set text in the header (customize as needed)
             headerUserEmail.text = email
 
             // Get the current layout parameters of the NavigationView
@@ -237,5 +250,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         drawerLayout.closeDrawer(GravityCompat.END)
         return true
+    }
+
+    private fun fetchUserData(uid: String) {
+        db.collection("users")
+            .document(uid)
+            .get()
+            .addOnSuccessListener {
+                it.data?.let { data ->
+                    user = User.fromSnapshot(data)
+                    setImage(user?.pathToImage, headerImage, this)
+                    headerUserName.text = user?.username
+                }
+            }
+            .addOnFailureListener {
+                showToast("An error occurred: ${it.localizedMessage}", this)
+            }
     }
 }

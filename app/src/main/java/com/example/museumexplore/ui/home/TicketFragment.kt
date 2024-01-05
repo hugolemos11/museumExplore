@@ -87,7 +87,8 @@ class TicketFragment : Fragment() {
     }
 
     private fun fetchTicketsData() {
-        db.collection("museums/$museumId/tickets")
+        db.collection("ticketTypes")
+            .whereEqualTo("museumId", museumId)
             .get()
             .addOnSuccessListener { documents ->
                 for (document in documents) {

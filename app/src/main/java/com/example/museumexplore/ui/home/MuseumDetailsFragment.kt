@@ -1,6 +1,7 @@
 package com.example.museumexplore.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,7 +35,7 @@ class MuseumDetailsFragment : Fragment() {
     private val museumImagesList = arrayListOf<Image>()
     private val artWorksList = arrayListOf<Image>()
     private val eventList = arrayListOf<Event>()
-    private var id: String? = null
+    private var museumId: String? = null
     private var museumName: String? = null
     private var museumDescription: String? = null
     private var museumRate: Int? = null
@@ -62,7 +63,7 @@ class MuseumDetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         arguments?.let { bundle ->
-            id = bundle.getString("museumId")
+            museumId = bundle.getString("museumId")
             museumName = bundle.getString("museumName")
             museumDescription = bundle.getString("museumDescription")
             museumRate = bundle.getInt("museumRate")
@@ -84,7 +85,7 @@ class MuseumDetailsFragment : Fragment() {
 
             buttonCollection.setOnClickListener {
                 val bundle = Bundle()
-                bundle.putString("museumId", id)
+                bundle.putString("museumId", museumId)
                 bundle.putString("museumName", museumName)
                 navController.navigate(
                     R.id.action_museumDetailsFragment_to_artWorksFragment,
@@ -98,11 +99,14 @@ class MuseumDetailsFragment : Fragment() {
 
             buttonTicket.setOnClickListener {
                 val bundle = Bundle()
-                bundle.putString("museumId", id)
+                bundle.putString("museumId", museumId)
                 bundle.putString("museumName", museumName)
                 navController.navigate(R.id.action_museumDetailsFragment_to_ticketFragment, bundle)
             }
         }
+
+        Log.e("teste", "$museumId")
+
         fetchMuseumImagesData()
         fetchArtWorkImagesData()
         fetchEventsData()
@@ -110,7 +114,8 @@ class MuseumDetailsFragment : Fragment() {
     }
 
     private fun fetchMuseumImagesData() {
-        db.collection("museums/$id/imagesCollectionMuseum")
+        db.collection("imagesCollectionMuseum")
+            .whereEqualTo("museumId", museumId)
             .get()
             .addOnSuccessListener { documents ->
                 for (document in documents) {
@@ -126,7 +131,8 @@ class MuseumDetailsFragment : Fragment() {
     }
 
     private fun fetchArtWorkImagesData() {
-        db.collection("museums/$id/imagesCollectionArtWork")
+        db.collection("artWorks")
+            .whereEqualTo("museumId", museumId)
             .get()
             .addOnSuccessListener { documents ->
                 for (document in documents) {
@@ -142,7 +148,8 @@ class MuseumDetailsFragment : Fragment() {
     }
 
     private fun fetchEventsData() {
-        db.collection("museums/$id/events")
+        db.collection("events")
+            .whereEqualTo("museumId", museumId)
             .get()
             .addOnSuccessListener { documents ->
                 for (document in documents) {
@@ -168,7 +175,8 @@ class MuseumDetailsFragment : Fragment() {
     }
 
     private fun fetchLocationData() {
-        db.collection("museums/$id/location")
+        db.collection("location")
+            .whereEqualTo("museumId", museumId)
             .get()
             .addOnSuccessListener { documents ->
                 if (!documents.isEmpty) {

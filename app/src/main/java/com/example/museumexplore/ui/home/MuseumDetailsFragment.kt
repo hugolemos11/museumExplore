@@ -39,6 +39,8 @@ class MuseumDetailsFragment : Fragment() {
     private var museumName: String? = null
     private var museumDescription: String? = null
     private var museumRate: Int? = null
+    private var museumLongitude: Double? = null
+    private var museumLatitude: Double? = null
     private var museumPathToImage: String? = null
 
     private lateinit var mapBoxMap: MapboxMap
@@ -67,6 +69,8 @@ class MuseumDetailsFragment : Fragment() {
             museumName = bundle.getString("museumName")
             museumDescription = bundle.getString("museumDescription")
             museumRate = bundle.getInt("museumRate")
+            museumLongitude = bundle.getDouble("museumLongitude")
+            museumLatitude = bundle.getDouble("museumLatitude")
             museumPathToImage = bundle.getString("museumPathToImage")
         }
 
@@ -110,7 +114,7 @@ class MuseumDetailsFragment : Fragment() {
         fetchMuseumImagesData()
         fetchArtWorkImagesData()
         fetchEventsData()
-        fetchLocationData()
+        configMap()
     }
 
     private fun fetchMuseumImagesData() {
@@ -174,34 +178,38 @@ class MuseumDetailsFragment : Fragment() {
             }
     }
 
-        private fun fetchLocationData() {
-            db.collection("location")
-                .whereEqualTo("museumId", museumId)
-                .get()
-                .addOnSuccessListener { documents ->
-                    if (!documents.isEmpty) {
-                        val document = documents.first()
-                        val location = Location.fromSnapshot(document.id, document.data)
-                        configMap(location)
-                    } else {
-                        showToast("No document found", requireContext())
-                    }
+    /*private fun fetchLocationData() {
+        db.collection("location")
+            .whereEqualTo("museumId", museumId)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (!documents.isEmpty) {
+                    val document = documents.first()
+                    val location = Location.fromSnapshot(document.id, document.data)
+                    configMap(location)
+                } else {
+                    showToast("No document found", requireContext())
                 }
-                .addOnFailureListener {
-                    showToast("An error occurred: ${it.localizedMessage}", requireContext())
-                }
-        }
+            }
+            .addOnFailureListener {
+                showToast("An error occurred: ${it.localizedMessage}", requireContext())
+            }
+    }*/
 
-        private fun configMap(location: Location) {
-            val mapView = binding.mapView
+    private fun configMap() {
+        museumLatitude?.let { latitude ->
+            museumLongitude?.let { longitude ->
+                val mapView = binding.mapView
 
-            mapView.mapboxMap.setCamera(
-                CameraOptions.Builder()
-                    .center(Point.fromLngLat(location.longitude, location.latitude))
-                    .pitch(3.0)
-                    .zoom(12.0)
-                    .bearing(0.0)
-                    .build()
-            )
+                mapView.mapboxMap.setCamera(
+                    CameraOptions.Builder()
+                        .center(Point.fromLngLat(longitude, latitude))
+                        .pitch(3.0)
+                        .zoom(12.0)
+                        .bearing(0.0)
+                        .build()
+                )
+            }
         }
+    }
 }

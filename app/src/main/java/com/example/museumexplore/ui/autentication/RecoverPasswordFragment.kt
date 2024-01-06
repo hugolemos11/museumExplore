@@ -13,6 +13,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.museumexplore.databinding.FragmentRecoverPasswordBinding
 import com.example.museumexplore.isValidEmail
+import com.example.museumexplore.setErrorAndFocus
 import com.example.museumexplore.showToast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -28,9 +29,7 @@ class RecoverPasswordFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentRecoverPasswordBinding.inflate(inflater, container, false)
         return binding.root
@@ -50,22 +49,29 @@ class RecoverPasswordFragment : Fragment() {
         navController = Navigation.findNavController(view)
 
         binding.editTextEmailAddress.doOnTextChanged { text, start, before, count ->
-            when{
+            when {
                 text.toString().trim().isEmpty() -> {
                     binding.textInputLayoutEmailAddress.error = "Required!"
                 }
+
                 !isValidEmail(text.toString().trim()) -> {
                     binding.textInputLayoutEmailAddress.error = "Invalid E-mail!"
-                } else -> {
-                binding.textInputLayoutEmailAddress.error = null
-            }
+                }
+
+                else -> {
+                    binding.textInputLayoutEmailAddress.error = null
+                }
             }
         }
 
         binding.recoverPasswordButton.setOnClickListener {
-            val email = binding.editTextEmailAddress.text.toString()
-            auth.sendPasswordResetEmail(email)
-                .addOnCompleteListener { task ->
+            val email = binding.editTextEmailAddress.text.toString().trim()
+            if (email.isEmpty()) {
+                setErrorAndFocus(binding.textInputLayoutEmailAddress, "Required!")
+            } else if (!isValidEmail(email)) {
+                binding.textInputLayoutEmailAddress.requestFocus()
+            } else {
+                auth.sendPasswordResetEmail(email).addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         showToast("Email Sent Successfully", requireContext())
                         navController.popBackStack()
@@ -73,6 +79,7 @@ class RecoverPasswordFragment : Fragment() {
                         showToast("Could Not Send Email", requireContext())
                     }
                 }
+            }
         }
 
         binding.imageViewBackArrow.setOnClickListener {

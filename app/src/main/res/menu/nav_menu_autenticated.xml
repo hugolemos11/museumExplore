@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn = "navigation_view"
-    >
+    tools:showIn="navigation_view">
 
-    <group
-        android:checkableBehavior="single"
-        >
+    <group android:checkableBehavior="single">
 
         <item
             android:id="@+id/navHome"
@@ -22,17 +18,16 @@
         <item
             android:id="@+id/navScan"
             android:icon="@drawable/scan"
-            android:title="Scan QrCode"/>
+            android:title="Scan QrCode" />
 
         <item
             android:id="@+id/navSettings"
-            android:title="Configurações"
             android:icon="@drawable/setting"
-            />
+            android:title="Configurações" />
 
         <item
             android:id="@+id/navLogout"
             android:icon="@drawable/logout"
-            android:title="Logout"/>
+            android:title="Logout" />
     </group>
 </menu>

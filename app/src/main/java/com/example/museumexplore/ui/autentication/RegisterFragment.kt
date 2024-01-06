@@ -20,6 +20,7 @@ import com.example.museumexplore.isValidUsername
 import com.example.museumexplore.modules.Event
 import com.example.museumexplore.modules.EventAdapter
 import com.example.museumexplore.modules.User
+import com.example.museumexplore.setErrorAndFocus
 import com.example.museumexplore.showToast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -36,7 +37,7 @@ class RegisterFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private val db = Firebase.firestore
 
-    private var usernamesInUse : ArrayList<String> = ArrayList()
+    private var usernamesInUse: ArrayList<String> = ArrayList()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,39 +61,42 @@ class RegisterFragment : Fragment() {
         navController = Navigation.findNavController(view)
 
         binding.editTextEmailAddress.doOnTextChanged { text, start, before, count ->
-            when{
+            when {
                 text.toString().trim().isEmpty() -> {
                     binding.textInputLayoutEmailAddress.error = "Required!"
                 }
+
                 !isValidEmail(text.toString().trim()) -> {
                     binding.textInputLayoutEmailAddress.error = "Invalid E-mail!"
-                } else -> {
-                binding.textInputLayoutEmailAddress.error = null
-            }
+                }
+
+                else -> {
+                    binding.textInputLayoutEmailAddress.error = null
+                }
             }
         }
 
-        // Define o filtro para limitar o número máximo de caracteres no campo de usuário
-        binding.editTextUsername.filters = arrayOf(InputFilter.LengthFilter(20))
-
         binding.editTextUsername.doOnTextChanged { text, start, before, count ->
-            when{
+            when {
                 text.toString().trim().isEmpty() -> {
                     binding.textInputLayoutUsername.error = "Required!"
                 }
+
                 !isValidUsername(text.toString().trim()) -> {
                     binding.textInputLayoutUsername.error = "Invalid Username!"
-                } else -> {
-                binding.textInputLayoutUsername.error = null
-            }
+                }
+
+                else -> {
+                    binding.textInputLayoutUsername.error = null
+                }
             }
         }
 
         binding.editTextUsername.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
                 // Verify if the username inserted is not already in use
-                for (username in usernamesInUse){
-                    if (username == binding.editTextUsername.text.toString().trim()){
+                for (username in usernamesInUse) {
+                    if (username == binding.editTextUsername.text.toString().trim()) {
                         binding.textInputLayoutUsername.error = "The Username is Already in use!"
                     }
                 }
@@ -100,46 +104,29 @@ class RegisterFragment : Fragment() {
         }
 
         binding.editTextPassword.doOnTextChanged { text, start, before, count ->
-            when{
+            when {
                 text.toString().trim().isEmpty() -> {
                     binding.textInputLayoutPassword.error = "Required!"
                 }
+
                 !isValidPassword(text.toString().trim()) -> {
                     binding.textInputLayoutPassword.error = "Invalid Password!"
-                } else -> {
-                binding.textInputLayoutPassword.error = null
+                }
+
+                else -> {
+                    binding.textInputLayoutPassword.error = null
+                }
             }
+        }
+
+        binding.checkBox.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                binding.errorTextView.visibility = View.GONE
             }
         }
 
         binding.registerButton.setOnClickListener {
-            val email = binding.editTextEmailAddress.text.toString().trim()
-            val username = binding.editTextUsername.text.toString().trim()
-            val password = binding.editTextPassword.text.toString().trim()
-
-            if (isValidEmail(email) && isValidUsername(username) && isValidPassword(password)){
-                auth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(requireActivity()) {
-                        if (it.isSuccessful) {
-                            val user = User(username, null, password, "userImages/default_user.png")
-
-                            db.collection("users")
-                                .document(auth.uid!!)
-                                .set(user).addOnCompleteListener{task ->
-                                    if (task.isSuccessful) {
-                                        showToast("User Registered Successfully!", requireContext())
-                                        navController.navigate(R.id.action_global_homeNavigation)
-                                    }
-                                    else {
-                                        showToast("User Failed to Registered!", requireContext())
-                                    }
-                                }
-                        }
-                    }
-                    .addOnFailureListener {
-                        showToast("The E-mail inserted is already in use!", requireContext())
-                    }
-            }
+            validateAndRegisterUser()
         }
 
         binding.imageViewBackArrow.setOnClickListener {
@@ -147,6 +134,55 @@ class RegisterFragment : Fragment() {
         }
 
         fetchUsernamesData()
+    }
+
+    private fun validateAndRegisterUser() {
+        val email = binding.editTextEmailAddress.text.toString().trim()
+        val username = binding.editTextUsername.text.toString().trim()
+        val password = binding.editTextPassword.text.toString().trim()
+        when {
+            email.isEmpty() -> setErrorAndFocus(binding.textInputLayoutEmailAddress, "Required!")
+            !isValidEmail(email) -> binding.textInputLayoutEmailAddress.requestFocus()
+
+            username.isEmpty() -> setErrorAndFocus(binding.textInputLayoutUsername, "Required!")
+            !isValidUsername(username) -> binding.textInputLayoutUsername.requestFocus()
+
+            usernamesInUse.contains(username) -> binding.textInputLayoutUsername.requestFocus()
+
+            password.isEmpty() -> setErrorAndFocus(binding.textInputLayoutPassword, "Required!")
+            !isValidUsername(password) -> binding.textInputLayoutPassword.requestFocus()
+
+            !binding.checkBox.isChecked -> {
+                binding.errorTextView.visibility = View.VISIBLE
+                binding.errorTextView.text = "Required!"
+            }
+
+            else -> {
+                auth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(requireActivity()) {
+                        if (it.isSuccessful) {
+                            val user = User(username, null, "userImages/default_user.png")
+
+                            db.collection("users")
+                                .document(auth.uid!!)
+                                .set(user).addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        showToast("User Registered Successfully!", requireContext())
+                                        navController.navigate(R.id.action_global_homeNavigation)
+                                    } else {
+                                        showToast("User Failed to Registered!", requireContext())
+                                    }
+                                }
+                        }
+                    }
+                    .addOnFailureListener {
+                        setErrorAndFocus(
+                            binding.textInputLayoutEmailAddress,
+                            "The Email is Already in Use!"
+                        )
+                    }
+            }
+        }
     }
 
     private fun fetchUsernamesData() {

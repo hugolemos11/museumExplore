@@ -20,6 +20,9 @@ import com.example.museumexplore.databinding.FragmentLoginBinding
 import com.example.museumexplore.isValidEmail
 import com.example.museumexplore.isValidPassword
 import com.example.museumexplore.isValidUsername
+import com.example.museumexplore.modules.User
+import com.example.museumexplore.setErrorAndFocus
+import com.example.museumexplore.showToast
 import com.google.firebase.auth.FirebaseAuth
 
 class LoginFragment : Fragment() {
@@ -53,28 +56,34 @@ class LoginFragment : Fragment() {
         navController = Navigation.findNavController(view)
 
         binding.editTextEmailAddress.doOnTextChanged { text, start, before, count ->
-            when{
+            when {
                 text.toString().trim().isEmpty() -> {
                     binding.textInputLayoutEmailAddress.error = "Required!"
                 }
+
                 !isValidEmail(text.toString().trim()) -> {
                     binding.textInputLayoutEmailAddress.error = "Invalid E-mail!"
-                } else -> {
-                binding.textInputLayoutEmailAddress.error = null
-            }
+                }
+
+                else -> {
+                    binding.textInputLayoutEmailAddress.error = null
+                }
             }
         }
 
         binding.editTextPassword.doOnTextChanged { text, start, before, count ->
-            when{
+            when {
                 text.toString().trim().isEmpty() -> {
                     binding.textInputLayoutPassword.error = "Required!"
                 }
+
                 !isValidPassword(text.toString().trim()) -> {
                     binding.textInputLayoutPassword.error = "Invalid Password!"
-                } else -> {
-                binding.textInputLayoutPassword.error = null
-            }
+                }
+
+                else -> {
+                    binding.textInputLayoutPassword.error = null
+                }
             }
         }
 
@@ -87,27 +96,42 @@ class LoginFragment : Fragment() {
         }
 
         binding.loginButton.setOnClickListener {
-            val email = binding.editTextEmailAddress.text.toString()
-            val password = binding.editTextPassword.text.toString()
+            val email = binding.editTextEmailAddress.text.toString().trim()
+            val password = binding.editTextPassword.text.toString().trim()
 
-            auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(requireActivity()) { task ->
-                    if (task.isSuccessful) {
-                        Log.d(TAG, "signInWithEmail:success")
+            when {
+                email.isEmpty() -> setErrorAndFocus(binding.textInputLayoutEmailAddress, "Required!")
+                !isValidEmail(email) -> binding.textInputLayoutEmailAddress.requestFocus()
 
-                        val navOptions =
-                            NavOptions.Builder().setPopUpTo(R.id.loginFragment, true).build()
-                        navController.navigate(R.id.action_global_homeNavigation, null, navOptions)
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w(TAG, "signInWithEmail:failure", task.exception)
-                        Toast.makeText(
-                            context,
-                            "Authentication failed.",
-                            Toast.LENGTH_SHORT,
-                        ).show()
-                    }
+                password.isEmpty() -> setErrorAndFocus(binding.textInputLayoutPassword, "Required!")
+                !isValidPassword(password) -> binding.textInputLayoutPassword.requestFocus()
+
+                else -> {
+                    auth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(requireActivity()) { task ->
+                            if (task.isSuccessful) {
+                                Log.d(TAG, "signInWithEmail:success")
+
+                                val navOptions =
+                                    NavOptions.Builder().setPopUpTo(R.id.loginFragment, true)
+                                        .build()
+                                navController.navigate(
+                                    R.id.action_global_homeNavigation,
+                                    null,
+                                    navOptions
+                                )
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    "Authentication failed.",
+                                    Toast.LENGTH_SHORT,
+                                ).show()
+                            }
+                        }
                 }
+            }
+
+
         }
 
         binding.imageViewBackArrow.setOnClickListener {

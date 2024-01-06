@@ -29,14 +29,12 @@
 
     <TextView
         android:id="@+id/textView"
+        style="@style/Theme.TitleExtraLargeAutentication"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:layout_marginBottom="40dp"
-        android:fontFamily="@font/inria_sans_bold_italic"
         android:text="@string/register"
-        android:textColor="#260F01"
-        android:textSize="40sp"
         app:layout_constraintBottom_toTopOf="@+id/textInputLayoutEmailAddress"
         app:layout_constraintEnd_toEndOf="@+id/imageView"
         app:layout_constraintStart_toStartOf="@+id/imageView"
@@ -54,18 +52,21 @@
         app:boxStrokeColor="@color/blueMuseum"
         app:boxStrokeWidth="2dp"
         app:cursorColor="@color/black"
-        app:errorEnabled="true"
         app:cursorErrorColor="@color/design_default_color_error"
+        app:errorEnabled="true"
         app:hintTextColor="@color/blueMuseum"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:startIconDrawable="@android:drawable/ic_dialog_email">
+        app:startIconDrawable="@android:drawable/ic_dialog_email"
+        app:endIconMode="clear_text"
+        app:errorIconDrawable="@null">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextEmailAddress"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:lines="1"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -77,24 +78,28 @@
         android:layout_marginTop="5dp"
         android:layout_marginEnd="40dp"
         android:hint="@string/username_hint"
+        app:boxStrokeColor="@color/blueMuseum"
+        app:boxStrokeWidth="2dp"
+        app:counterEnabled="true"
+        app:counterMaxLength="20"
+        app:counterTextColor="@color/blueMuseum"
+        app:cursorColor="@color/black"
+        app:cursorErrorColor="@color/design_default_color_error"
+        app:errorEnabled="true"
+        app:hintTextColor="@color/blueMuseum"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayoutEmailAddress"
         app:startIconDrawable="@drawable/default_user"
-        app:boxStrokeColor="@color/blueMuseum"
-        app:hintTextColor="@color/blueMuseum"
-        app:cursorColor="@color/black"
-        app:boxStrokeWidth="2dp"
-        app:errorEnabled="true"
-        app:cursorErrorColor="@color/design_default_color_error"
-        app:counterEnabled="true"
-        app:counterMaxLength="20"
-        app:counterTextColor="@color/blueMuseum">
+        app:endIconMode="clear_text"
+        app:errorIconDrawable="@null">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextUsername"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:maxLength="20"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -106,21 +111,25 @@
         android:layout_marginTop="5dp"
         android:layout_marginEnd="40dp"
         android:hint="@string/password_hint"
+        app:boxStrokeColor="@color/blueMuseum"
+        app:boxStrokeWidth="2dp"
+        app:cursorColor="@color/black"
+        app:cursorErrorColor="@color/design_default_color_error"
+        app:errorEnabled="true"
+        app:hintTextColor="@color/blueMuseum"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayoutUsername"
         app:startIconDrawable="@android:drawable/ic_lock_lock"
-        app:boxStrokeWidth="2dp"
-        app:boxStrokeColor="@color/blueMuseum"
-        app:hintTextColor="@color/blueMuseum"
-        app:cursorColor="@color/black"
-        app:errorEnabled="true"
-        app:cursorErrorColor="@color/design_default_color_error">
+        app:passwordToggleEnabled="true"
+        app:errorIconDrawable="@null">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextPassword"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <CheckBox
@@ -136,19 +145,24 @@
         app:layout_constraintStart_toStartOf="@+id/textInputLayoutPassword"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayoutPassword" />
 
+    <TextView
+        android:id="@+id/errorTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/design_default_color_error"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/checkBox"
+        app:layout_constraintStart_toStartOf="@+id/checkBox"
+        app:layout_constraintTop_toBottomOf="@+id/checkBox" />
+
     <Button
         android:id="@+id/registerButton"
-        android:layout_width="208dp"
-        android:layout_height="40dp"
-        android:backgroundTint="#023859"
-        android:fontFamily="@font/inria_sans_bold"
+        style="@style/Theme.ButtonDefault"
         android:text="@string/register"
-        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/imageView"
         app:layout_constraintStart_toStartOf="@+id/imageView"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox"
-        app:rippleColor="#000000" />
+        app:layout_constraintTop_toBottomOf="@+id/errorTextView" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

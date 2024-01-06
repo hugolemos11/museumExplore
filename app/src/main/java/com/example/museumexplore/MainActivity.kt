@@ -40,10 +40,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private val auth = FirebaseAuth.getInstance()
     private val db = Firebase.firestore
 
-    private var user : User? = null
+    private var user: User? = null
 
-    private lateinit var headerImage : ImageView
-    private lateinit var headerUserName : TextView
+    private lateinit var headerImage: ImageView
+    private lateinit var headerUserName: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

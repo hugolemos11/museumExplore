@@ -174,34 +174,34 @@ class MuseumDetailsFragment : Fragment() {
             }
     }
 
-    private fun fetchLocationData() {
-        db.collection("location")
-            .whereEqualTo("museumId", museumId)
-            .get()
-            .addOnSuccessListener { documents ->
-                if (!documents.isEmpty) {
-                    val document = documents.first()
-                    val location = Location.fromSnapshot(document.id, document.data)
-                    configMap(location)
-                } else {
-                    showToast("No document found", requireContext())
+        private fun fetchLocationData() {
+            db.collection("location")
+                .whereEqualTo("museumId", museumId)
+                .get()
+                .addOnSuccessListener { documents ->
+                    if (!documents.isEmpty) {
+                        val document = documents.first()
+                        val location = Location.fromSnapshot(document.id, document.data)
+                        configMap(location)
+                    } else {
+                        showToast("No document found", requireContext())
+                    }
                 }
-            }
-            .addOnFailureListener {
-                showToast("An error occurred: ${it.localizedMessage}", requireContext())
-            }
-    }
+                .addOnFailureListener {
+                    showToast("An error occurred: ${it.localizedMessage}", requireContext())
+                }
+        }
 
-    private fun configMap(location: Location) {
-        val mapView = binding.mapView
+        private fun configMap(location: Location) {
+            val mapView = binding.mapView
 
-        mapView.mapboxMap.setCamera(
-            CameraOptions.Builder()
-                .center(Point.fromLngLat(location.longitude, location.latitude))
-                .pitch(3.0)
-                .zoom(12.0)
-                .bearing(0.0)
-                .build()
-        )
-    }
+            mapView.mapboxMap.setCamera(
+                CameraOptions.Builder()
+                    .center(Point.fromLngLat(location.longitude, location.latitude))
+                    .pitch(3.0)
+                    .zoom(12.0)
+                    .bearing(0.0)
+                    .build()
+            )
+        }
 }

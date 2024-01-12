@@ -3,6 +3,7 @@ package com.example.museumexplore.ui.autentication
 import android.graphics.Color
 import android.os.Bundle
 import android.text.InputFilter
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -137,52 +138,73 @@ class RegisterFragment : Fragment() {
     }
 
     private fun validateAndRegisterUser() {
+
+        Log.d("RegisterFragment", "validateAndRegisterUser() called")
         val email = binding.editTextEmailAddress.text.toString().trim()
         val username = binding.editTextUsername.text.toString().trim()
         val password = binding.editTextPassword.text.toString().trim()
-        when {
-            email.isEmpty() -> setErrorAndFocus(binding.textInputLayoutEmailAddress, "Required!")
-            !isValidEmail(email) -> binding.textInputLayoutEmailAddress.requestFocus()
 
-            username.isEmpty() -> setErrorAndFocus(binding.textInputLayoutUsername, "Required!")
-            !isValidUsername(username) -> binding.textInputLayoutUsername.requestFocus()
-
-            usernamesInUse.contains(username) -> binding.textInputLayoutUsername.requestFocus()
-
-            password.isEmpty() -> setErrorAndFocus(binding.textInputLayoutPassword, "Required!")
-            !isValidUsername(password) -> binding.textInputLayoutPassword.requestFocus()
-
-            !binding.checkBox.isChecked -> {
-                binding.errorTextView.visibility = View.VISIBLE
-                binding.errorTextView.text = "Required!"
-            }
-
-            else -> {
-                auth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(requireActivity()) {
-                        if (it.isSuccessful) {
-                            val user = User(username, null, "userImages/default_user.png")
-
-                            db.collection("users")
-                                .document(auth.uid!!)
-                                .set(user).addOnCompleteListener { task ->
-                                    if (task.isSuccessful) {
-                                        showToast("User Registered Successfully!", requireContext())
-                                        navController.navigate(R.id.action_global_homeNavigation)
-                                    } else {
-                                        showToast("User Failed to Registered!", requireContext())
-                                    }
-                                }
-                        }
-                    }
-                    .addOnFailureListener {
-                        setErrorAndFocus(
-                            binding.textInputLayoutEmailAddress,
-                            "The Email is Already in Use!"
-                        )
-                    }
-            }
+        if(email.isEmpty()){
+            setErrorAndFocus(binding.textInputLayoutEmailAddress, "Required!")
+            return
         }
+        if (!isValidEmail(email)) {
+            binding.textInputLayoutEmailAddress.requestFocus()
+            return
+        }
+
+        if(username.isEmpty()){
+            setErrorAndFocus(binding.textInputLayoutUsername, "Required!")
+            return
+        }
+        if (!isValidUsername(username)) {
+            binding.textInputLayoutUsername.requestFocus()
+            return
+        }
+        if(usernamesInUse.contains(username)){
+            binding.textInputLayoutUsername.requestFocus()
+            return
+        }
+
+        if(password.isEmpty()){
+            setErrorAndFocus(binding.textInputLayoutPassword, "Required!")
+            return
+        }
+        if (!isValidPassword(password)) {
+            binding.textInputLayoutPassword.requestFocus()
+            return
+        }
+
+        if (!binding.checkBox.isChecked) {
+            Log.d("RegisterFragment", "checkBox() called")
+            binding.errorTextView.visibility = View.VISIBLE
+            binding.errorTextView.text = "Required!"
+            return
+        }
+
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener(requireActivity()) {
+                if (it.isSuccessful) {
+                    val user = User(username, null, "userImages/default_user.png")
+
+                    db.collection("users")
+                        .document(auth.uid!!)
+                        .set(user).addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                showToast("User Registered Successfully!", requireContext())
+                                navController.navigate(R.id.action_global_homeNavigation)
+                            } else {
+                                showToast("User Failed to Registered!", requireContext())
+                            }
+                        }
+                }
+            }
+            .addOnFailureListener {
+                setErrorAndFocus(
+                    binding.textInputLayoutEmailAddress,
+                    "The Email is Already in Use!"
+                )
+            }
     }
 
     private fun fetchUsernamesData() {

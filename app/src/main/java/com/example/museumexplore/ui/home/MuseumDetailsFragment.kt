@@ -1,8 +1,11 @@
 package com.example.museumexplore.ui.home
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
@@ -24,6 +27,7 @@ import com.google.firebase.ktx.Firebase
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.MapboxMap
+import com.mapbox.maps.plugin.gestures.gestures
 
 class MuseumDetailsFragment : Fragment() {
 
@@ -107,9 +111,18 @@ class MuseumDetailsFragment : Fragment() {
                 bundle.putString("museumName", museumName)
                 navController.navigate(R.id.action_museumDetailsFragment_to_ticketFragment, bundle)
             }
-        }
 
-        Log.e("teste", "$museumId")
+            mapView.gestures.pitchEnabled = false
+            mapView.gestures.scrollEnabled = false
+            mapView.gestures.pinchToZoomEnabled = false
+            mapView.gestures.rotateEnabled = false
+
+            textView4.setOnClickListener {
+                val gmmIntentUri = Uri.parse("google.navigation:q=${museumLatitude},${museumLongitude}&mode=d")
+                val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                startActivity(mapIntent)
+            }
+        }
 
         fetchMuseumImagesData()
         fetchArtWorkImagesData()
@@ -178,38 +191,23 @@ class MuseumDetailsFragment : Fragment() {
             }
     }
 
-    /*private fun fetchLocationData() {
-        db.collection("location")
-            .whereEqualTo("museumId", museumId)
-            .get()
-            .addOnSuccessListener { documents ->
-                if (!documents.isEmpty) {
-                    val document = documents.first()
-                    val location = Location.fromSnapshot(document.id, document.data)
-                    configMap(location)
-                } else {
-                    showToast("No document found", requireContext())
-                }
-            }
-            .addOnFailureListener {
-                showToast("An error occurred: ${it.localizedMessage}", requireContext())
-            }
-    }*/
-
     private fun configMap() {
-        museumLatitude?.let { latitude ->
-            museumLongitude?.let { longitude ->
-                val mapView = binding.mapView
+        val mapView = binding.mapView
 
-                mapView.mapboxMap.setCamera(
-                    CameraOptions.Builder()
-                        .center(Point.fromLngLat(longitude, latitude))
-                        .pitch(3.0)
-                        .zoom(12.0)
-                        .bearing(0.0)
-                        .build()
-                )
-            }
-        }
+        mapView.mapboxMap.setCamera(
+            CameraOptions.Builder()
+                .center(museumLongitude?.let {
+                    museumLatitude?.let { it1 ->
+                        Point.fromLngLat(
+                            it,
+                            it1
+                        )
+                    }
+                })
+                .pitch(3.0)
+                .zoom(12.0)
+                .bearing(0.0)
+                .build()
+        )
     }
 }

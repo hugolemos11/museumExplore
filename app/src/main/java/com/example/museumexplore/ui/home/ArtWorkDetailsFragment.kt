@@ -78,7 +78,7 @@ class ArtWorkDetailsFragment : Fragment() {
 
         textToSpeech = TextToSpeech(requireContext()) { status ->
             if (status == TextToSpeech.SUCCESS) {
-                val result = textToSpeech.setLanguage(Locale.JAPAN)
+                val result = textToSpeech.setLanguage(Locale.getDefault())
                 if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                     showToast("Language not supported", requireContext())
                 }

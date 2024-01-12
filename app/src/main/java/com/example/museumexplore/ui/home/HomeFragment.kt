@@ -148,8 +148,8 @@ class HomeFragment : Fragment() {
                 bundle.putString("museumName", museumsList[position].name)
                 bundle.putString("museumDescription", museumsList[position].description)
                 bundle.putInt("museumRate", museumsList[position].rate)
-                bundle.putDouble("museumLongitude", museumsList[position].longitude)
-                bundle.putDouble("museumLatitude", museumsList[position].latitude)
+                bundle.putDouble("museumLongitude", museumsList[position].location.longitude)
+                bundle.putDouble("museumLatitude", museumsList[position].location.latitude)
                 bundle.putString("museumPathToImage", museumsList[position].pathToImage)
                 navController.navigate(R.id.action_homeFragment_to_museumDetailsFragment, bundle)
             }

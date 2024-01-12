@@ -1,18 +1,20 @@
 package com.example.museumexplore.ui.autentication
 
 import android.content.ContentValues.TAG
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
-import com.example.museumexplore.R
-import com.example.museumexplore.databinding.FragmentLoginBinding
+import androidx.navigation.Navigation
 import com.example.museumexplore.databinding.FragmentRecoverPasswordBinding
+import com.example.museumexplore.isValidEmail
+import com.example.museumexplore.setErrorAndFocus
+import com.example.museumexplore.showToast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -27,9 +29,7 @@ class RecoverPasswordFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentRecoverPasswordBinding.inflate(inflater, container, false)
         return binding.root
@@ -43,21 +43,47 @@ class RecoverPasswordFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.recoverPasswordButton.setOnClickListener {
-            activity?.fragmentManager?.popBackStack();
+        // Initialize 'auth' here
+        auth = FirebaseAuth.getInstance()
+
+        navController = Navigation.findNavController(view)
+
+        binding.editTextEmailAddress.doOnTextChanged { text, start, before, count ->
+            when {
+                text.toString().trim().isEmpty() -> {
+                    binding.textInputLayoutEmailAddress.error = "Required!"
+                }
+
+                !isValidEmail(text.toString().trim()) -> {
+                    binding.textInputLayoutEmailAddress.error = "Invalid E-mail!"
+                }
+
+                else -> {
+                    binding.textInputLayoutEmailAddress.error = null
+                }
+            }
         }
 
-        binding.editTextEmailAddress.setOnClickListener {
-            val email = binding.editTextEmailAddress.text.toString()
-            Firebase.auth.sendPasswordResetEmail(email)
-                .addOnCompleteListener { task ->
+        binding.recoverPasswordButton.setOnClickListener {
+            val email = binding.editTextEmailAddress.text.toString().trim()
+            if (email.isEmpty()) {
+                setErrorAndFocus(binding.textInputLayoutEmailAddress, "Required!")
+            } else if (!isValidEmail(email)) {
+                binding.textInputLayoutEmailAddress.requestFocus()
+            } else {
+                auth.sendPasswordResetEmail(email).addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        Toast.makeText(requireContext(),  "Email Sent Successfully", Toast.LENGTH_LONG).show()
-                        Log.d(TAG, "Email sent.")
+                        showToast("Email Sent Successfully", requireContext())
+                        navController.popBackStack()
                     } else {
-                        Toast.makeText(requireContext(),  "Could Not Send Email", Toast.LENGTH_LONG).show()
+                        showToast("Could Not Send Email", requireContext())
                     }
                 }
+            }
+        }
+
+        binding.imageViewBackArrow.setOnClickListener {
+            navController.popBackStack()
         }
     }
 }

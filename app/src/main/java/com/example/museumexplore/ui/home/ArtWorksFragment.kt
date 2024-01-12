@@ -1,7 +1,7 @@
 package com.example.museumexplore.ui.home
 
-import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,12 +13,11 @@ import androidx.navigation.Navigation
 import com.example.museumexplore.R
 import com.example.museumexplore.databinding.ArtWorksDisplayBinding
 import com.example.museumexplore.databinding.FragmentArtWorksBinding
-import com.example.museumexplore.databinding.MuseumDisplayBinding
 import com.example.museumexplore.modules.ArtWorks
-import com.example.museumexplore.modules.Museum
+import com.example.museumexplore.setImage
+import com.example.museumexplore.showToast
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
 
 
 class ArtWorksFragment : Fragment() {
@@ -29,7 +28,9 @@ class ArtWorksFragment : Fragment() {
     private lateinit var navController: NavController
 
     var artWorksList = arrayListOf<ArtWorks>()
-    private var  adapter = ArtWorksAdapter()
+    private var adapter = ArtWorksAdapter()
+
+    private val db = Firebase.firestore
 
     private var museumId: String? = null
     private var museumName: String? = null
@@ -59,31 +60,34 @@ class ArtWorksFragment : Fragment() {
         // Remove the title of fragment on the actionBar
         (activity as AppCompatActivity).supportActionBar?.title = ""
 
-        navController = Navigation.findNavController(view);
+        navController = Navigation.findNavController(view)
 
         binding.textViewMuseumName.text = museumName
-        binding.gridViewArtWorks.adapter = adapter
 
-        val db = Firebase.firestore
-        db.collection("museums/$museumId/artWorks")
-            .addSnapshotListener { snapshot, error ->
-                snapshot?.documents?.let {
-                    this.artWorksList.clear()
-                    for (document in it) {
-                        document.data?.let{ data ->
-                            this.artWorksList.add(
-                                ArtWorks.fromSnapshot(
-                                    document.id,
-                                    data
-                                )
-                            )
-                        }
-                    }
-                    this.adapter.notifyDataSetChanged()
+        fetchArtWorksData()
+    }
+
+    private fun fetchArtWorksData() {
+        db.collection("artWorks")
+            .whereEqualTo("museumId", "$museumId")
+            .get()
+            .addOnSuccessListener { documents ->
+                // clear de List for don't duplicate de data
+                artWorksList.clear()
+
+                for (document in documents) {
+                    val artWork = ArtWorks.fromSnapshot(document.id, document.data)
+                    this.artWorksList.add(artWork)
+                    Log.e("teste2", "$artWork")
                 }
-            }
+                binding.gridViewArtWorks.adapter =
+                    ArtWorksAdapter()
 
-        //artWorksList.add(ArtWorks("aa", "ArtWork1", "Picasso", 1986 ,"Cubism", "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum." , "artWorksImages/art_work1.jpg"))
+                ArtWorksAdapter().notifyDataSetChanged()
+            }
+            .addOnFailureListener {
+                showToast("An error occurred: ${it.localizedMessage}", requireContext())
+            }
     }
 
     inner class ArtWorksAdapter : BaseAdapter() {
@@ -105,21 +109,13 @@ class ArtWorksFragment : Fragment() {
             rootView.textViewArtWorkName.text = artWorksList[position].name
             rootView.textViewCategory.text = artWorksList[position].category
 
-            artWorksList[position].pathToImage?.let {
-                val storage = Firebase.storage
-                val storageRef = storage.reference
-                val pathReference = storageRef.child(it)
-                val ONE_MEGABYTE: Long = 10 * 1024 * 1024
-                pathReference.getBytes(ONE_MEGABYTE).addOnSuccessListener { data ->
-                    val bitmap = BitmapFactory.decodeByteArray(data, 0, data.count())
-                    rootView.imageViewArtWork.setImageBitmap(bitmap)
-                }.addOnFailureListener {
-                    // Handle any errors
-                }
+            setImage(
+                artWorksList[position].pathToImage,
+                rootView.imageViewArtWork,
+                requireContext()
+            )
 
-            }
-
-            rootView.root.setOnClickListener{
+            rootView.root.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putString("artWorkId", artWorksList[position].id)
                 bundle.putString("artWorkName", artWorksList[position].name)
@@ -128,7 +124,10 @@ class ArtWorksFragment : Fragment() {
                 bundle.putString("artWorkCategory", artWorksList[position].category)
                 bundle.putInt("artWorkYear", artWorksList[position].year)
                 bundle.putString("artWorkPathToImage", artWorksList[position].pathToImage)
-                navController.navigate(R.id.action_artWorksFragment_to_artWorkDetailsFragment, bundle)
+                navController.navigate(
+                    R.id.action_artWorksFragment_to_artWorkDetailsFragment,
+                    bundle
+                )
             }
 
             return rootView.root

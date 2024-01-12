@@ -1,11 +1,17 @@
 package com.example.museumexplore.ui.home
 
-import android.graphics.BitmapFactory
+import android.app.SearchManager
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.ImageView
+import androidx.appcompat.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
@@ -14,9 +20,11 @@ import com.example.museumexplore.R
 import com.example.museumexplore.databinding.FragmentHomeBinding
 import com.example.museumexplore.databinding.MuseumDisplayBinding
 import com.example.museumexplore.modules.Museum
+import com.example.museumexplore.setImage
+import com.example.museumexplore.showToast
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
+import java.util.Locale
 
 
 class HomeFragment : Fragment() {
@@ -26,8 +34,9 @@ class HomeFragment : Fragment() {
 
     private lateinit var navController: NavController
 
-    var museums = arrayListOf<Museum>()
-    private  var  adapter = MuseumAdapter()
+    private var museumsList = arrayListOf<Museum>()
+
+    private val db = Firebase.firestore
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,37 +58,77 @@ class HomeFragment : Fragment() {
         // Remove the title of fragment on the actionBar
         (activity as AppCompatActivity).supportActionBar?.title = ""
 
-        navController = Navigation.findNavController(view);
+        navController = Navigation.findNavController(view)
 
-        binding.gridViewMuseums.adapter = adapter
+        fetchMuseumsData()
 
-        val db = Firebase.firestore
-        db.collection("museums")
-            .addSnapshotListener { snapshoot, error ->
-                snapshoot?.documents?.let {
-                    this.museums.clear()
-                    for (document in it) {
-                        document.data?.let{ data ->
-                            this.museums.add(
-                                Museum.fromSnapshot(
-                                    document.id,
-                                    data
-                                )
-                            )
-                        }
-                    }
-                    this.adapter.notifyDataSetChanged()
-                }
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                filterMuseums(query)
+                return true
             }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                filterMuseums(newText)
+                return true
+            }
+
+        })
+    }
+
+    private fun fetchMuseumsData() {
+        db.collection("museums")
+            .get()
+            .addOnSuccessListener { documents ->
+                // clear de List for don't duplicate de data
+                museumsList.clear()
+
+                for (document in documents) {
+                    val museum = Museum.fromSnapshot(document.id, document.data)
+                    this.museumsList.add(museum)
+                }
+                binding.gridViewMuseums.adapter =
+                    MuseumAdapter()
+
+                MuseumAdapter().notifyDataSetChanged()
+            }
+            .addOnFailureListener {
+                showToast("An error occurred: ${it.localizedMessage}", requireContext())
+            }
+    }
+
+    private fun filterMuseums(query: String?) {
+        if (query != null) {
+            db.collection("museums")
+                .whereGreaterThanOrEqualTo("nameSearch", query)
+                .whereLessThanOrEqualTo("nameSearch", query + '\uf8ff')
+                .get()
+                .addOnSuccessListener { documents ->
+                    // clear de List for don't duplicate de data
+                    museumsList.clear()
+
+                    for (document in documents) {
+                        val museum = Museum.fromSnapshot(document.id, document.data)
+                        this.museumsList.add(museum)
+                    }
+                    binding.gridViewMuseums.adapter =
+                        MuseumAdapter()
+
+                    MuseumAdapter().notifyDataSetChanged()
+                }
+                .addOnFailureListener {
+                    showToast("An error occurred: ${it.localizedMessage}", requireContext())
+                }
+        }
     }
 
     inner class MuseumAdapter : BaseAdapter() {
         override fun getCount(): Int {
-            return museums.size
+            return museumsList.size
         }
 
         override fun getItem(position: Int): Any {
-            return museums[position]
+            return museumsList[position]
         }
 
         override fun getItemId(position: Int): Long {
@@ -89,30 +138,19 @@ class HomeFragment : Fragment() {
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
             val rootView = MuseumDisplayBinding.inflate(layoutInflater)
 
-            rootView.textViewMuseumName.text = museums[position].name
+            rootView.textViewMuseumName.text = museumsList[position].name
 
-            museums[position].pathToImage?.let {
-                val storage = Firebase.storage
-                val storageRef = storage.reference
-                val pathReference = storageRef.child(it)
-                val ONE_MEGABYTE: Long = 10 * 1024 * 1024
-                pathReference.getBytes(ONE_MEGABYTE).addOnSuccessListener { data ->
-                    val bitmap = BitmapFactory.decodeByteArray(data, 0, data.count())
-                    rootView.imageView3.setImageBitmap(bitmap)
-                }.addOnFailureListener {
-                    // Handle any errors
-                }
+            setImage(museumsList[position].pathToImage, rootView.imageView3, requireContext())
 
-            }
-
-            rootView.root.setOnClickListener{
+            rootView.root.setOnClickListener {
                 val bundle = Bundle()
-                bundle.putString("museumId", museums[position].id)
-                bundle.putString("museumName", museums[position].name)
-                bundle.putString("museumDescription", museums[position].description)
-                bundle.putString("museumLocation", museums[position].location)
-                bundle.putInt("museumRate", museums[position].rate)
-                bundle.putString("museumPathToImage", museums[position].pathToImage)
+                bundle.putString("museumId", museumsList[position].id)
+                bundle.putString("museumName", museumsList[position].name)
+                bundle.putString("museumDescription", museumsList[position].description)
+                bundle.putInt("museumRate", museumsList[position].rate)
+                bundle.putDouble("museumLongitude", museumsList[position].location.longitude)
+                bundle.putDouble("museumLatitude", museumsList[position].location.latitude)
+                bundle.putString("museumPathToImage", museumsList[position].pathToImage)
                 navController.navigate(R.id.action_homeFragment_to_museumDetailsFragment, bundle)
             }
 

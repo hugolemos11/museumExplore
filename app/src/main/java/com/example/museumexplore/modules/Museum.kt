@@ -1,22 +1,29 @@
 package com.example.museumexplore.modules
 
-data class Museum (
+import com.google.firebase.firestore.GeoPoint
+
+data class Museum(
     var id: String,
     var name: String,
+    var nameSearch: String,
     var description: String,
-    var location: String,
     var rate: Int,
+    var location: GeoPoint,
     var pathToImage: String?
-){
-    companion object{
-        fun fromSnapshot(id : String, snapshot: Map<String,Any>) : Museum{
-            return Museum(id,
+) {
+    companion object {
+        fun fromSnapshot(id: String, snapshot: Map<String, Any>): Museum {
+
+            return Museum(
+                id,
                 snapshot["name"] as String,
+                snapshot["nameSearch"] as String,
                 snapshot["description"] as String,
-                snapshot["location"] as String,
                 (snapshot["rate"] as Long).toInt(),
+                snapshot["location"] as GeoPoint,
                 snapshot["pathToImage"] as? String?
             )
+
         }
     }
 }

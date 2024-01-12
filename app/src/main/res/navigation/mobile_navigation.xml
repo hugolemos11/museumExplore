@@ -38,6 +38,9 @@
             <action
                 android:id="@+id/action_museumDetailsFragment_to_eventDetailsFragment"
                 app:destination="@id/eventDetailsFragment" />
+            <action
+                android:id="@+id/action_museumDetailsFragment_to_ticketFragment"
+                app:destination="@id/ticketFragment" />
         </fragment>
         <fragment
             android:id="@+id/artWorkDetailsFragment"
@@ -52,6 +55,11 @@
             android:name="com.example.museumexplore.ui.home.EventDetailsFragment"
             android:label="fragment_event_details"
             tools:layout="@layout/fragment_event_details" />
+        <fragment
+            android:id="@+id/ticketFragment"
+            android:name="com.example.museumexplore.ui.home.TicketFragment"
+            android:label="fragment_ticket"
+            tools:layout="@layout/fragment_ticket" />
     </navigation>
     <navigation android:id="@+id/autenticationNavigation"
         app:startDestination="@id/loginFragment">

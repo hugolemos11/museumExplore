@@ -5,4 +5,6 @@
     <color name="blueMuseum">#023859</color>
     <color name="background">#F2E6D0</color>
     <color name="nav">#A68263</color>
+    <color name="description">#545247</color>
+    <color name="title">#40311E</color>
 </resources>

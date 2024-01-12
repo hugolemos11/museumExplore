@@ -9,6 +9,7 @@
         android:layout_width="170dp"
         android:layout_height="170dp"
         app:cardCornerRadius="10dp"
+        app:cardElevation="10dp"
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="229dp">
 
@@ -18,18 +19,18 @@
 
             <ImageView
                 android:id="@+id/imageView3"
+                style="@style/ImageViewMuseumsAndArtWorks"
                 android:layout_width="170dp"
                 android:layout_height="170dp"
                 android:scaleType="centerCrop"
-                android:tintMode="multiply"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tint="#F1D7C1" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/textViewMuseumName"
+                style="@style/Theme.TitleWhiteMedium"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"

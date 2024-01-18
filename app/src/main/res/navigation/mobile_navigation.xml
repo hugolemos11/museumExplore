@@ -60,6 +60,9 @@
             android:name="com.example.museumexplore.ui.home.TicketFragment"
             android:label="fragment_ticket"
             tools:layout="@layout/fragment_ticket" />
+        <action
+            android:id="@+id/action_global_generateQrCodeFragment"
+            app:destination="@id/generateQrCodeFragment" />
     </navigation>
     <navigation android:id="@+id/autenticationNavigation"
         app:startDestination="@id/loginFragment">
@@ -89,4 +92,8 @@
             android:id="@+id/action_global_homeNavigation"
             app:destination="@id/homeNavigation" />
     </navigation>
+    <fragment
+        android:id="@+id/generateQrCodeFragment"
+        android:name="com.example.museumexplore.ui.home.GenerateQrCodeFragment"
+        android:label="GenerateQrCodeFragment" />
 </navigation>

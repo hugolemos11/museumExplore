@@ -220,7 +220,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
 
             R.id.navTicket -> {
-
+                navController.navigate(R.id.action_global_generateQrCodeFragment)
             }
 
             R.id.navScan -> {

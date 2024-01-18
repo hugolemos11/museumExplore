@@ -118,7 +118,7 @@ class MuseumDetailsFragment : Fragment() {
             mapView.gestures.rotateEnabled = false
 
             textView4.setOnClickListener {
-                val gmmIntentUri = Uri.parse("google.navigation:q=${museumLatitude},${museumLongitude}&mode=d")
+                val gmmIntentUri = Uri.parse("google.navigation:q=${museumLatitude},${museumLongitude}")
                 val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
                 startActivity(mapIntent)
             }

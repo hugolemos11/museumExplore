@@ -1,6 +1,7 @@
 package com.example.museumexplore
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.renderscript.ScriptGroup.Binding
 import android.widget.Adapter
 import android.widget.EditText
@@ -27,6 +28,7 @@ fun showToast(message: String, context: Context) {
 }
 
 fun setImage(pathToImage: String?, imageView: ImageView, context: Context) {
+    val imageCache = mutableMapOf<String, Bitmap?>()
     pathToImage?.let { imagePath ->
         // Load the image from Firebase Storage
         val storage = Firebase.storage

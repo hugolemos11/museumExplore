@@ -28,7 +28,6 @@ fun showToast(message: String, context: Context) {
 }
 
 fun setImage(pathToImage: String?, imageView: ImageView, context: Context) {
-    val imageCache = mutableMapOf<String, Bitmap?>()
     pathToImage?.let { imagePath ->
         // Load the image from Firebase Storage
         val storage = Firebase.storage

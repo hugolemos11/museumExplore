@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private val auth = FirebaseAuth.getInstance()
     private val db = Firebase.firestore
-
+    private var uid : String? = null
     private var user: User? = null
 
     private lateinit var headerImage: ImageView
@@ -142,10 +142,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (currentUser != null) {
             // User is signed in
             // You can get the user's information using currentUser
-            val uid = currentUser.uid
+            uid = currentUser.uid
             val email = currentUser.email
 
-            fetchUserData(uid)
+            fetchUserData(uid!!)
 
             // Inflate the menu and set it for the NavigationView
             menuInflater.inflate(R.menu.nav_menu_autenticated, navigationView.menu)
@@ -224,11 +224,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
 
             R.id.navScan -> {
-
+                navController.navigate(R.id.action_global_generateQrCodeFragment)
             }
 
             R.id.navSettings -> {
-
+                val bundle = Bundle()
+                bundle.putString("uid", uid)
+                navController.navigate(R.id.action_global_settingsFragment, bundle)
             }
 
             R.id.navLogout -> {

@@ -127,6 +127,8 @@
         style="@style/Theme.ButtonDefault"
         android:layout_marginBottom="30dp"
         android:text="@string/login"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/textViewPassword"
         app:layout_constraintStart_toStartOf="@+id/textViewPassword"

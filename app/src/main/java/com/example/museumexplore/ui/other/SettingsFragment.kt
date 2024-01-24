@@ -1,6 +1,7 @@
 package com.example.museumexplore.ui.other
 
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Switch
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -55,6 +57,7 @@ class SettingsFragment : Fragment() {
         _binding = null
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         arguments?.let { bundle ->
@@ -83,6 +86,7 @@ class SettingsFragment : Fragment() {
             }
             //shouldShowRequestPermissionRationale(android.Manifest.permission.POST_NOTIFICATIONS
     }
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun askForNotificationPermission() {
         ActivityCompat.requestPermissions(
             requireActivity(),

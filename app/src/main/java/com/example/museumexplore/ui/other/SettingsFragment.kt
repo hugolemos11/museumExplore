@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Switch
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -34,8 +35,8 @@ class SettingsFragment : Fragment() {
     private val db = Firebase.firestore
     private var userId: String? = null
     private var user: User? = null
-    private lateinit var headerImage: ImageView
-    private lateinit var headerUserName: TextView
+    private var notificationSwitch: Switch? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -62,6 +63,18 @@ class SettingsFragment : Fragment() {
 
         if (userId != null) {
             fetchUserData(userId!!)
+        }
+
+        notificationSwitch = binding.notificationSwitch
+
+        notificationSwitch!!.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                // Lógica para lidar com a ativação das notificações
+                // Por exemplo, enviar uma notificação
+            } else {
+                // Lógica para lidar com a desativação das notificações
+                // Por exemplo, cancelar as notificações
+            }
         }
     }
 

@@ -3,6 +3,7 @@ package com.example.museumexplore.ui.other
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,10 +28,12 @@ import com.example.museumexplore.modules.TicketAdapter
 import com.example.museumexplore.modules.User
 import com.example.museumexplore.setImage
 import com.example.museumexplore.showToast
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlin.math.abs
+import kotlin.system.exitProcess
 
 class SettingsFragment : Fragment() {
 
@@ -42,6 +45,7 @@ class SettingsFragment : Fragment() {
     private var user: User? = null
     private var notificationSwitch: Switch? = null
     private val requestCodeNotificationPermission = 1001
+    private var snackBar: Snackbar? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -67,24 +71,44 @@ class SettingsFragment : Fragment() {
         (activity as AppCompatActivity).supportActionBar?.title = ""
 
         navController = Navigation.findNavController(view)
-
+        notificationSwitch = binding.notificationSwitch
         if (userId != null) {
             fetchUserData(userId!!)
         }
+        if (ContextCompat.checkSelfPermission(
+                requireContext(), android.Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED) {
+            notificationSwitch?.isChecked = true
+        }
 
-        notificationSwitch = binding.notificationSwitch
-
-       notificationSwitch!!.setOnClickListener {
-                if (ContextCompat.checkSelfPermission(
-                        requireContext(), android.Manifest.permission.POST_NOTIFICATIONS
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    askForNotificationPermission()
-                } else {
-                    notificationSwitch?.isEnabled = false
-                }
+        notificationSwitch!!.setOnClickListener {
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(), android.Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                askForNotificationPermission()
+            } else {
+                requireContext().revokeSelfPermissionOnKill(android.Manifest.permission.POST_NOTIFICATIONS)
+                showRevokeSuccessSnackBar()
             }
-            //shouldShowRequestPermissionRationale(android.Manifest.permission.POST_NOTIFICATIONS
+        }
+        if (notificationSwitch!!.isChecked) {
+            askForNotificationPermission()
+        }
+
+    }
+    private fun showRevokeSuccessSnackBar() {
+        snackBar?.dismiss()
+        snackBar = Snackbar.make(
+            requireView(),
+            "Permission has been revoked! Restart app to see the change.",
+            Snackbar.LENGTH_INDEFINITE,
+        ).apply {
+            setAction("Quit App") {
+                exitProcess(0)
+            }
+        }
+        snackBar?.show()
     }
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun askForNotificationPermission() {
@@ -103,7 +127,7 @@ class SettingsFragment : Fragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == requestCodeNotificationPermission && grantResults.isNotEmpty()) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                notificationSwitch?.isEnabled = true
+                notificationSwitch?.isChecked = true
             } else {
                 showToast("Não deu permissão para as notificações.", requireContext())
             }

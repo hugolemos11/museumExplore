@@ -1,5 +1,6 @@
 package com.example.museumexplore.ui.other
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,8 @@ import android.widget.ImageView
 import android.widget.Switch
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -36,6 +39,7 @@ class SettingsFragment : Fragment() {
     private var userId: String? = null
     private var user: User? = null
     private var notificationSwitch: Switch? = null
+    private val requestCodeNotificationPermission = 1001
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -67,17 +71,40 @@ class SettingsFragment : Fragment() {
 
         notificationSwitch = binding.notificationSwitch
 
-        notificationSwitch!!.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                // Lógica para lidar com a ativação das notificações
-                // Por exemplo, enviar uma notificação
+       notificationSwitch!!.setOnClickListener {
+                if (ContextCompat.checkSelfPermission(
+                        requireContext(), android.Manifest.permission.POST_NOTIFICATIONS
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    askForNotificationPermission()
+                } else {
+                    notificationSwitch?.isEnabled = false
+                }
+            }
+            //shouldShowRequestPermissionRationale(android.Manifest.permission.POST_NOTIFICATIONS
+    }
+    private fun askForNotificationPermission() {
+        ActivityCompat.requestPermissions(
+            requireActivity(),
+            arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+            requestCodeNotificationPermission
+        )
+    }
+    @Deprecated("Deprecated in Java")
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == requestCodeNotificationPermission && grantResults.isNotEmpty()) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                notificationSwitch?.isEnabled = true
             } else {
-                // Lógica para lidar com a desativação das notificações
-                // Por exemplo, cancelar as notificações
+                showToast("Não deu permissão para as notificações.", requireContext())
             }
         }
     }
-
     private fun fetchUserData(uid: String) {
         db.collection("users")
             .document(uid)

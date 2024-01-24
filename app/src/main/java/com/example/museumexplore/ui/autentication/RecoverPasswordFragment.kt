@@ -48,7 +48,7 @@ class RecoverPasswordFragment : Fragment() {
 
         navController = Navigation.findNavController(view)
 
-        binding.editTextEmailAddress.doOnTextChanged { text, start, before, count ->
+        /*.editTextEmailAddress.doOnTextChanged { text, start, before, count ->
             when {
                 text.toString().trim().isEmpty() -> {
                     binding.textInputLayoutEmailAddress.error = "Required!"
@@ -62,7 +62,8 @@ class RecoverPasswordFragment : Fragment() {
                     binding.textInputLayoutEmailAddress.error = null
                 }
             }
-        }
+        }*/
+        
 
         binding.recoverPasswordButton.setOnClickListener {
             val email = binding.editTextEmailAddress.text.toString().trim()
@@ -81,7 +82,6 @@ class RecoverPasswordFragment : Fragment() {
                 }
             }
         }
-
         binding.imageViewBackArrow.setOnClickListener {
             navController.popBackStack()
         }

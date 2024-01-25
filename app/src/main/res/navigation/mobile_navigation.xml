@@ -102,5 +102,14 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.museumexplore.ui.other.SettingsFragment"
-        android:label="SettingsFragment" />
+        android:label="SettingsFragment" >
+        <action
+            android:id="@+id/action_settingsFragment_to_editProfileFragment3"
+            app:destination="@id/editProfileFragment3" />
+    </fragment>
+    <fragment
+        android:id="@+id/editProfileFragment3"
+        android:name="com.example.museumexplore.ui.other.EditProfileFragment"
+        android:label="fragment_edit_profile"
+        tools:layout="@layout/fragment_edit_profile" />
 </navigation>

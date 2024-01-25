@@ -120,15 +120,21 @@ class SettingsFragment : Fragment() {
                         }
                     }
                     .addOnFailureListener { exception ->
-                        Log.e(TAG, "Error deleting user account: ${exception.message}")
-                        // Trate o erro de exclusão da conta aqui, se necessário
+                        showToast("Erro ao eliminar a conta", requireContext())
                     }
             })
             builder.setNegativeButton("Não", DialogInterface.OnClickListener {dialog, id ->
                 dialog.cancel()
             })
-            var alert = builder.create()
+            val alert = builder.create()
             alert.show()
+        }
+
+        binding.editProfileTextView.setOnClickListener {
+            val auth = FirebaseAuth.getInstance()
+            val bundle = Bundle()
+            bundle.putString("uid", auth.currentUser?.uid)
+            navController.navigate(R.id.carouselRecyclerViewEvents)
         }
     }
     private fun showRevokeSuccessSnackBar() {

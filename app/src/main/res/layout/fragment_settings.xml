@@ -29,13 +29,13 @@
         android:layout_marginBottom="5dp"
         android:text="Ricardo Fernandes"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/editProfile"
+        app:layout_constraintBottom_toTopOf="@+id/editProfileTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/profileImage"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/editProfile"
+        android:id="@+id/editProfileTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"

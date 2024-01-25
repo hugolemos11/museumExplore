@@ -1,5 +1,7 @@
 package com.example.museumexplore.ui.other
 
+import android.content.ContentValues.TAG
+import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -11,6 +13,7 @@ import android.widget.ImageView
 import android.widget.Switch
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -21,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
+import com.example.museumexplore.R
 import com.example.museumexplore.databinding.FragmentSettingsBinding
 import com.example.museumexplore.databinding.FragmentTicketBinding
 import com.example.museumexplore.modules.Ticket
@@ -30,6 +34,7 @@ import com.example.museumexplore.setImage
 import com.example.museumexplore.showToast
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlin.math.abs
@@ -96,12 +101,39 @@ class SettingsFragment : Fragment() {
             askForNotificationPermission()
         }
 
+        binding.removeAccountButton.setOnClickListener {
+            val user = Firebase.auth.currentUser!!
+            val builder = AlertDialog.Builder(requireActivity())
+            builder.setTitle(getString(R.string.delete_account_confirm))
+            builder.setMessage(getString(R.string.delete_account_message))
+            builder.setPositiveButton("Sim", DialogInterface.OnClickListener { dialog, id ->
+                dialog.cancel()
+                showToast("Conta eliminada", requireContext())
+                user.delete()
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Log.d(TAG, "User account deleted.")
+                            showToast("Conta eliminada", requireContext())
+                        }
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.e(TAG, "Error deleting user account: ${exception.message}")
+                        // Trate o erro de exclusão da conta aqui, se necessário
+                    }
+
+            })
+            builder.setNegativeButton("Não", DialogInterface.OnClickListener {dialog, id ->
+                dialog.cancel()
+            })
+            var alert = builder.create()
+            alert.show()
+        }
     }
     private fun showRevokeSuccessSnackBar() {
         snackBar?.dismiss()
         snackBar = Snackbar.make(
             requireView(),
-            "A permissão foi removida, por favor, reinicie a aplicação para aplicar as alterações.",
+            "A permissão foi alterada, por favor, reinicie a aplicação para aplicar as alterações.",
             Snackbar.LENGTH_INDEFINITE,
         ).apply {
             setAction("Sair da aplicação") {

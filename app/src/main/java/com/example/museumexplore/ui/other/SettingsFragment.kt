@@ -134,7 +134,7 @@ class SettingsFragment : Fragment() {
             val auth = FirebaseAuth.getInstance()
             val bundle = Bundle()
             bundle.putString("uid", auth.currentUser?.uid)
-            navController.navigate(R.id.carouselRecyclerViewEvents)
+            navController.navigate(R.id.action_settingsFragment_to_editProfileFragment, bundle)
         }
     }
     private fun showRevokeSuccessSnackBar() {

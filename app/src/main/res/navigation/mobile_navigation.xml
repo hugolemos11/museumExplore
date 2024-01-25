@@ -64,8 +64,8 @@
             android:id="@+id/action_global_generateQrCodeFragment"
             app:destination="@id/generateQrCodeFragment" />
         <action
-            android:id="@+id/action_global_settingsFragment"
-            app:destination="@id/settingsFragment" />
+            android:id="@+id/action_global_settingsNavigation"
+            app:destination="@id/settingsNavigation" />
     </navigation>
     <navigation android:id="@+id/autenticationNavigation"
         app:startDestination="@id/loginFragment">
@@ -99,17 +99,20 @@
         android:id="@+id/generateQrCodeFragment"
         android:name="com.example.museumexplore.ui.home.GenerateQrCodeFragment"
         android:label="GenerateQrCodeFragment" />
-    <fragment
-        android:id="@+id/settingsFragment"
-        android:name="com.example.museumexplore.ui.other.SettingsFragment"
-        android:label="SettingsFragment" >
-        <action
-            android:id="@+id/action_settingsFragment_to_editProfileFragment3"
-            app:destination="@id/editProfileFragment3" />
-    </fragment>
-    <fragment
-        android:id="@+id/editProfileFragment3"
-        android:name="com.example.museumexplore.ui.other.EditProfileFragment"
-        android:label="fragment_edit_profile"
-        tools:layout="@layout/fragment_edit_profile" />
+    <navigation android:id="@+id/settingsNavigation"
+        app:startDestination="@id/settingsFragment">
+        <fragment
+            android:id="@+id/settingsFragment"
+            android:name="com.example.museumexplore.ui.other.SettingsFragment"
+            android:label="SettingsFragment">
+            <action
+                android:id="@+id/action_settingsFragment_to_editProfileFragment"
+                app:destination="@id/editProfileFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/editProfileFragment"
+            android:name="com.example.museumexplore.ui.other.EditProfileFragment"
+            android:label="fragment_edit_profile"
+            tools:layout="@layout/fragment_edit_profile" />
+    </navigation>
 </navigation>

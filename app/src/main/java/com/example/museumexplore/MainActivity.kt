@@ -230,7 +230,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.navSettings -> {
                 val bundle = Bundle()
                 bundle.putString("uid", uid)
-                navController.navigate(R.id.action_global_settingsFragment, bundle)
+                navController.navigate(R.id.action_global_settingsNavigation, bundle)
             }
 
             R.id.navLogout -> {

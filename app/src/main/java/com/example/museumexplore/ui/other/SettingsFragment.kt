@@ -104,6 +104,7 @@ class SettingsFragment : Fragment() {
         binding.removeAccountButton.setOnClickListener {
             val user = Firebase.auth.currentUser!!
             val builder = AlertDialog.Builder(requireActivity())
+            val auth = FirebaseAuth.getInstance()
             builder.setTitle(getString(R.string.delete_account_confirm))
             builder.setMessage(getString(R.string.delete_account_message))
             builder.setPositiveButton("Sim", DialogInterface.OnClickListener { dialog, id ->
@@ -112,6 +113,8 @@ class SettingsFragment : Fragment() {
                 user.delete()
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
+                            fragmentManager?.popBackStack()
+                            auth.signOut()
                             Log.d(TAG, "User account deleted.")
                             showToast("Conta eliminada", requireContext())
                         }
@@ -120,7 +123,6 @@ class SettingsFragment : Fragment() {
                         Log.e(TAG, "Error deleting user account: ${exception.message}")
                         // Trate o erro de exclusão da conta aqui, se necessário
                     }
-
             })
             builder.setNegativeButton("Não", DialogInterface.OnClickListener {dialog, id ->
                 dialog.cancel()

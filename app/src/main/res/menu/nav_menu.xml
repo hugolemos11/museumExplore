@@ -18,11 +18,6 @@
             android:title="Scan QrCode" />
 
         <item
-            android:id="@+id/navSettings"
-            android:icon="@drawable/setting"
-            android:title="Configurações" />
-
-        <item
             android:id="@+id/navLogin"
             android:icon="@drawable/login"
             android:title="LogIn" />

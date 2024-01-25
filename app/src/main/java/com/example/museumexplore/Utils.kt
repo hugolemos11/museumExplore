@@ -61,8 +61,3 @@ fun setErrorAndFocus(editText: TextInputLayout, error: String) {
     editText.requestFocus()
     editText.error = error
 }
-fun restartApp(context: Context) {
-    val intent = context.packageManager.getLaunchIntentForPackage(context.packageName)
-    context.startActivity(intent)
-    Runtime.getRuntime().exit(0)
-}

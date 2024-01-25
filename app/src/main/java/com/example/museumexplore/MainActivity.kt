@@ -1,5 +1,6 @@
 package com.example.museumexplore
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -10,6 +11,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -36,6 +38,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navigationView: NavigationView
     private lateinit var binding: MainActivityBinding
+
+    private val requestCodeCameraPermission = 1001
 
     private val auth = FirebaseAuth.getInstance()
     private val db = Firebase.firestore
@@ -224,7 +228,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
 
             R.id.navScan -> {
-
+                if (ContextCompat.checkSelfPermission(
+                        this@MainActivity, android.Manifest.permission.CAMERA
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    askForCameraPermission()
+                } else {
+                    binding.navView.menu.findItem(R.id.navScan).isEnabled = false
+                }
+                navController.navigate(R.id.action_global_qrCodeReaderFragment)
             }
 
             R.id.navSettings -> {
@@ -266,5 +278,28 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             .addOnFailureListener {
                 showToast("An error occurred: ${it.localizedMessage}", this)
             }
+    }
+
+    private fun askForCameraPermission() {
+        ActivityCompat.requestPermissions(
+            this@MainActivity,
+            arrayOf(android.Manifest.permission.CAMERA),
+            requestCodeCameraPermission
+        )
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == requestCodeCameraPermission && grantResults.isNotEmpty()) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                binding.navView.menu.findItem(R.id.navScan).isEnabled = true
+            } else {
+                showToast("Não deu permissão para usar a camâra.", applicationContext)
+            }
+        }
     }
 }

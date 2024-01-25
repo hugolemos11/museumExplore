@@ -66,6 +66,9 @@
         <action
             android:id="@+id/action_global_qrCodeReaderFragment"
             app:destination="@id/qrCodeReaderFragment" />
+        <action
+            android:id="@+id/action_global_settingsNavigation"
+            app:destination="@id/settingsNavigation" />
     </navigation>
     <navigation android:id="@+id/autenticationNavigation"
         app:startDestination="@id/loginFragment">
@@ -103,4 +106,20 @@
         android:id="@+id/qrCodeReaderFragment"
         android:name="com.example.museumexplore.ui.other.QrCodeReaderFragment"
         android:label="QrCodeReaderFragment" />
+    <navigation android:id="@+id/settingsNavigation"
+        app:startDestination="@id/settingsFragment">
+        <fragment
+            android:id="@+id/settingsFragment"
+            android:name="com.example.museumexplore.ui.other.SettingsFragment"
+            android:label="SettingsFragment">
+            <action
+                android:id="@+id/action_settingsFragment_to_editProfileFragment"
+                app:destination="@id/editProfileFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/editProfileFragment"
+            android:name="com.example.museumexplore.ui.other.EditProfileFragment"
+            android:label="fragment_edit_profile"
+            tools:layout="@layout/fragment_edit_profile" />
+    </navigation>
 </navigation>

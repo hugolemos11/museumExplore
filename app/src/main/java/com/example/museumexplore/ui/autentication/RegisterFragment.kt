@@ -32,7 +32,7 @@ class RegisterFragment : Fragment() {
 
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
-
+    private var registerIsValid : Boolean? = null
     private lateinit var navController: NavController
 
     private lateinit var auth: FirebaseAuth
@@ -144,44 +144,61 @@ class RegisterFragment : Fragment() {
         val username = binding.editTextUsername.text.toString().trim()
         val password = binding.editTextPassword.text.toString().trim()
 
-        if(email.isEmpty()){
+        registerIsValid = if(email.isEmpty()){
             setErrorAndFocus(binding.textInputLayoutEmailAddress, "Required!")
-            return
+            false
+        } else {
+            true
         }
-        if (!isValidEmail(email)) {
+        registerIsValid = if (!isValidEmail(email)) {
             binding.textInputLayoutEmailAddress.requestFocus()
-            return
+            false
+        }else {
+            true
         }
 
-        if(username.isEmpty()){
+        registerIsValid = if(username.isEmpty()){
             setErrorAndFocus(binding.textInputLayoutUsername, "Required!")
-            return
+            false
+        }else {
+            true
         }
-        if (!isValidUsername(username)) {
+        registerIsValid = if (!isValidUsername(username)) {
             binding.textInputLayoutUsername.requestFocus()
-            return
+            false
+        } else {
+            true
         }
-        if(usernamesInUse.contains(username)){
+        registerIsValid = if(usernamesInUse.contains(username)){
             binding.textInputLayoutUsername.requestFocus()
-            return
+            false
+        }else {
+            true
         }
 
-        if(password.isEmpty()){
+        registerIsValid = if(password.isEmpty()){
             setErrorAndFocus(binding.textInputLayoutPassword, "Required!")
-            return
+            false
+        }else {
+            true
         }
-        if (!isValidPassword(password)) {
+        registerIsValid = if (!isValidPassword(password)) {
             binding.textInputLayoutPassword.requestFocus()
-            return
+            false
+        }else {
+            true
         }
 
         if (!binding.checkBox.isChecked) {
             Log.d("RegisterFragment", "checkBox() called")
             binding.errorTextView.visibility = View.VISIBLE
             binding.errorTextView.text = "Required!"
-            return
+            registerIsValid = false
+        } else {
+            registerIsValid = true
         }
 
+        if (registerIsValid == true) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(requireActivity()) {
                 if (it.isSuccessful) {
@@ -205,6 +222,7 @@ class RegisterFragment : Fragment() {
                     "The Email is Already in Use!"
                 )
             }
+        }
     }
 
     private fun fetchUsernamesData() {

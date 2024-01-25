@@ -101,10 +101,10 @@ class SettingsFragment : Fragment() {
         snackBar?.dismiss()
         snackBar = Snackbar.make(
             requireView(),
-            "Permission has been revoked! Restart app to see the change.",
+            "A permissão foi removida, por favor, reinicie a aplicação para aplicar as alterações.",
             Snackbar.LENGTH_INDEFINITE,
         ).apply {
-            setAction("Quit App") {
+            setAction("Sair da aplicação") {
                 exitProcess(0)
             }
         }

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/navHome"
+            android:icon="@drawable/mini_logo"
+            android:title="Home" />
+
+        <item
+            android:id="@+id/navTicket"
+            android:icon="@drawable/ticket"
+            android:title="Meus Bilhetes" />
+
+        <item
+            android:id="@+id/navScan"
+            android:icon="@drawable/scan"
+            android:title="Scan QrCode" />
+
+        <item
+            android:id="@+id/navSettings"
+            android:icon="@drawable/setting"
+            android:title="Configurações" />
+
+        <item
+            android:id="@+id/navLogout"
+            android:icon="@drawable/logout"
+            android:title="Logout" />
+    </group>
+</menu>

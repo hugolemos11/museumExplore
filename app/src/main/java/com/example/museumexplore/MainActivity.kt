@@ -1,67 +1,272 @@
 package com.example.museumexplore
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
+import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.ViewGroup
-import android.widget.BaseAdapter
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import com.example.museumexplore.databinding.MainActivityBinding
-import com.example.museumexplore.databinding.MuseumDisplayBinding
-import com.example.museumexplore.modules.Museum
+import com.example.museumexplore.modules.User
+import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
-class MainActivity : AppCompatActivity() {
 
-    var museums = arrayListOf<Museum>()
-
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var navController: NavController
+    private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var navigationView: NavigationView
     private lateinit var binding: MainActivityBinding
-    private  var  adapter = MuseumAdapter()
+
+    private val auth = FirebaseAuth.getInstance()
+    private val db = Firebase.firestore
+    private var uid : String? = null
+    private var user: User? = null
+
+    private lateinit var headerImage: ImageView
+    private lateinit var headerUserName: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        museums.add(Museum("aa", "Museumxzy", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."))
-        museums.add(Museum("ab", "Museumxyz", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."))
-        museums.add(Museum("ac", "Museumxzy1", ""))
-        museums.add(Museum("ba", "Museumxyz1", ""))
-        museums.add(Museum("bb", "Museumxzy2", ""))
-        museums.add(Museum("bc", "Museumxyz2", ""))
-        museums.add(Museum("ca", "Museumxzy3", ""))
-        museums.add(Museum("cb", "Museumxyz3", ""))
-
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.gridViewMuseums.adapter = adapter
 
+        drawerLayout = findViewById(R.id.drawer_layout)
 
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
+
+        navigationView = binding.navView
+
+        appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.homeFragment,
+                R.id.loginFragment,
+                // R.id.navigation_settings // Add other destination IDs if needed
+            ),
+            drawerLayout,
+            fallbackOnNavigateUpListener = ::onSupportNavigateUp
+        )
+        setupActionBarWithNavController(navController, appBarConfiguration)
+        navigationView.setupWithNavController(navController)
+
+        navController.addOnDestinationChangedListener { _: NavController, nd: NavDestination, _: Bundle? ->
+            when (nd.id) {
+                R.id.homeFragment /*|| nd.id == R.id.museumDetailsFragment*/ -> {
+                    // Causes the menu icon (on the left) to disappear and not be clickable
+                    supportActionBar?.show()
+                    supportActionBar?.setDisplayHomeAsUpEnabled(false)
+                    supportActionBar?.setHomeButtonEnabled(false)
+                    if (nd.id == R.id.homeFragment /*|| nd.id == R.id.editProfileFragment*/) {
+                        // Updates the drawer every time the user changes their profile and logs into their account
+                        updateDrawerContent()
+                    }
+                }
+
+                R.id.loginFragment, R.id.recoverPasswordFragment, R.id.registerFragment -> {
+                    // Hide the actionBar
+                    supportActionBar?.hide()
+                }
+
+                else -> {
+                    toolbar.setNavigationOnClickListener {
+                        onBackPressed()
+                    }
+                }
+            }
+        }
+        NavigationUI.setupWithNavController(navigationView, navController)
+
+        navigationView.setNavigationItemSelectedListener(this)
     }
 
-    inner class MuseumAdapter : BaseAdapter() {
-        override fun getCount(): Int {
-            return museums.size
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        // Method for placing the Menu Icon on the OptionsMenu, which is supposed to be a Three-Dot Icon
+        val menuToUse: Int = R.menu.drawer_icon_right
+
+        val inflater = menuInflater
+        inflater.inflate(menuToUse, menu)
+
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Method to make the Right Menu Icon open and close the Drawer
+        if (item.itemId == R.id.drawerIcon) {
+            if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
+                drawerLayout.closeDrawer(GravityCompat.END)
+            } else {
+                drawerLayout.openDrawer(GravityCompat.END)
+            }
+            return true
         }
+        return false
+    }
 
-        override fun getItem(position: Int): Any {
-            return museums[position]
-        }
+    private fun updateDrawerContent() {
+        // Method to Update the Drawer Data and the Type of Drawer
+        val menuInflater: MenuInflater = menuInflater
 
-        override fun getItemId(position: Int): Long {
-            return 0
-        }
+        navigationView.menu.clear()
 
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-            val rootView = MuseumDisplayBinding.inflate(layoutInflater)
+        val currentUser = auth.currentUser
 
-            rootView.textViewMuseumName.text = museums[position].name
+        if (currentUser != null) {
+            // User is signed in
+            // You can get the user's information using currentUser
+            uid = currentUser.uid
+            val email = currentUser.email
 
-            rootView.root.setOnClickListener{
-                val intent = Intent(this@MainActivity, MuseumDetailsActivity::class.java)
-                intent.putExtra(MuseumDetailsActivity.EXTRA_NAME, museums[position].name)
-                intent.putExtra(MuseumDetailsActivity.EXTRA_DESCRIPTION, museums[position].description)
-                startActivity(intent)
+            fetchUserData(uid!!)
+
+            // Inflate the menu and set it for the NavigationView
+            menuInflater.inflate(R.menu.nav_menu_autenticated, navigationView.menu)
+
+            // Verify if already exists an Header on the Navigation View
+            if (navigationView.getHeaderView(0) == null) {
+                navigationView.inflateHeaderView(R.layout.nav_header)
             }
 
-            return rootView.root
-        }
+            // Set navigation header with user data
+            val headerView = navigationView.getHeaderView(0)
+            headerImage = headerView.findViewById<ImageView>(R.id.imageViewUserImage)
+            headerUserName = headerView.findViewById<TextView>(R.id.textViewUserName)
+            val headerUserEmail = headerView.findViewById<TextView>(R.id.textViewUserEmail)
 
+            // Set text in the header (customize as needed)
+            headerUserEmail.text = email
+
+            // Get the current layout parameters of the NavigationView
+            val params: ViewGroup.LayoutParams = navigationView.layoutParams
+
+            // Update the height in the layout parameters
+            params.height = ViewGroup.LayoutParams.MATCH_PARENT
+
+            // Set the background color to the NavigationView
+            val backgroundColor = ContextCompat.getColor(this, R.color.nav)
+            navigationView.setBackgroundColor(backgroundColor)
+
+            // Set the updated layout parameters to the NavigationView
+            navigationView.layoutParams = params
+        } else {
+            // Inflate the menu and set it for the NavigationView
+            menuInflater.inflate(R.menu.nav_menu, navigationView.menu)
+
+            // Get the current layout parameters of the NavigationView
+            val params: ViewGroup.LayoutParams = navigationView.layoutParams
+
+            // Update the height in the layout parameters
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT
+
+            // Set the updated layout parameters to the NavigationView
+            navigationView.layoutParams = params
+
+            // Set the background color to the NavigationView
+            val backgroundColor = ContextCompat.getColor(this, R.color.blueMuseum)
+            navigationView.setBackgroundColor(backgroundColor)
+
+            // Remove the header view
+            navigationView.removeHeaderView(navigationView.getHeaderView(0))
+        }
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        // Handle navigation view item clicks
+        when (item.itemId) {
+            R.id.navHome -> {
+                when (navController.currentDestination?.id) {
+                    R.id.homeFragment -> {
+                        // If the current destination is HomeFragment, close the drawer
+                        drawerLayout.closeDrawer(GravityCompat.END)
+                    }
+
+                    R.id.museumDetailsFragment, R.id.artWorksFragment, R.id.artWorkDetailsFragment, R.id.eventDetailsFragment, R.id.ticketFragment -> {
+                        // Pop the back stack to navigate to homeFragment
+                        navController.popBackStack(R.id.homeFragment, false)
+                    }
+
+                    else -> {
+                        navController.navigate(R.id.action_global_homeNavigation)
+                    }
+                }
+            }
+
+            R.id.navTicket -> {
+                navController.navigate(R.id.action_global_generateQrCodeFragment)
+            }
+
+            R.id.navScan -> {
+                navController.navigate(R.id.action_global_generateQrCodeFragment)
+            }
+
+            R.id.navSettings -> {
+                val bundle = Bundle()
+                bundle.putString("uid", uid)
+                navController.navigate(R.id.action_global_settingsNavigation, bundle)
+            }
+
+            R.id.navLogout -> {
+                // Method used to terminate the Firebase authentication session
+                auth.signOut()
+
+                // Update the Drawer to  the UnAuthenticated user drawer
+                updateDrawerContent()
+            }
+
+            R.id.navLogin -> {
+                if (navController.currentDestination?.id == R.id.loginFragment) {
+                    // If the current destination is HomeFragment, close the drawer
+                    drawerLayout.closeDrawer(GravityCompat.END)
+                } else {
+                    navController.navigate(R.id.action_global_autenticationNavigation)
+                }
+            }
+        }
+        drawerLayout.closeDrawer(GravityCompat.END)
+        return true
+    }
+
+    private fun fetchUserData(uid: String) {
+        db.collection("users")
+            .document(uid)
+            .get()
+            .addOnSuccessListener {
+                it.data?.let { data ->
+                    user = User.fromSnapshot(data)
+                    setImage(user?.pathToImage, headerImage, this)
+                    headerUserName.text = user?.username
+                }
+            }
+            .addOnFailureListener {
+                showToast("An error occurred: ${it.localizedMessage}", this)
+            }
     }
 }

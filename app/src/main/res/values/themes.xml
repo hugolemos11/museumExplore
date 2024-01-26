@@ -1,10 +1,115 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+    <!-- Base application theme -->
     <style name="Base.Theme.MuseumExplore" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
         <item name="colorPrimary">@color/background</item>
         <item name="colorPrimaryVariant">@color/background</item>
-        <item name="android:statusBarColor">@color/background</item>
+        <item name="android:statusBarColor">@color/blueMuseum</item>
+        <item name="android:windowBackground">@color/background</item>
     </style>
 
+    <!-- Theme for MainActivity -->
+    <style name="Theme.MainActivity" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/background</item>
+        <item name="colorPrimaryVariant">@color/background</item>
+        <item name="android:statusBarColor">@color/blueMuseum</item>
+        <item name="android:windowBackground">@color/background</item>
+    </style>
+
+    <!-- Theme for ActionBar -->
+    <style name="Theme.ActionBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="colorControlNormal">@color/background</item>
+        <item name="android:background">@color/blueMuseum</item>
+    </style>
+
+    <!-- Text Themes -->
+    <style name="Theme.TitleExtraLarge" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/blueMuseum</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">32sp</item>
+    </style>
+
+    <style name="Theme.TitleWhiteExtraLarge" parent="Theme.TitleExtraLarge">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">30sp</item>
+    </style>
+
+    <style name="Theme.TicketPrice" parent="Theme.TitleWhiteExtraLarge">
+        <item name="android:textSize">54sp</item>
+    </style>
+
+    <style name="Theme.TitleExtraLargeAutentication" parent="Theme.TitleExtraLarge">
+        <item name="android:textColor">@color/title</item>
+        <item name="android:textSize">36sp</item>
+    </style>
+
+    <style name="Theme.TitleLarge" parent="Theme.TitleExtraLarge">
+        <item name="android:textColor">@color/title</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="Theme.TitleWhiteLarge" parent="Theme.TitleWhiteExtraLarge">
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="Theme.DescriptionTitle" parent="Theme.TitleLarge">
+        <item name="android:textColor">@color/description</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="Theme.Description" parent="Theme.DescriptionTitle">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="Theme.TitleBackGroundColorMedium" parent="Theme.TitleLarge">
+        <item name="android:textColor">@color/background</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="Theme.TitleWhiteMedium" parent="Theme.TitleWhiteLarge">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Theme.TitleWhiteSmall" parent="Theme.TitleWhiteMedium">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="Theme.Link" parent="Theme.TitleWhiteSmall">
+        <item name="android:textColor">#156799</item>
+    </style>
+
+    <style name="Theme.TitleBackGroundColorSmall" parent="Theme.TitleBackGroundColorMedium">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="Theme.TitleWhiteExtraSmall" parent="Theme.TitleWhiteSmall">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <!-- Used on Carousels -->
+    <style name="RoundedContainer">
+        <item name="shapeAppearanceOverlay">@style/RoundedCorners</item>
+    </style>
+
+    <style name="RoundedCorners">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">24dp</item>
+    </style>
+
+    <!-- Button Themes -->
+    <style name="Theme.ButtonDefault" parent="ThemeOverlay.Material3.Button.ElevatedButton">
+        <item name="backgroundTint">@color/blueMuseum</item>
+        <item name="android:textColor">@color/background</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:layout_width">200dp</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.Small</item>
+    </style>
+
+    <style name="ImageViewMuseumsAndArtWorks">
+        <item name="tint">#b08e71</item>
+        <item name="tintMode">multiply</item>
+    </style>
 </resources>

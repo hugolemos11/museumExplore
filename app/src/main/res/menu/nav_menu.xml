@@ -1,32 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn = "navigation_view"
-    >
+    tools:showIn="navigation_view">
 
     <group
-        android:checkableBehavior="single">
+        android:checkableBehavior="single"
+        android:gravity="end">
 
         <item
-            android:id="@+id/nav_home"
-            android:icon="@drawable/ticket"
-            android:title="Meus Bilhetes"/>
+            android:id="@+id/navHome"
+            android:icon="@drawable/mini_logo"
+            android:title="Home" />
 
         <item
-            android:id="@+id/nav_settings"
+            android:id="@+id/navScan"
             android:icon="@drawable/scan"
-            android:title="Scan QrCode"/>
+            android:title="Scan QrCode" />
 
         <item
-            android:id="@+id/nav_share"
-            android:title="Configurações"
-            android:icon="@drawable/setting"
-            />
-
-        <item
-            android:id="@+id/nav_about"
-            android:icon="@drawable/logout"
-            android:title="Logout"/>
+            android:id="@+id/navLogin"
+            android:icon="@drawable/login"
+            android:title="LogIn" />
     </group>
 </menu>

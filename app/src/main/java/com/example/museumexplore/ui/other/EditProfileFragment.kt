@@ -1,6 +1,7 @@
 package com.example.museumexplore.ui.other
 
 import android.os.Bundle
+import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.museumexplore.databinding.FragmentEditProfileBinding
+import com.example.museumexplore.modules.User
+import com.example.museumexplore.setImage
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 class EditProfileFragment : Fragment() {
@@ -16,10 +19,12 @@ class EditProfileFragment : Fragment() {
     private var _binding: FragmentEditProfileBinding? = null
     private val binding get() = _binding!!
     private lateinit var navController: NavController
+    private var userId: String? = null
+    private var username: String? = null
+    private var pathToImage: String? = null
     private val db = Firebase.firestore
     private var password : String? = null
     private var repeatPassword : String? = null
-    private var username : String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,13 +42,19 @@ class EditProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        arguments?.let { bundle ->
+            userId = bundle.getString("uid")
+            username = bundle.getString("username")
+            pathToImage = bundle.getString("pathToImage")
+        }
         // Remove the title of fragment on the actionBar
         (activity as AppCompatActivity).supportActionBar?.title = ""
 
         navController = Navigation.findNavController(view)
 
+        setImage(pathToImage, binding.imageViewUser, requireContext())
 
+        binding.editTextUsername.text = Editable.Factory.getInstance().newEditable(username ?: "")
 
         binding.ConfirmButton.setOnClickListener {
             if (binding.editTextPassword != binding.editTextRepeatPassword) {

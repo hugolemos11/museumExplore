@@ -17,6 +17,9 @@ class EditProfileFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var navController: NavController
     private val db = Firebase.firestore
+    private var password : String? = null
+    private var repeatPassword : String? = null
+    private var username : String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,5 +43,13 @@ class EditProfileFragment : Fragment() {
 
         navController = Navigation.findNavController(view)
 
+
+
+        binding.ConfirmButton.setOnClickListener {
+            if (binding.editTextPassword != binding.editTextRepeatPassword) {
+                binding.textInputLayoutPassword.error = "Passwords Must Match!"
+                binding.textInputLayoutRepeatPassword.error = "Passwords Must Match!"
+            }
+        }
     }
 }

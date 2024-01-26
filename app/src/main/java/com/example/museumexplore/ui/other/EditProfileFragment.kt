@@ -1,7 +1,9 @@
 package com.example.museumexplore.ui.other
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.text.Editable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +14,8 @@ import androidx.navigation.Navigation
 import com.example.museumexplore.databinding.FragmentEditProfileBinding
 import com.example.museumexplore.modules.User
 import com.example.museumexplore.setImage
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 class EditProfileFragment : Fragment() {
@@ -24,7 +28,7 @@ class EditProfileFragment : Fragment() {
     private var pathToImage: String? = null
     private val db = Firebase.firestore
     private var password : String? = null
-    private var repeatPassword : String? = null
+    val user = Firebase.auth.currentUser
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,7 +64,15 @@ class EditProfileFragment : Fragment() {
             if (binding.editTextPassword != binding.editTextRepeatPassword) {
                 binding.textInputLayoutPassword.error = "Passwords Must Match!"
                 binding.textInputLayoutRepeatPassword.error = "Passwords Must Match!"
+            } else {
+                password = binding.editTextPassword.toString()
             }
-        }
+            user!!.updatePassword(password!!)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Log.d(TAG, "User password updated.")
+                    }
+                }
+                }
     }
 }

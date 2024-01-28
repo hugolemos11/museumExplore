@@ -12,11 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.museumexplore.databinding.FragmentEditProfileBinding
-import com.example.museumexplore.modules.User
 import com.example.museumexplore.setImage
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 class EditProfileFragment : Fragment() {
 
@@ -26,9 +23,8 @@ class EditProfileFragment : Fragment() {
     private var userId: String? = null
     private var username: String? = null
     private var pathToImage: String? = null
-    private val db = Firebase.firestore
     private var password : String? = null
-    val user = Firebase.auth.currentUser
+    private val user = Firebase.auth.currentUser
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,11 +57,11 @@ class EditProfileFragment : Fragment() {
         binding.editTextUsername.text = Editable.Factory.getInstance().newEditable(username ?: "")
 
         binding.ConfirmButton.setOnClickListener {
-            if (binding.editTextPassword != binding.editTextRepeatPassword) {
+            if (binding.editTextPassword.text != binding.editTextRepeatPassword.text) {
                 binding.textInputLayoutPassword.error = "Passwords Must Match!"
                 binding.textInputLayoutRepeatPassword.error = "Passwords Must Match!"
             } else {
-                password = binding.editTextPassword.toString()
+                password = binding.editTextPassword.text.toString()
             }
             user!!.updatePassword(password!!)
                 .addOnCompleteListener { task ->

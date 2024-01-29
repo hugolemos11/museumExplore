@@ -12,7 +12,9 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.museumexplore.databinding.FragmentEditProfileBinding
+import com.example.museumexplore.isValidPassword
 import com.example.museumexplore.setImage
+import com.example.museumexplore.showToast
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 class EditProfileFragment : Fragment() {
@@ -56,26 +58,30 @@ class EditProfileFragment : Fragment() {
         binding.editTextUsername.text = Editable.Factory.getInstance().newEditable(username ?: "")
 
         binding.ConfirmButton.setOnClickListener {
+            val newPassword = binding.editTextPassword.text.toString()
+            val repeatPassword = binding.editTextRepeatPassword.text.toString()
 
-            if (binding.editTextPassword.text.toString() != binding.editTextRepeatPassword.text.toString()) {
+            if (newPassword != repeatPassword) {
                 binding.textInputLayoutPassword.error = "Passwords Must Match!"
                 binding.textInputLayoutRepeatPassword.error = "Passwords Must Match!"
+            } else if (!isValidPassword(newPassword)) {
+                binding.textInputLayoutPassword.error = "Invalid password"
             } else {
                 binding.textInputLayoutPassword.error = null
                 binding.textInputLayoutRepeatPassword.error = null
 
-                password = binding.editTextPassword.text.toString()
-
-                Log.d(TAG, password.toString())
-                user?.updatePassword(password!!)
+                user?.updatePassword(newPassword)
                     ?.addOnCompleteListener { task ->
                         if (task.isSuccessful) {
+                            showToast("Password successfully updated", requireContext())
                             Log.d(TAG, "User password updated.")
+                            fragmentManager?.popBackStack()
                         } else {
-                            Log.d(TAG, "User password error.")
+                            showToast("Error updating password", requireContext())
+                            Log.e(TAG, "User password update failed: ${task.exception?.message}")
                         }
                     }
             }
         }
-        }
+    }
 }

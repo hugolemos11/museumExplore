@@ -70,8 +70,8 @@ class EditProfileFragment : Fragment() {
                 binding.textInputLayoutPassword.error = null
                 binding.textInputLayoutRepeatPassword.error = null
 
-                user?.updatePassword(newPassword)
-                    ?.addOnCompleteListener { task ->
+                user!!.updatePassword(newPassword)
+                    .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             showToast("Password successfully updated", requireContext())
                             Log.d(TAG, "User password updated.")

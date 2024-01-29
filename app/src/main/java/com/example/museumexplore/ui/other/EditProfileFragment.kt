@@ -53,22 +53,29 @@ class EditProfileFragment : Fragment() {
         navController = Navigation.findNavController(view)
 
         setImage(pathToImage, binding.imageViewUser, requireContext())
-
         binding.editTextUsername.text = Editable.Factory.getInstance().newEditable(username ?: "")
 
         binding.ConfirmButton.setOnClickListener {
-            if (binding.editTextPassword.text != binding.editTextRepeatPassword.text) {
+
+            if (binding.editTextPassword.text.toString() != binding.editTextRepeatPassword.text.toString()) {
                 binding.textInputLayoutPassword.error = "Passwords Must Match!"
                 binding.textInputLayoutRepeatPassword.error = "Passwords Must Match!"
             } else {
+                binding.textInputLayoutPassword.error = null
+                binding.textInputLayoutRepeatPassword.error = null
+
                 password = binding.editTextPassword.text.toString()
-            }
-            user!!.updatePassword(password!!)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        Log.d(TAG, "User password updated.")
+
+                Log.d(TAG, password.toString())
+                user?.updatePassword(password!!)
+                    ?.addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Log.d(TAG, "User password updated.")
+                        } else {
+                            Log.d(TAG, "User password error.")
+                        }
                     }
-                }
-                }
-    }
+            }
+        }
+        }
 }

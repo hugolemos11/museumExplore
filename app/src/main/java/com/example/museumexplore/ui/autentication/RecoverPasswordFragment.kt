@@ -70,7 +70,7 @@ class RecoverPasswordFragment : Fragment() {
             if (email.isEmpty()) {
                 setErrorAndFocus(binding.textInputLayoutEmailAddress, "Required!")
             } else if (!isValidEmail(email)) {
-                binding.textInputLayoutEmailAddress.requestFocus()
+                binding.textInputLayoutEmailAddress.error = "Invalid email!"
             } else {
                 auth.sendPasswordResetEmail(email).addOnCompleteListener { task ->
                     if (task.isSuccessful) {

@@ -113,10 +113,9 @@ class SettingsFragment : Fragment() {
                 user.delete()
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            fragmentManager?.popBackStack()
-                            auth.signOut()
                             Log.d(TAG, "User account deleted.")
                             showToast("Conta eliminada", requireContext())
+                            fragmentManager?.popBackStack()
                         }
                     }
                     .addOnFailureListener { exception ->

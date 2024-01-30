@@ -11,11 +11,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.example.museumexplore.R
 import com.example.museumexplore.databinding.FragmentEditProfileBinding
 import com.example.museumexplore.isValidPassword
+import com.example.museumexplore.isValidUsername
 import com.example.museumexplore.setImage
 import com.example.museumexplore.showToast
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.auth.User
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 class EditProfileFragment : Fragment() {
 
@@ -25,8 +30,9 @@ class EditProfileFragment : Fragment() {
     private var userId: String? = null
     private var username: String? = null
     private var pathToImage: String? = null
-    private var password : String? = null
     private val user = Firebase.auth.currentUser
+    private val db = Firebase.firestore
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,13 +66,13 @@ class EditProfileFragment : Fragment() {
         binding.ConfirmButton.setOnClickListener {
             val newPassword = binding.editTextPassword.text.toString()
             val repeatPassword = binding.editTextRepeatPassword.text.toString()
+            val username = binding.editTextUsername.text.toString()
+            auth = Firebase.auth
 
             if (newPassword != repeatPassword) {
                 binding.textInputLayoutPassword.error = "Passwords Must Match!"
                 binding.textInputLayoutRepeatPassword.error = "Passwords Must Match!"
-            } else if (!isValidPassword(newPassword)) {
-                binding.textInputLayoutPassword.error = "Invalid password"
-            } else {
+            } else if (isValidPassword(newPassword) && newPassword != ""){
                 binding.textInputLayoutPassword.error = null
                 binding.textInputLayoutRepeatPassword.error = null
 
@@ -79,6 +85,21 @@ class EditProfileFragment : Fragment() {
                         } else {
                             showToast("Error updating password", requireContext())
                             Log.e(TAG, "User password update failed: ${task.exception?.message}")
+                        }
+                    }
+            }
+            if (isValidUsername(username)) {
+                val userUpdates = mapOf(
+                    "username" to username
+                )
+                db.collection("users")
+                    .document(auth.uid!!)
+                    .update(userUpdates)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            showToast("User Updated Successfully!", requireContext())
+                        } else {
+                            showToast("Failed to Update User!", requireContext())
                         }
                     }
             }

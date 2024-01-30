@@ -98,6 +98,9 @@ class EditProfileFragment : Fragment() {
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             showToast("User Updated Successfully!", requireContext())
+                            if (newPassword == "") {
+                                fragmentManager?.popBackStack()
+                            }
                         } else {
                             showToast("Failed to Update User!", requireContext())
                         }

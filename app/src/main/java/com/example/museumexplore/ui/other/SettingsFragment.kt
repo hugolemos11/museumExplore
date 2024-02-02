@@ -113,10 +113,9 @@ class SettingsFragment : Fragment() {
                 user.delete()
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            fragmentManager?.popBackStack()
-                            auth.signOut()
                             Log.d(TAG, "User account deleted.")
                             showToast("Conta eliminada", requireContext())
+                            fragmentManager?.popBackStack()
                         }
                     }
                     .addOnFailureListener { exception ->
@@ -134,6 +133,8 @@ class SettingsFragment : Fragment() {
             val auth = FirebaseAuth.getInstance()
             val bundle = Bundle()
             bundle.putString("uid", auth.currentUser?.uid)
+            bundle.putString("username", user?.username)
+            bundle.putString("pathToImage", user?.pathToImage)
             navController.navigate(R.id.action_settingsFragment_to_editProfileFragment, bundle)
         }
     }

@@ -3,6 +3,7 @@ package com.example.museumexplore.ui.home
 import android.app.SearchManager
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -148,8 +149,8 @@ class HomeFragment : Fragment() {
                 bundle.putString("museumName", museumsList[position].name)
                 bundle.putString("museumDescription", museumsList[position].description)
                 bundle.putInt("museumRate", museumsList[position].rate)
-                bundle.putDouble("museumLongitude", museumsList[position].location.longitude)
-                bundle.putDouble("museumLatitude", museumsList[position].location.latitude)
+                bundle.putDouble("museumLongitude", museumsList[position].location["longitude"] ?: 0.0)
+                bundle.putDouble("museumLatitude", museumsList[position].location["latitude"] ?: 0.0)
                 bundle.putString("museumPathToImage", museumsList[position].pathToImage)
                 navController.navigate(R.id.action_homeFragment_to_museumDetailsFragment, bundle)
             }

@@ -2,14 +2,11 @@ package com.example.museumexplore.ui.autentication
 
 import android.content.ContentValues.TAG
 import android.os.Bundle
-import android.text.InputFilter
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.addCallback
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
@@ -19,10 +16,7 @@ import com.example.museumexplore.R
 import com.example.museumexplore.databinding.FragmentLoginBinding
 import com.example.museumexplore.isValidEmail
 import com.example.museumexplore.isValidPassword
-import com.example.museumexplore.isValidUsername
-import com.example.museumexplore.modules.User
 import com.example.museumexplore.setErrorAndFocus
-import com.example.museumexplore.showToast
 import com.google.firebase.auth.FirebaseAuth
 
 class LoginFragment : Fragment() {
@@ -55,7 +49,7 @@ class LoginFragment : Fragment() {
 
         navController = Navigation.findNavController(view)
 
-        binding.editTextEmailAddress.doOnTextChanged { text, start, before, count ->
+        binding.editTextEmailAddress.doOnTextChanged { text, _, _, _ ->
             when {
                 text.toString().trim().isEmpty() -> {
                     binding.textInputLayoutEmailAddress.error = "Required!"
@@ -71,7 +65,7 @@ class LoginFragment : Fragment() {
             }
         }
 
-        binding.editTextPassword.doOnTextChanged { text, start, before, count ->
+        binding.editTextPassword.doOnTextChanged { text, _, _, _ ->
             when {
                 text.toString().trim().isEmpty() -> {
                     binding.textInputLayoutPassword.error = "Required!"

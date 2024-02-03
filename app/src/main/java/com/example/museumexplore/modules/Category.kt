@@ -1,5 +1,6 @@
 package com.example.museumexplore.modules
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
@@ -14,43 +15,34 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
+
 @Entity
-data class Event(
-    @PrimaryKey
-    var id: String,
-    var title: String,
-    var description: String,
+data class Category(
+    @PrimaryKey var id: String,
     var museumId: String,
-    var pathToImage: String?
+    var descritpion: String
 ) {
     companion object {
-        fun fromSnapshot(id: String, snapshot: Map<String, Any>): Event {
-            return Event(
-                id,
-                snapshot["title"] as String,
-                snapshot["description"] as String,
-                snapshot["museumId"] as String,
-                snapshot["pathToImage"] as? String?
+        fun fromSnapshot(id: String, snapshot: Map<String, Any>): Category {
+            return Category(
+                id, snapshot["museumId"] as String, snapshot["description"] as String
             )
         }
 
-        suspend fun fetchEventsData(museumId: String): List<Event> {
+        suspend fun fetchCategoriesData(museumId: String): List<Category> {
             return suspendCoroutine { continuation ->
                 val db = Firebase.firestore
-                db.collection("events")
-                    .whereEqualTo("museumId", museumId)
-                    .get()
+                db.collection("categories").whereEqualTo("museumId", museumId).get()
                     .addOnSuccessListener { documents ->
-                        val eventsList = ArrayList<Event>()
+                        val categoriesList = ArrayList<Category>()
                         for (document in documents) {
-                            eventsList.add(
+                            categoriesList.add(
                                 fromSnapshot(
-                                    document.id,
-                                    document.data
+                                    document.id, document.data
                                 )
                             )
                         }
-                        continuation.resume(eventsList)
+                        continuation.resume(categoriesList)
                     }
                     .addOnFailureListener {
                         continuation.resumeWithException(it)
@@ -58,27 +50,26 @@ data class Event(
             }
         }
 
-        suspend fun fetchEventData(eventId: String): Event {
+        suspend fun fetchCategoryData(categoryId: String): Category {
             return suspendCoroutine { continuation ->
                 val db = Firebase.firestore
-                db.collection("events")
-                    .document(eventId)
+                db.collection("categories")
+                    .document(categoryId)
                     .get()
                     .addOnSuccessListener { documentSnapshot ->
                         if (documentSnapshot.exists()) {
-                            val event = documentSnapshot.data?.let {
+                            val category = documentSnapshot.data?.let {
                                 fromSnapshot(
-                                    documentSnapshot.id,
-                                    it
+                                    documentSnapshot.id, it
                                 )
                             }
-                            if (event != null) {
-                                continuation.resume(event)
+                            if (category != null) {
+                                continuation.resume(category)
                             } else {
-                                continuation.resumeWithException(NullPointerException("Event is null"))
+                                continuation.resumeWithException(NullPointerException("Category is null"))
                             }
                         } else {
-                            continuation.resumeWithException(NoSuchElementException("Event not found"))
+                            continuation.resumeWithException(NoSuchElementException("Category not found"))
                         }
                     }
                     .addOnFailureListener {
@@ -90,16 +81,16 @@ data class Event(
 }
 
 @Dao
-interface EventDao {
-    @Query("SELECT * FROM event WHERE museumId = :museumId")
-    fun getAll(museumId: String) : LiveData<List<Event>>
+interface CategoryDao {
+    @Query("SELECT * FROM category WHERE museumId = :museumId")
+    fun getAll(museumId: String): LiveData<List<Category>>
 
-    @Query("SELECT * FROM event WHERE id = :id")
-    fun get(id : String) : Event
+    @Query("SELECT * FROM category WHERE id = :id")
+    fun get(id: String): Category
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun add(event: Event)
+    fun add(category: Category)
 
     @Delete
-    fun  delete(event: Event)
+    fun delete(category: Category)
 }

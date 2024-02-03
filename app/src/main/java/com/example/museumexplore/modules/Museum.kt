@@ -12,6 +12,9 @@ import com.example.museumexplore.showToast
 import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 @Entity
 data class Museum(
@@ -37,23 +40,28 @@ data class Museum(
             )
         }
 
-        fun fetchMuseumsData(onCompletion: (List<Museum>) -> Unit) {
-            val db = Firebase.firestore
-            db.collection("museums")
-                .get()
-                .addOnSuccessListener { documents ->
-                    val museumsList = ArrayList<Museum>()
+        suspend fun fetchMuseumsData(): List<Museum> {
+            return suspendCoroutine { continuation ->
+                val db = Firebase.firestore
+                db.collection("museums")
+                    .get()
+                    .addOnSuccessListener { documents ->
+                        val museumsList = ArrayList<Museum>()
 
-                    for (document in documents) {
-                        museumsList.add(
-                            fromSnapshot(
-                                document.id,
-                                document.data
+                        for (document in documents) {
+                            museumsList.add(
+                                fromSnapshot(
+                                    document.id,
+                                    document.data
+                                )
                             )
-                        )
+                        }
+                        continuation.resume(museumsList)
                     }
-                    onCompletion(museumsList)
-                }
+                    .addOnFailureListener {
+                        continuation.resumeWithException(it)
+                    }
+            }
         }
     }
 }

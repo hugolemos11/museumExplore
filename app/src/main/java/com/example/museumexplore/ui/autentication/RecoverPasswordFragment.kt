@@ -1,13 +1,9 @@
 package com.example.museumexplore.ui.autentication
 
-import android.content.ContentValues.TAG
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -16,8 +12,6 @@ import com.example.museumexplore.isValidEmail
 import com.example.museumexplore.setErrorAndFocus
 import com.example.museumexplore.showToast
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 
 class RecoverPasswordFragment : Fragment() {
 

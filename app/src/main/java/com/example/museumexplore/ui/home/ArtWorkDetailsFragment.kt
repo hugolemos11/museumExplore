@@ -1,5 +1,6 @@
 package com.example.museumexplore.ui.home
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.util.Log
@@ -8,12 +9,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import com.example.museumexplore.AppDatabase
 import com.example.museumexplore.databinding.FragmentArtWorkDetailsBinding
 import com.example.museumexplore.modules.ArtWork
+import com.example.museumexplore.modules.Category
 import com.example.museumexplore.setImage
 import com.example.museumexplore.showToast
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import java.util.Locale
 
 class ArtWorkDetailsFragment : Fragment() {
@@ -23,14 +28,7 @@ class ArtWorkDetailsFragment : Fragment() {
 
     private var id: String? = null
     private var artWork: ArtWork? = null
-//    private var artworkName: String? = null
-//    private var artistName: String? = null
-//    private var artWorkDescription: String? = null
-//    private var artWorkCategory: String? = null
-//    private var artWorkYear: Int? = null
-//    private var artWorkPathToImage: String? = null
-
-    private val db = Firebase.firestore
+    private var category: Category? = null
 
     private lateinit var textToSpeech: TextToSpeech
 
@@ -50,6 +48,7 @@ class ArtWorkDetailsFragment : Fragment() {
         _binding = null
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -57,42 +56,43 @@ class ArtWorkDetailsFragment : Fragment() {
             id = bundle.getString("artWorkId")
         }
 
-        fetchArtWorkData();
+        val appDatabase = AppDatabase.getInstance(requireContext())
+        lifecycleScope.launch {
+            if (appDatabase != null) {
+                id?.let { currentArtWorkId ->
+                    val artWorkData = ArtWork.fetchArtWorkData(currentArtWorkId)
+                    appDatabase.artWorkDao().add(artWorkData)
+                    artWork = appDatabase.artWorkDao().get(currentArtWorkId)
 
-        configTextToSpeech()
-    }
-
-    private fun fetchArtWorkData() {
-        db.collection("artWorks")
-            .document("$id")
-            .get()
-            .addOnSuccessListener { documentSnapshot ->
-
-                if (documentSnapshot.exists()) {
-                    artWork =
-                        documentSnapshot.data?.let {
-                            ArtWork.fromSnapshot(
-                                documentSnapshot.id,
-                                it
-                            )
-                        }
-                    setImage(artWork?.pathToImage, binding.imageViewArtWorkImage, requireContext())
-
-                    binding.apply {
-
-                        textViewArtWorkName.text = artWork?.name
-                        textViewArtistNameYear.text = "${artWork?.artist}, ${artWork?.year}"
-                        textViewArtWorkCategory.text = artWork?.categoryId
-                        textViewArtWorkDescription.text = artWork?.description
-
+                    artWork?.let { currentArtWork ->
+                        val categoryData = Category.fetchCategoryData(currentArtWork.categoryId)
+                        appDatabase.categoryDao().add(categoryData)
+                        category = appDatabase.categoryDao().get(currentArtWork.categoryId)
                     }
-                } else {
-                    showToast("Artwork with id $id not found", requireContext())
                 }
             }
-            .addOnFailureListener {
-                showToast("An error occurred: ${it.localizedMessage}", requireContext())
+
+            artWork?.let { currentArtWork ->
+                setImage(
+                    currentArtWork.pathToImage,
+                    binding.imageViewArtWorkImage,
+                    requireContext()
+                )
+
+                binding.apply {
+                    textViewArtWorkName.text = currentArtWork.name
+                    textViewArtistNameYear.text = "${currentArtWork.artist}, ${currentArtWork.year}"
+                    textViewArtWorkDescription.text = currentArtWork.description
+
+                    category?.let { currentCategory ->
+                        textViewArtWorkCategory.text = currentCategory.descritpion
+                    }
+                }
+
+                configTextToSpeech()
             }
+        }
+
     }
 
     private fun configTextToSpeech() {

@@ -19,7 +19,6 @@
 
             <ImageView
                 android:id="@+id/imageView3"
-                style="@style/ImageViewMuseumsAndArtWorks"
                 android:layout_width="170dp"
                 android:layout_height="170dp"
                 android:scaleType="centerCrop"

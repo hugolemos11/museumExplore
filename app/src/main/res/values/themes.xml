@@ -108,8 +108,8 @@
         <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.Small</item>
     </style>
 
-    <style name="ImageViewMuseumsAndArtWorks">
-        <item name="tint">#b08e71</item>
-        <item name="tintMode">multiply</item>
-    </style>
+<!--    <style name="ImageViewMuseumsAndArtWorks">-->
+<!--        <item name="tint">#a68263</item>-->
+<!--        <item name="tintMode">multiply</item>-->
+<!--    </style>-->
 </resources>

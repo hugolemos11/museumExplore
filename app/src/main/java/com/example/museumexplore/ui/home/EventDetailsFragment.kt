@@ -6,8 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import com.example.museumexplore.AppDatabase
 import com.example.museumexplore.databinding.FragmentEventDetailsBinding
+import com.example.museumexplore.modules.ArtWork
+import com.example.museumexplore.modules.Category
+import com.example.museumexplore.modules.Event
 import com.example.museumexplore.setImage
+import kotlinx.coroutines.launch
 
 
 class EventDetailsFragment : Fragment() {
@@ -16,9 +22,8 @@ class EventDetailsFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var id: String? = null
-    private var eventTitle: String? = null
-    private var eventDescription: String? = null
-    private var eventPathToImage: String? = null
+
+    private var event: Event? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,16 +48,28 @@ class EventDetailsFragment : Fragment() {
 
         arguments?.let { bundle ->
             id = bundle.getString("eventId")
-            eventTitle = bundle.getString("eventTitle")
-            eventDescription = bundle.getString("eventDescription")
-            eventPathToImage = bundle.getString("eventPathToImage")
         }
 
-        setImage(eventPathToImage, binding.imageViewEventDetails, requireContext())
+        val appDatabase = AppDatabase.getInstance(requireContext())
+        lifecycleScope.launch {
+            if (appDatabase != null) {
+                id?.let { currentEventId ->
+                    val eventData = Event.fetchEventData(currentEventId)
+                    appDatabase.eventDao().add(eventData)
+                    event = appDatabase.eventDao().get(currentEventId)
+                }
+            }
 
-        binding.apply {
-            textViewEventTitleDetails.text = eventTitle
-            textViewEventDescriptionDetails.text = eventDescription
+            event?.let { currentEvent ->
+                setImage(currentEvent.pathToImage, binding.imageViewEventDetails, requireContext())
+
+                binding.apply {
+                    textViewEventTitleDetails.text = currentEvent.title
+                    textViewEventDescriptionDetails.text = currentEvent.description
+                }
+
+            }
         }
     }
+
 }

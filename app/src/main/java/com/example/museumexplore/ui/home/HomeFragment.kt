@@ -1,7 +1,7 @@
 package com.example.museumexplore.ui.home
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,17 +9,17 @@ import android.widget.BaseAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.museumexplore.AppDatabase
 import com.example.museumexplore.R
 import com.example.museumexplore.databinding.FragmentHomeBinding
 import com.example.museumexplore.databinding.MuseumDisplayBinding
+import com.example.museumexplore.modules.ArtWork
 import com.example.museumexplore.modules.Museum
 import com.example.museumexplore.setImage
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import androidx.lifecycle.Observer
+import kotlinx.coroutines.launch
 
 
 class HomeFragment : Fragment() {
@@ -29,11 +29,9 @@ class HomeFragment : Fragment() {
 
     private lateinit var navController: NavController
 
-    private var museumsList: List<Museum> = arrayListOf()
+    private var museumsList = arrayListOf<Museum>()
 
     private val museumAdapter = MuseumAdapter()
-
-    private val db = Firebase.firestore
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -57,33 +55,34 @@ class HomeFragment : Fragment() {
         binding.gridViewMuseums.adapter = museumAdapter
 
         val appDatabase = AppDatabase.getInstance(requireContext())
-        if (appDatabase != null) {
-            Museum.fetchMuseumsData { museumsData ->
+        lifecycleScope.launch {
+            if (appDatabase != null) {
+                val museumsData = Museum.fetchMuseumsData()
                 for (museumData in museumsData) {
                     appDatabase.museumDao().add(museumData)
                 }
+                appDatabase.museumDao().getAll().observe(viewLifecycleOwner) {
+                    museumsList = it as ArrayList<Museum>
+                    museumAdapter.notifyDataSetChanged()
+                }
             }
-            appDatabase.museumDao().getAll().observe(viewLifecycleOwner, Observer {
-                museumsList = it
-                museumAdapter.notifyDataSetChanged()
+
+            binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return true
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    appDatabase?.museumDao()?.getFilteredByName(newText)
+                        ?.observe(viewLifecycleOwner) { filteredMuseumsList ->
+                            museumsList = filteredMuseumsList as ArrayList<Museum>
+                            museumAdapter.notifyDataSetChanged()
+                        }
+                    return true
+                }
+
             })
         }
-
-        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                appDatabase?.museumDao()?.getFilteredByName(newText)
-                    ?.observe(viewLifecycleOwner, Observer { filteredMuseumsList ->
-                        museumsList = filteredMuseumsList
-                        museumAdapter.notifyDataSetChanged()
-                    })
-                return true
-            }
-
-        })
     }
 
     inner class MuseumAdapter : BaseAdapter() {
@@ -99,6 +98,7 @@ class HomeFragment : Fragment() {
             return 0
         }
 
+        @SuppressLint("ViewHolder")
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
             val rootView = MuseumDisplayBinding.inflate(layoutInflater)
 
@@ -109,16 +109,6 @@ class HomeFragment : Fragment() {
             rootView.root.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putString("museumId", museumsList[position].id)
-//                bundle.putString("museumName", museumsList[position].name)
-//                bundle.putString("museumDescription", museumsList[position].description)
-//                bundle.putInt("museumRate", museumsList[position].rate)
-//                bundle.putDouble(
-//                    "museumLongitude", museumsList[position].location["longitude"] ?: 0.0
-//                )
-//                bundle.putDouble(
-//                    "museumLatitude", museumsList[position].location["latitude"] ?: 0.0
-//                )
-//                bundle.putString("museumPathToImage", museumsList[position].pathToImage)
                 navController.navigate(R.id.action_homeFragment_to_museumDetailsFragment, bundle)
             }
 

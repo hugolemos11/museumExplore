@@ -1,23 +1,26 @@
 package com.example.museumexplore.ui.home
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.example.museumexplore.AppDatabase
 import com.example.museumexplore.R
 import com.example.museumexplore.databinding.ArtWorksDisplayBinding
 import com.example.museumexplore.databinding.FragmentArtWorksBinding
 import com.example.museumexplore.modules.ArtWork
+import com.example.museumexplore.modules.Category
 import com.example.museumexplore.setImage
-import com.example.museumexplore.showToast
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.launch
 
 
 class ArtWorksFragment : Fragment() {
@@ -28,9 +31,10 @@ class ArtWorksFragment : Fragment() {
     private lateinit var navController: NavController
 
     var artWorksList = arrayListOf<ArtWork>()
-    private var adapter = ArtWorksAdapter()
+    private var artWorksAdapter = ArtWorksAdapter()
 
-    private val db = Firebase.firestore
+    private var categoriesList = arrayListOf<Category>()
+    private var categoryMap = mapOf<String, String>() // Map for efficient category lookup
 
     private var museumId: String? = null
     private var museumName: String? = null
@@ -62,30 +66,35 @@ class ArtWorksFragment : Fragment() {
         navController = Navigation.findNavController(view)
 
         binding.textViewMuseumName.text = museumName
+        binding.gridViewArtWorks.adapter = artWorksAdapter
 
-        fetchArtWorksData()
-    }
-
-    private fun fetchArtWorksData() {
-        db.collection("artWorks")
-            .whereEqualTo("museumId", "$museumId")
-            .get()
-            .addOnSuccessListener { documents ->
-                // clear de List for don't duplicate de data
-                artWorksList.clear()
-
-                for (document in documents) {
-                    val artWork = ArtWork.fromSnapshot(document.id, document.data)
-                    this.artWorksList.add(artWork)
+        val appDatabase = AppDatabase.getInstance(requireContext())
+        lifecycleScope.launch {
+            if (appDatabase != null) {
+                museumId?.let { currentMuseumId ->
+                    val artWorksData = ArtWork.fetchArtWorksData(currentMuseumId)
+                    for (artWorkData in artWorksData) {
+                        appDatabase.artWorkDao().add(artWorkData)
+                    }
+                    val categoriesData = Category.fetchCategoriesData(currentMuseumId)
+                    for (categoryData in categoriesData) {
+                        appDatabase.categoryDao().add(categoryData)
+                    }
+                    appDatabase.artWorkDao().getAll(currentMuseumId)
+                        .observe(viewLifecycleOwner) {
+                            artWorksList = it as ArrayList<ArtWork>
+                            artWorksAdapter.notifyDataSetChanged()
+                        }
+                    appDatabase.categoryDao().getAll(currentMuseumId)
+                        .observe(viewLifecycleOwner) {
+                            categoriesList = it as ArrayList<Category>
+                            // Build the category map for efficient lookup
+                            categoryMap =
+                                categoriesList.associateBy(Category::id, Category::descritpion)
+                        }
                 }
-                binding.gridViewArtWorks.adapter =
-                    ArtWorksAdapter()
-
-                ArtWorksAdapter().notifyDataSetChanged()
             }
-            .addOnFailureListener {
-                showToast("An error occurred: ${it.localizedMessage}", requireContext())
-            }
+        }
     }
 
     inner class ArtWorksAdapter : BaseAdapter() {
@@ -101,11 +110,15 @@ class ArtWorksFragment : Fragment() {
             return 0
         }
 
+        @SuppressLint("ViewHolder")
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
             val rootView = ArtWorksDisplayBinding.inflate(layoutInflater)
 
             rootView.textViewArtWorkName.text = artWorksList[position].name
-            rootView.textViewCategory.text = artWorksList[position].categoryId
+
+            // Look up category description using the categoryMap
+            val categoryDescription = categoryMap[artWorksList[position].categoryId]
+            rootView.textViewCategory.text = categoryDescription ?: ""
 
             setImage(
                 artWorksList[position].pathToImage,
@@ -116,12 +129,6 @@ class ArtWorksFragment : Fragment() {
             rootView.root.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putString("artWorkId", artWorksList[position].id)
-//                bundle.putString("artWorkName", artWorksList[position].name)
-//                bundle.putString("artistName", artWorksList[position].artist)
-//                bundle.putString("artWorkDescription", artWorksList[position].description)
-//                bundle.putString("artWorkCategory", artWorksList[position].category)
-//                bundle.putInt("artWorkYear", artWorksList[position].year)
-//                bundle.putString("artWorkPathToImage", artWorksList[position].pathToImage)
                 navController.navigate(
                     R.id.action_artWorksFragment_to_artWorkDetailsFragment,
                     bundle
@@ -131,5 +138,4 @@ class ArtWorksFragment : Fragment() {
             return rootView.root
         }
     }
-
 }

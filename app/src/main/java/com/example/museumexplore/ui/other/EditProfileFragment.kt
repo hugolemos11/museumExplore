@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import com.example.museumexplore.R
 import com.example.museumexplore.databinding.FragmentEditProfileBinding
 import com.example.museumexplore.isValidPassword
 import com.example.museumexplore.isValidUsername
@@ -19,7 +18,6 @@ import com.example.museumexplore.setImage
 import com.example.museumexplore.showToast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.auth.User
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 class EditProfileFragment : Fragment() {

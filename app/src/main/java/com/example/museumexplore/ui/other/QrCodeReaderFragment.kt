@@ -11,24 +11,15 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import android.view.SurfaceHolder
 import androidx.lifecycle.lifecycleScope
-import androidx.viewpager2.widget.CompositePageTransformer
-import androidx.viewpager2.widget.MarginPageTransformer
-import androidx.viewpager2.widget.ViewPager2
 import com.example.museumexplore.databinding.FragmentQrCodeReaderBinding
-import com.example.museumexplore.databinding.FragmentTicketBinding
-import com.example.museumexplore.modules.Ticket
-import com.example.museumexplore.modules.TicketAdapter
 import com.example.museumexplore.showToast
 import com.google.android.gms.vision.CameraSource
 import com.google.android.gms.vision.Detector
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.IOException
-import kotlin.math.abs
 
 class QrCodeReaderFragment : Fragment() {
 
@@ -119,7 +110,7 @@ class QrCodeReaderFragment : Fragment() {
                     }
 
                 }else{
-                    showToast("Sem resultados", requireContext())
+                    showToast("No results", requireContext())
                 }
             }
 

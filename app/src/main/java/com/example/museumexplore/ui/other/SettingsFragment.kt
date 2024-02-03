@@ -9,9 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.Switch
-import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -20,15 +18,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.CompositePageTransformer
-import androidx.viewpager2.widget.MarginPageTransformer
-import androidx.viewpager2.widget.ViewPager2
 import com.example.museumexplore.R
 import com.example.museumexplore.databinding.FragmentSettingsBinding
-import com.example.museumexplore.databinding.FragmentTicketBinding
-import com.example.museumexplore.modules.Ticket
-import com.example.museumexplore.modules.TicketAdapter
 import com.example.museumexplore.modules.User
 import com.example.museumexplore.setImage
 import com.example.museumexplore.showToast
@@ -37,7 +28,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlin.math.abs
 import kotlin.system.exitProcess
 
 class SettingsFragment : Fragment() {
@@ -104,27 +94,26 @@ class SettingsFragment : Fragment() {
         binding.removeAccountButton.setOnClickListener {
             val user = Firebase.auth.currentUser!!
             val builder = AlertDialog.Builder(requireActivity())
-            val auth = FirebaseAuth.getInstance()
             builder.setTitle(getString(R.string.delete_account_confirm))
             builder.setMessage(getString(R.string.delete_account_message))
-            builder.setPositiveButton("Sim", DialogInterface.OnClickListener { dialog, id ->
+            builder.setPositiveButton("Yes") { dialog, _ ->
                 dialog.cancel()
-                showToast("Conta eliminada", requireContext())
+                showToast("Account Deleted!", requireContext())
                 user.delete()
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             Log.d(TAG, "User account deleted.")
-                            showToast("Conta eliminada", requireContext())
+                            showToast("Account Deleted!", requireContext())
                             fragmentManager?.popBackStack()
                         }
                     }
-                    .addOnFailureListener { exception ->
-                        showToast("Erro ao eliminar a conta", requireContext())
+                    .addOnFailureListener {
+                        showToast("Error Deleting Account!", requireContext())
                     }
-            })
-            builder.setNegativeButton("Não", DialogInterface.OnClickListener {dialog, id ->
+            }
+            builder.setNegativeButton("No") { dialog, _ ->
                 dialog.cancel()
-            })
+            }
             val alert = builder.create()
             alert.show()
         }
@@ -142,10 +131,10 @@ class SettingsFragment : Fragment() {
         snackBar?.dismiss()
         snackBar = Snackbar.make(
             requireView(),
-            "A permissão foi alterada, por favor, reinicie a aplicação para aplicar as alterações.",
+            "The permission was changed, please reload the application to apply the changes!",
             Snackbar.LENGTH_INDEFINITE,
         ).apply {
-            setAction("Sair da aplicação") {
+            setAction("Exit from MuseumExplore") {
                 exitProcess(0)
             }
         }
@@ -170,7 +159,7 @@ class SettingsFragment : Fragment() {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 notificationSwitch?.isChecked = true
             } else {
-                showToast("Não deu permissão para as notificações.", requireContext())
+                showToast("No permission for Notifications", requireContext())
             }
         }
     }

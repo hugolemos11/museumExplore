@@ -1,14 +1,11 @@
 package com.example.museumexplore.ui.autentication
 
-import android.graphics.Color
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.text.InputFilter
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
@@ -18,8 +15,6 @@ import com.example.museumexplore.databinding.FragmentRegisterBinding
 import com.example.museumexplore.isValidEmail
 import com.example.museumexplore.isValidPassword
 import com.example.museumexplore.isValidUsername
-import com.example.museumexplore.modules.Event
-import com.example.museumexplore.modules.EventAdapter
 import com.example.museumexplore.modules.User
 import com.example.museumexplore.setErrorAndFocus
 import com.example.museumexplore.showToast
@@ -61,7 +56,7 @@ class RegisterFragment : Fragment() {
 
         navController = Navigation.findNavController(view)
 
-        binding.editTextEmailAddress.doOnTextChanged { text, start, before, count ->
+        binding.editTextEmailAddress.doOnTextChanged { text, _, _, _ ->
             when {
                 text.toString().trim().isEmpty() -> {
                     binding.textInputLayoutEmailAddress.error = "Required!"
@@ -77,7 +72,7 @@ class RegisterFragment : Fragment() {
             }
         }
 
-        binding.editTextUsername.doOnTextChanged { text, start, before, count ->
+        binding.editTextUsername.doOnTextChanged { text, _, _, _ ->
             when {
                 text.toString().trim().isEmpty() -> {
                     binding.textInputLayoutUsername.error = "Required!"
@@ -104,7 +99,7 @@ class RegisterFragment : Fragment() {
             }
         }
 
-        binding.editTextPassword.doOnTextChanged { text, start, before, count ->
+        binding.editTextPassword.doOnTextChanged { text, _, _, _ ->
             when {
                 text.toString().trim().isEmpty() -> {
                     binding.textInputLayoutPassword.error = "Required!"
@@ -137,6 +132,7 @@ class RegisterFragment : Fragment() {
         fetchUsernamesData()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun validateAndRegisterUser() {
 
         Log.d("RegisterFragment", "validateAndRegisterUser() called")

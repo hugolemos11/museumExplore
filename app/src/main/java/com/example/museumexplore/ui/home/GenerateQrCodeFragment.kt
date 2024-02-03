@@ -12,7 +12,6 @@ import androidx.navigation.Navigation
 import com.example.museumexplore.databinding.FragmentGenerateQrCodeBinding
 import com.example.museumexplore.showToast
 import com.google.firebase.crashlytics.buildtools.reloc.org.apache.commons.io.output.ByteArrayOutputStream
-import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.google.zxing.BarcodeFormat
@@ -28,10 +27,6 @@ class GenerateQrCodeFragment : Fragment() {
 
     private lateinit var navController: NavController
 
-    private val db = Firebase.firestore
-
-    private var museumId: String? = null
-    private var museumName: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -69,7 +64,7 @@ class GenerateQrCodeFragment : Fragment() {
         }
     }
 
-    fun addQrCodeToStorage(bitmap: Bitmap){
+    private fun addQrCodeToStorage(bitmap: Bitmap){
 
         val storage = Firebase.storage
         val storageRef = storage.reference

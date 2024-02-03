@@ -105,6 +105,8 @@ class EditProfileFragment : Fragment() {
                             showToast("Failed to Update User!", requireContext())
                         }
                     }
+            } else {
+                binding.textInputLayoutUsername.error = "Invalid Username"
             }
         }
     }

@@ -13,7 +13,7 @@ import androidx.navigation.Navigation
 import com.example.museumexplore.R
 import com.example.museumexplore.databinding.ArtWorksDisplayBinding
 import com.example.museumexplore.databinding.FragmentArtWorksBinding
-import com.example.museumexplore.modules.ArtWorks
+import com.example.museumexplore.modules.ArtWork
 import com.example.museumexplore.setImage
 import com.example.museumexplore.showToast
 import com.google.firebase.firestore.ktx.firestore
@@ -27,7 +27,7 @@ class ArtWorksFragment : Fragment() {
 
     private lateinit var navController: NavController
 
-    var artWorksList = arrayListOf<ArtWorks>()
+    var artWorksList = arrayListOf<ArtWork>()
     private var adapter = ArtWorksAdapter()
 
     private val db = Firebase.firestore
@@ -40,6 +40,8 @@ class ArtWorksFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        // Remove the title of fragment on the actionBar
+        (activity as AppCompatActivity).supportActionBar?.title = ""
         _binding = FragmentArtWorksBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -57,9 +59,6 @@ class ArtWorksFragment : Fragment() {
             museumName = bundle.getString("museumName")
         }
 
-        // Remove the title of fragment on the actionBar
-        (activity as AppCompatActivity).supportActionBar?.title = ""
-
         navController = Navigation.findNavController(view)
 
         binding.textViewMuseumName.text = museumName
@@ -76,9 +75,8 @@ class ArtWorksFragment : Fragment() {
                 artWorksList.clear()
 
                 for (document in documents) {
-                    val artWork = ArtWorks.fromSnapshot(document.id, document.data)
+                    val artWork = ArtWork.fromSnapshot(document.id, document.data)
                     this.artWorksList.add(artWork)
-                    Log.e("teste2", "$artWork")
                 }
                 binding.gridViewArtWorks.adapter =
                     ArtWorksAdapter()
@@ -107,7 +105,7 @@ class ArtWorksFragment : Fragment() {
             val rootView = ArtWorksDisplayBinding.inflate(layoutInflater)
 
             rootView.textViewArtWorkName.text = artWorksList[position].name
-            rootView.textViewCategory.text = artWorksList[position].category
+            rootView.textViewCategory.text = artWorksList[position].categoryId
 
             setImage(
                 artWorksList[position].pathToImage,
@@ -118,12 +116,12 @@ class ArtWorksFragment : Fragment() {
             rootView.root.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putString("artWorkId", artWorksList[position].id)
-                bundle.putString("artWorkName", artWorksList[position].name)
-                bundle.putString("artistName", artWorksList[position].artist)
-                bundle.putString("artWorkDescription", artWorksList[position].description)
-                bundle.putString("artWorkCategory", artWorksList[position].category)
-                bundle.putInt("artWorkYear", artWorksList[position].year)
-                bundle.putString("artWorkPathToImage", artWorksList[position].pathToImage)
+//                bundle.putString("artWorkName", artWorksList[position].name)
+//                bundle.putString("artistName", artWorksList[position].artist)
+//                bundle.putString("artWorkDescription", artWorksList[position].description)
+//                bundle.putString("artWorkCategory", artWorksList[position].category)
+//                bundle.putInt("artWorkYear", artWorksList[position].year)
+//                bundle.putString("artWorkPathToImage", artWorksList[position].pathToImage)
                 navController.navigate(
                     R.id.action_artWorksFragment_to_artWorkDetailsFragment,
                     bundle

@@ -39,6 +39,8 @@ class EditProfileFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        // Remove the title of fragment on the actionBar
+        (activity as AppCompatActivity).supportActionBar?.title = ""
         _binding = FragmentEditProfileBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -55,8 +57,6 @@ class EditProfileFragment : Fragment() {
             username = bundle.getString("username")
             pathToImage = bundle.getString("pathToImage")
         }
-        // Remove the title of fragment on the actionBar
-        (activity as AppCompatActivity).supportActionBar?.title = ""
 
         navController = Navigation.findNavController(view)
 

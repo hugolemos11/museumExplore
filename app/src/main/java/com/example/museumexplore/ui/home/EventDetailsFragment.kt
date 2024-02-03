@@ -25,6 +25,8 @@ class EventDetailsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        // Remove the title of fragment on the actionBar
+        (activity as AppCompatActivity).supportActionBar?.title = ""
         _binding = FragmentEventDetailsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -36,9 +38,6 @@ class EventDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // Remove the title of fragment on the actionBar
-        (activity as AppCompatActivity).supportActionBar?.title = ""
 
         //navController = Navigation.findNavController(view);
 

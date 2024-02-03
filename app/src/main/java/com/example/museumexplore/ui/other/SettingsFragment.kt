@@ -57,6 +57,8 @@ class SettingsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        // Remove the title of fragment on the actionBar
+        (activity as AppCompatActivity).supportActionBar?.title = ""
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -72,8 +74,6 @@ class SettingsFragment : Fragment() {
         arguments?.let { bundle ->
             userId = bundle.getString("uid")
         }
-        // Remove the title of fragment on the actionBar
-        (activity as AppCompatActivity).supportActionBar?.title = ""
 
         navController = Navigation.findNavController(view)
         notificationSwitch = binding.notificationSwitch

@@ -46,7 +46,14 @@
             android:id="@+id/artWorkDetailsFragment"
             android:name="com.example.museumexplore.ui.home.ArtWorkDetailsFragment"
             android:label="fragment_art_work_details"
-            tools:layout="@layout/fragment_art_work_details" />
+            tools:layout="@layout/fragment_art_work_details">
+            <deepLink
+                android:id="@+id/deepLink"
+                app:uri="museumexplore.com/artWork/{artWorkId}" />
+            <argument
+                android:name="artWorkId"
+                app:argType="string" />
+        </fragment>
         <action
             android:id="@+id/action_global_autenticationNavigation"
             app:destination="@id/autenticationNavigation" />

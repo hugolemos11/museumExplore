@@ -1,5 +1,6 @@
 package com.example.museumexplore.modules
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.museumexplore.R
 import com.example.museumexplore.setImage
 
-class TicketAdapter(private val list: ArrayList<Ticket>, private val context: Context) :
+class TicketAdapter(private val list: ArrayList<TicketType>, private val context: Context) :
     RecyclerView.Adapter<TicketAdapter.ImageViewHolder>() {
 
     inner class ImageViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
@@ -29,6 +30,7 @@ class TicketAdapter(private val list: ArrayList<Ticket>, private val context: Co
         return ImageViewHolder(view)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: TicketAdapter.ImageViewHolder, position: Int) {
         val model = list[position]
 

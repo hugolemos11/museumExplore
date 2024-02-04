@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -15,7 +14,6 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.museumexplore.AppDatabase
 import com.example.museumexplore.databinding.FragmentEditProfileBinding
-import com.example.museumexplore.isValidEmail
 import com.example.museumexplore.isValidPassword
 import com.example.museumexplore.isValidUsername
 import com.example.museumexplore.modules.User
@@ -23,7 +21,6 @@ import com.example.museumexplore.setErrorAndFocus
 import com.example.museumexplore.setImage
 import com.example.museumexplore.showToast
 import com.google.firebase.auth.EmailAuthProvider
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -41,7 +38,6 @@ class EditProfileFragment : Fragment() {
     private var pathToImage: String? = null
     private val user = Firebase.auth.currentUser
     private val db = Firebase.firestore
-    private lateinit var auth: FirebaseAuth
     private var usernamesInUse: ArrayList<String> = ArrayList()
     private var formIsValid: Boolean? = null
 
@@ -50,8 +46,6 @@ class EditProfileFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Remove the title of fragment on the actionBar
-        (activity as AppCompatActivity).supportActionBar?.title = ""
         _binding = FragmentEditProfileBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -170,7 +164,7 @@ class EditProfileFragment : Fragment() {
                     updateUsername(username) { success ->
                         if (success) {
                             showToast("User Updated Successfully!", requireContext())
-                            fragmentManager?.popBackStack()
+                            navController.popBackStack()
                         } else {
                             showToast("Failed to Update User!", requireContext())
                         }
@@ -184,7 +178,6 @@ class EditProfileFragment : Fragment() {
     }
 
     private fun validateAndUpdatePassword() {
-        auth = Firebase.auth
         val username = binding.editTextUsername.text.toString().trim()
         val oldPassword = binding.editTextOldPassword.text.toString().trim()
         val newPassword = binding.editTextPassword.text.toString().trim()
@@ -256,7 +249,7 @@ class EditProfileFragment : Fragment() {
                 currentUser.reauthenticate(credential)
                     .addOnCompleteListener { reAuthTask ->
                         if (reAuthTask.isSuccessful) {
-                            // User has been successfully reauthenticated
+                            // User has been successfully re-authenticated
                             // Now you can update the password
                             lifecycleScope.launch {
                                 if (username != this@EditProfileFragment.username) {
@@ -269,7 +262,7 @@ class EditProfileFragment : Fragment() {
                                                             "User data successfully updated!",
                                                             requireContext()
                                                         )
-                                                        fragmentManager?.popBackStack()
+                                                        navController.popBackStack()
                                                     } else {
                                                         showToast(
                                                             "Error updating password!",
@@ -297,7 +290,7 @@ class EditProfileFragment : Fragment() {
                                                     "Password successfully updated!",
                                                     requireContext()
                                                 )
-                                                fragmentManager?.popBackStack()
+                                                navController.popBackStack()
                                             } else {
                                                 showToast(
                                                     "Error updating password!",
@@ -312,7 +305,7 @@ class EditProfileFragment : Fragment() {
                                 }
                             }
                         } else {
-                            showToast("Reauthentication failed", requireContext())
+                            showToast("Re-authentication failed", requireContext())
                             setErrorAndFocus(
                                 binding.textInputLayoutOldPassword,
                                 "Incorrect password!"

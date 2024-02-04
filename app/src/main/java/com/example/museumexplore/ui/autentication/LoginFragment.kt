@@ -110,7 +110,7 @@ class LoginFragment : Fragment() {
                                     NavOptions.Builder().setPopUpTo(R.id.loginFragment, true)
                                         .build()
                                 navController.navigate(
-                                    R.id.action_global_homeNavigation,
+                                    R.id.action_autenticationNavigation_to_homeNavigation,
                                     null,
                                     navOptions
                                 )

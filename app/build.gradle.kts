@@ -90,9 +90,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-vision:20.1.3")
 
     // Room
-
     implementation("androidx.room:room-runtime:2.6.1")
     annotationProcessor("androidx.room:room-compiler:2.6.1")
-    // To use Kotlin annotation processing tool (kapt)
     ksp("androidx.room:room-compiler:2.6.1")
 }

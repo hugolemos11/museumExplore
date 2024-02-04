@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -16,7 +15,6 @@ import com.example.museumexplore.AppDatabase
 import com.example.museumexplore.R
 import com.example.museumexplore.databinding.FragmentHomeBinding
 import com.example.museumexplore.databinding.MuseumDisplayBinding
-import com.example.museumexplore.modules.ArtWork
 import com.example.museumexplore.modules.Museum
 import com.example.museumexplore.setImage
 import kotlinx.coroutines.launch
@@ -36,8 +34,6 @@ class HomeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        // Remove the title of fragment on the actionBar
-        (activity as AppCompatActivity).supportActionBar?.title = ""
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }

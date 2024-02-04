@@ -2,7 +2,6 @@ package com.example.museumexplore.ui.autentication
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -180,7 +179,6 @@ class RegisterFragment : Fragment() {
         }
 
         if (!binding.checkBox.isChecked) {
-            Log.d("RegisterFragment", "checkBox() called")
             binding.errorTextView.visibility = View.VISIBLE
             binding.errorTextView.text = "Required!"
             registerIsValid = false
@@ -200,7 +198,7 @@ class RegisterFragment : Fragment() {
                                 .set(user).addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
                                         showToast("User Registered Successfully!", requireContext())
-                                        navController.navigate(R.id.action_global_homeNavigation)
+                                        navController.navigate(R.id.action_autenticationNavigation_to_homeNavigation)
                                     } else {
                                         showToast("User Failed to Registered!", requireContext())
                                     }

@@ -1,23 +1,25 @@
 package com.example.museumexplore.ui.home
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
+import com.example.museumexplore.AppDatabase
+import com.example.museumexplore.R
 import com.example.museumexplore.databinding.FragmentTicketBinding
-import com.example.museumexplore.modules.Ticket
+import com.example.museumexplore.modules.Museum
 import com.example.museumexplore.modules.TicketAdapter
-import com.example.museumexplore.showToast
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.example.museumexplore.modules.TicketType
+import kotlinx.coroutines.launch
 import kotlin.math.abs
 
 class TicketFragment : Fragment() {
@@ -27,22 +29,21 @@ class TicketFragment : Fragment() {
 
     private lateinit var navController: NavController
 
-    private var ticketList = ArrayList<Ticket>()
+    private var ticketTypesList = ArrayList<TicketType>()
+
+    private lateinit var ticketTypeSelected: TicketType
 
     private lateinit var imageView: ViewPager2
 
-    private val db = Firebase.firestore
-
     private var museumId: String? = null
-    private var museumName: String? = null
+
+    private var museum: Museum? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Remove the title of fragment on the actionBar
-        (activity as AppCompatActivity).supportActionBar?.title = ""
         _binding = FragmentTicketBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -52,18 +53,56 @@ class TicketFragment : Fragment() {
         _binding = null
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         arguments?.let { bundle ->
             museumId = bundle.getString("museumId")
-            museumName = bundle.getString("museumName")
         }
 
         navController = Navigation.findNavController(view)
 
+        binding.checkBoxTerms.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                binding.errorTextView.visibility = View.GONE
+            }
+        }
+        binding.button.setOnClickListener {
+            if (!binding.checkBoxTerms.isChecked) {
+                binding.errorTextView.visibility = View.VISIBLE
+                binding.errorTextView.text = "Required!"
+            } else {
+                val bundle = Bundle()
+                bundle.putString("museumId", museumId)
+                museum?.let {currentMuseum ->
+                    bundle.putString("museumName", currentMuseum.name)
+                    bundle.putString("museumPathToImage", currentMuseum.pathToImage)
+                }
+                bundle.putString("ticketTypeId", ticketTypeSelected.id)
+                bundle.putString("ticketType", ticketTypeSelected.type)
+                bundle.putDouble("ticketPrice", ticketTypeSelected.price)
+                navController.navigate(R.id.action_ticketFragment_to_registerTicketFragment, bundle)
+            }
+        }
+
+        val appDatabase = AppDatabase.getInstance(requireContext())
+        lifecycleScope.launch {
+            if (appDatabase != null) {
+                museumId?.let {currentMuseumId ->
+                    museum = appDatabase.museumDao().get(currentMuseumId)
+                    val ticketTypesData = TicketType.fetchTicketTypesData(currentMuseumId)
+                    for (ticketTypeData in ticketTypesData) {
+                        appDatabase.ticketTypesDao().add(ticketTypeData)
+                    }
+                    appDatabase.ticketTypesDao().getAll(currentMuseumId).observe(viewLifecycleOwner) {
+                        ticketTypesList = it as ArrayList<TicketType>
+                        binding.viewPager.adapter = TicketAdapter(ticketTypesList, requireContext())
+                    }
+                }
+            }
+        }
         transformer()
-        fetchTicketsData()
     }
 
     private fun transformer() {
@@ -83,21 +122,11 @@ class TicketFragment : Fragment() {
             page.scaleY = 0.85f + r * 0.15f
         }
         imageView.setPageTransformer(compositePageTransformer)
-    }
 
-    private fun fetchTicketsData() {
-        db.collection("ticketTypes")
-            .whereEqualTo("museumId", museumId)
-            .get()
-            .addOnSuccessListener { documents ->
-                for (document in documents) {
-                    val ticket = Ticket.fromSnapshot(document.id, document.data)
-                    this.ticketList.add(ticket)
-                }
-                binding.viewPager.adapter = TicketAdapter(ticketList, requireContext())
+        imageView.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                ticketTypeSelected = ticketTypesList[position]
             }
-            .addOnFailureListener {
-                showToast("An error occurred: ${it.localizedMessage}", requireContext())
-            }
+        })
     }
 }

@@ -1,7 +1,6 @@
 package com.example.museumexplore.ui.other
 
 import android.content.ContentValues.TAG
-import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -12,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.Switch
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -28,7 +26,6 @@ import com.example.museumexplore.showToast
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
@@ -49,8 +46,6 @@ class SettingsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Remove the title of fragment on the actionBar
-        (activity as AppCompatActivity).supportActionBar?.title = ""
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -121,7 +116,7 @@ class SettingsFragment : Fragment() {
                         if (task.isSuccessful) {
                             Log.d(TAG, "User account deleted.")
                             showToast("Account Deleted!", requireContext())
-                            fragmentManager?.popBackStack()
+                            navController.popBackStack()
                         }
                     }
                     .addOnFailureListener {
@@ -165,6 +160,8 @@ class SettingsFragment : Fragment() {
             requestCodeNotificationPermission
         )
     }
+
+    @Suppress("DEPRECATION")
     @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(
         requestCode: Int,

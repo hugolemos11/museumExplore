@@ -12,7 +12,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -21,7 +20,6 @@ import androidx.navigation.Navigation
 import com.example.museumexplore.AppDatabase
 import com.example.museumexplore.R
 import com.example.museumexplore.databinding.FragmentMuseumDetailsBinding
-import com.example.museumexplore.modules.ArtWork
 import com.example.museumexplore.modules.EventAdapter
 import com.example.museumexplore.modules.Event
 import com.example.museumexplore.modules.Image
@@ -29,6 +27,9 @@ import com.example.museumexplore.modules.ImageAdapter
 import com.example.museumexplore.modules.Museum
 import com.example.museumexplore.setImage
 import com.google.android.material.carousel.CarouselSnapHelper
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.MapView
@@ -45,6 +46,8 @@ class MuseumDetailsFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var navController: NavController
+
+    private lateinit var auth: FirebaseAuth
 
     private var museumImagesList = arrayListOf<Image>()
     private var artWorksList = arrayListOf<Image>()
@@ -63,8 +66,6 @@ class MuseumDetailsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Remove the title of fragment on the actionBar
-        (activity as AppCompatActivity).supportActionBar?.title = ""
         _binding = FragmentMuseumDetailsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -83,6 +84,7 @@ class MuseumDetailsFragment : Fragment() {
 
         navController = Navigation.findNavController(view)
 
+        auth = Firebase.auth
 
         val appDatabase = AppDatabase.getInstance(requireContext())
         lifecycleScope.launch {
@@ -152,13 +154,17 @@ class MuseumDetailsFragment : Fragment() {
                         CarouselSnapHelper().attachToRecyclerView(carouselRecyclerViewEvents)
 
                         buttonTicket.setOnClickListener {
-                            val bundle = Bundle()
-                            bundle.putString("museumId", museumId)
-                            bundle.putString("museumName", currentMuseum.name)
-                            navController.navigate(
-                                R.id.action_museumDetailsFragment_to_ticketFragment,
-                                bundle
-                            )
+                            if (auth.uid != null) {
+                                val bundle = Bundle()
+                                bundle.putString("museumId", museumId)
+                                bundle.putString("museumName", currentMuseum.name)
+                                navController.navigate(
+                                    R.id.action_museumDetailsFragment_to_ticketFragment,
+                                    bundle
+                                )
+                            } else {
+                                navController.navigate(R.id.action_homeNavigation_to_autenticationNavigation)
+                            }
                         }
 
                         mapView.gestures.pitchEnabled = false

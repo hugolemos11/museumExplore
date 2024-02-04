@@ -4,13 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.museumexplore.AppDatabase
 import com.example.museumexplore.databinding.FragmentEventDetailsBinding
-import com.example.museumexplore.modules.ArtWork
-import com.example.museumexplore.modules.Category
 import com.example.museumexplore.modules.Event
 import com.example.museumexplore.setImage
 import kotlinx.coroutines.launch
@@ -30,8 +27,6 @@ class EventDetailsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Remove the title of fragment on the actionBar
-        (activity as AppCompatActivity).supportActionBar?.title = ""
         _binding = FragmentEventDetailsBinding.inflate(inflater, container, false)
         return binding.root
     }

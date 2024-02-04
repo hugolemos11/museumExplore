@@ -2,7 +2,6 @@ package com.example.museumexplore
 
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -25,14 +24,9 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.museumexplore.databinding.MainActivityBinding
-import com.example.museumexplore.modules.ArtWork
-import com.example.museumexplore.modules.Category
 import com.example.museumexplore.modules.User
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 
 
@@ -70,10 +64,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navigationView = binding.navView
 
         appBarConfiguration = AppBarConfiguration(
+            // Set just the top level screens, makes the screen don't have the back arrow
             setOf(
                 R.id.homeFragment,
-                R.id.loginFragment,
-                // R.id.navigation_settings // Add other destination IDs if needed
             ),
             drawerLayout,
             fallbackOnNavigateUpListener = ::onSupportNavigateUp
@@ -83,27 +76,47 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         navController.addOnDestinationChangedListener { _: NavController, nd: NavDestination, _: Bundle? ->
             when (nd.id) {
-                R.id.homeFragment /*|| nd.id == R.id.museumDetailsFragment*/ -> {
-                    // Causes the menu icon (on the left) to disappear and not be clickable
+                R.id.homeFragment -> {
                     supportActionBar?.show()
                     supportActionBar?.setDisplayHomeAsUpEnabled(false)
                     supportActionBar?.setHomeButtonEnabled(false)
-                    if (nd.id == R.id.homeFragment /*|| nd.id == R.id.editProfileFragment*/) {
-                        // Updates the drawer every time the user changes their profile and logs into their account
-                        updateDrawerContent()
-                    }
+                    supportActionBar?.setDisplayShowTitleEnabled(false)
+                    updateDrawerContent()
                 }
 
-                R.id.loginFragment, R.id.recoverPasswordFragment, R.id.registerFragment -> {
+                R.id.museumDetailsFragment,
+                R.id.artWorksFragment,
+                R.id.artWorkDetailsFragment,
+                R.id.eventDetailsFragment,
+                R.id.paymentFragment,
+                R.id.registerTicketFragment,
+                R.id.ticketFragment,
+                R.id.editProfileFragment,
+                R.id.qrCodeReaderFragment -> {
+                    supportActionBar?.show()
+                    supportActionBar?.setDisplayShowTitleEnabled(false)
+                }
+
+                R.id.settingsFragment,
+                R.id.artWorkDetailsFragment -> {
+                    supportActionBar?.show()
+                    supportActionBar?.setDisplayShowTitleEnabled(false)
+                    updateDrawerContent()
+                }
+
+                R.id.loginFragment,
+                R.id.recoverPasswordFragment,
+                R.id.registerFragment,
+                R.id.finishPaymentFragment -> {
                     // Hide the actionBar
                     supportActionBar?.hide()
                 }
 
-                else -> {
-                    toolbar.setNavigationOnClickListener {
-                        onBackPressed()
-                    }
-                }
+//                else -> {
+//                    toolbar.setNavigationOnClickListener {
+//                        onBackPressed()
+//                    }
+//                }
             }
         }
         NavigationUI.setupWithNavController(navigationView, navController)
@@ -230,19 +243,45 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         drawerLayout.closeDrawer(GravityCompat.END)
                     }
 
-                    R.id.museumDetailsFragment, R.id.artWorksFragment, R.id.artWorkDetailsFragment, R.id.eventDetailsFragment, R.id.ticketFragment -> {
+                    R.id.museumDetailsFragment,
+                    R.id.artWorksFragment,
+                    R.id.artWorkDetailsFragment,
+                    R.id.eventDetailsFragment,
+                    R.id.ticketFragment -> {
                         // Pop the back stack to navigate to homeFragment
                         navController.popBackStack(R.id.homeFragment, false)
                     }
 
-                    else -> {
-                        navController.navigate(R.id.action_global_homeNavigation)
+                    R.id.qrCodeReaderFragment -> {
+                        navController.navigate(R.id.action_qrCodeReaderFragment_to_homeNavigation)
+                    }
+
+                    R.id.settingsFragment,
+                    R.id.editProfileFragment -> {
+                        navController.navigate(R.id.action_settingsNavigation_to_homeNavigation)
                     }
                 }
             }
 
             R.id.navTicket -> {
-                navController.navigate(R.id.action_global_generateQrCodeFragment)
+                when (navController.currentDestination?.id) {
+                    R.id.homeFragment,
+                    R.id.museumDetailsFragment,
+                    R.id.artWorksFragment,
+                    R.id.artWorkDetailsFragment,
+                    R.id.eventDetailsFragment,
+                    R.id.ticketFragment -> {
+                        navController.navigate(R.id.action_global_generateQrCodeFragment)
+                    }
+
+                    R.id.qrCodeReaderFragment -> {
+                        navController.navigate(R.id.action_qrCodeReaderFragment_to_homeNavigation)
+                    }
+
+                    R.id.settingsFragment, R.id.editProfileFragment -> {
+                        navController.navigate(R.id.action_settingsNavigation_to_homeNavigation)
+                    }
+                }
             }
 
             R.id.navScan -> {
@@ -254,13 +293,61 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 } else {
                     binding.navView.menu.findItem(R.id.navScan).isEnabled = false
                 }
-                navController.navigate(R.id.action_global_qrCodeReaderFragment)
+                when (navController.currentDestination?.id) {
+                    R.id.homeFragment,
+                    R.id.museumDetailsFragment,
+                    R.id.artWorksFragment,
+                    R.id.artWorkDetailsFragment,
+                    R.id.eventDetailsFragment,
+                    R.id.ticketFragment -> {
+                        navController.navigate(R.id.action_homeNavigation_to_qrCodeReaderFragment)
+                    }
+
+                    R.id.qrCodeReaderFragment -> {
+                        // If the current destination is QrCodeReader, close the drawer
+                        drawerLayout.closeDrawer(GravityCompat.END)
+                    }
+
+                    R.id.settingsFragment,
+                    R.id.editProfileFragment -> {
+                        navController.navigate(R.id.action_settingsNavigation_to_qrCodeReaderFragment)
+                    }
+                }
             }
 
             R.id.navSettings -> {
                 val bundle = Bundle()
                 bundle.putString("uid", uid)
-                navController.navigate(R.id.action_global_settingsNavigation, bundle)
+                when (navController.currentDestination?.id) {
+                    R.id.homeFragment,
+                    R.id.museumDetailsFragment,
+                    R.id.artWorksFragment,
+                    R.id.artWorkDetailsFragment,
+                    R.id.eventDetailsFragment,
+                    R.id.ticketFragment -> {
+                        navController.navigate(
+                            R.id.action_homeNavigation_to_settingsNavigation,
+                            bundle
+                        )
+                    }
+
+                    R.id.qrCodeReaderFragment -> {
+                        navController.navigate(
+                            R.id.action_homeNavigation_to_settingsNavigation,
+                            bundle
+                        )
+                    }
+
+                    R.id.editProfileFragment -> {
+                        // Pop the back stack to navigate to settings
+                        navController.popBackStack(R.id.settingsFragment, false)
+                    }
+
+                    R.id.settingsFragment -> {
+                        // If the current destination is Settings, close the drawer
+                        drawerLayout.closeDrawer(GravityCompat.END)
+                    }
+                }
             }
 
             R.id.navLogout -> {
@@ -269,6 +356,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                 // Update the Drawer to  the UnAuthenticated user drawer
                 updateDrawerContent()
+
+                // Go to the home page
+                // Pop the back stack to navigate to homeFragment
+                navController.popBackStack(R.id.homeFragment, false)
             }
 
             R.id.navLogin -> {
@@ -276,7 +367,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     // If the current destination is HomeFragment, close the drawer
                     drawerLayout.closeDrawer(GravityCompat.END)
                 } else {
-                    navController.navigate(R.id.action_global_autenticationNavigation)
+                    navController.navigate(R.id.action_homeNavigation_to_autenticationNavigation)
                 }
             }
         }

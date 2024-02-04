@@ -29,6 +29,7 @@
             android:name=".MainActivity"
             android:theme="@style/Theme.MainActivity"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" > <!-- Makes that when the keyboard shows up the grid view don't follow -->
 
             <intent-filter>
@@ -54,7 +55,8 @@
             android:exported="false" />
         <activity
             android:name=".ui.home.MuseumDetailsFragment"
-            android:exported="false" />
+            android:exported="false"
+            />
         <activity
             android:name=".ui.home.ArtWorksFragment"
             android:exported="false" />

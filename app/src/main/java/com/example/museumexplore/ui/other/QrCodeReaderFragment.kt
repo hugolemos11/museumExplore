@@ -1,16 +1,18 @@
 package com.example.museumexplore.ui.other
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import android.view.SurfaceHolder
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavDeepLinkRequest
+import androidx.navigation.NavOptions
 import com.example.museumexplore.databinding.FragmentQrCodeReaderBinding
 import com.example.museumexplore.showToast
 import com.google.android.gms.vision.CameraSource
@@ -37,8 +39,6 @@ class QrCodeReaderFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Remove the title of fragment on the actionBar
-        (activity as AppCompatActivity).supportActionBar?.title = ""
         _binding = FragmentQrCodeReaderBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -54,6 +54,7 @@ class QrCodeReaderFragment : Fragment() {
 
         navController = Navigation.findNavController(view)
 
+        setupControls()
     }
 
     private fun setupControls() {
@@ -104,17 +105,23 @@ class QrCodeReaderFragment : Fragment() {
                 if (barcodes.size() == 1) {
                     scannedValue = barcodes.valueAt(0).rawValue
 
-                    lifecycleScope.launch (Dispatchers.Main){
+                    lifecycleScope.launch(Dispatchers.Main) {
                         cameraSource.stop()
-                        navController.popBackStack()
+                        // Create a NavDeepLinkRequest with the deep link URI
+                        val deepLinkRequest = NavDeepLinkRequest.Builder
+                            .fromUri(Uri.parse(scannedValue))
+                            .build()
+
+                        // Navigate to the destination associated with the deep link
+                        val navOptions = NavOptions.Builder().setLaunchSingleTop(true).build()
+                        navController.navigate(deepLinkRequest, navOptions)
                     }
 
-                }else{
+                } else {
                     showToast("No results", requireContext())
                 }
             }
 
         })
-
     }
 }

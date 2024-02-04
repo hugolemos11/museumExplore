@@ -45,19 +45,20 @@
         android:layout_marginStart="60dp"
         android:layout_marginTop="40dp"
         android:layout_marginEnd="60dp"
-        android:layout_weight="1"
+        android:buttonTint="#023859"
         android:text="@string/ticket_terms"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/viewPager" />
 
     <TextView
-        android:id="@+id/textViewTicketTypeSelected"
-        style="@style/Theme.Description"
+        android:id="@+id/errorTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:textColor="@color/design_default_color_error"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@+id/checkBoxTerms"
+        app:layout_constraintHorizontal_bias="0.04"
         app:layout_constraintStart_toStartOf="@+id/checkBoxTerms"
         app:layout_constraintTop_toBottomOf="@+id/checkBoxTerms" />
 
@@ -66,11 +67,11 @@
         style="@style/Theme.ButtonDefault"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:text="@string/buy"
-        app:layout_constraintEnd_toEndOf="@+id/textViewTicketTypeSelected"
-        app:layout_constraintStart_toStartOf="@+id/textViewTicketTypeSelected"
-        app:layout_constraintTop_toBottomOf="@+id/textViewTicketTypeSelected" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/checkBoxTerms"
+        app:layout_constraintStart_toStartOf="@+id/checkBoxTerms"
+        app:layout_constraintTop_toBottomOf="@+id/checkBoxTerms" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

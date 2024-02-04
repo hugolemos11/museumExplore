@@ -8,13 +8,40 @@
     <navigation android:id="@+id/homeNavigation"
         app:startDestination="@id/homeFragment">
         <fragment
+            android:id="@+id/finishPaymentFragment"
+            android:name="com.example.museumexplore.ui.home.FinishPaymentFragment"
+            android:label="FinishPaymentFragment" />
+        <fragment
+            android:id="@+id/paymentFragment"
+            android:name="com.example.museumexplore.ui.home.PaymentFragment"
+            android:label="fragment_payment"
+            tools:layout="@layout/fragment_payment" >
+            <action
+                android:id="@+id/action_paymentFragment_to_finishPaymentFragment"
+                app:destination="@id/finishPaymentFragment"
+                app:enterAnim="@android:anim/fade_in"
+                app:exitAnim="@android:anim/fade_out" />
+        </fragment>
+        <fragment
+            android:id="@+id/registerTicketFragment"
+            android:name="com.example.museumexplore.ui.home.RegisterTicketFragment"
+            android:label="RegisterTicketFragment" >
+            <action
+                android:id="@+id/action_registerTicketFragment_to_paymentFragment"
+                app:destination="@id/paymentFragment"
+                app:enterAnim="@android:anim/fade_in"
+                app:exitAnim="@android:anim/fade_out" />
+        </fragment>
+        <fragment
             android:id="@+id/artWorksFragment"
             android:name="com.example.museumexplore.ui.home.ArtWorksFragment"
             android:label="fragment_art_works"
             tools:layout="@layout/fragment_art_works">
             <action
                 android:id="@+id/action_artWorksFragment_to_artWorkDetailsFragment"
-                app:destination="@id/artWorkDetailsFragment" />
+                app:destination="@id/artWorkDetailsFragment"
+                app:enterAnim="@android:anim/fade_in"
+                app:exitAnim="@android:anim/fade_out" />
         </fragment>
         <fragment
             android:id="@+id/homeFragment"
@@ -34,29 +61,37 @@
             tools:layout="@layout/fragment_museum_details">
             <action
                 android:id="@+id/action_museumDetailsFragment_to_artWorksFragment"
-                app:destination="@id/artWorksFragment" />
+                app:destination="@id/artWorksFragment"
+                app:enterAnim="@android:anim/fade_in"
+                app:exitAnim="@android:anim/fade_out" />
             <action
                 android:id="@+id/action_museumDetailsFragment_to_eventDetailsFragment"
-                app:destination="@id/eventDetailsFragment" />
+                app:destination="@id/eventDetailsFragment"
+                app:enterAnim="@android:anim/fade_in"
+                app:exitAnim="@android:anim/fade_out" />
             <action
                 android:id="@+id/action_museumDetailsFragment_to_ticketFragment"
-                app:destination="@id/ticketFragment" />
+                app:destination="@id/ticketFragment"
+                app:enterAnim="@android:anim/fade_in"
+                app:exitAnim="@android:anim/fade_out" />
         </fragment>
         <fragment
             android:id="@+id/artWorkDetailsFragment"
             android:name="com.example.museumexplore.ui.home.ArtWorkDetailsFragment"
             android:label="fragment_art_work_details"
             tools:layout="@layout/fragment_art_work_details">
-            <deepLink
-                android:id="@+id/deepLink"
-                app:uri="museumexplore.com/artWork/{artWorkId}" />
             <argument
                 android:name="artWorkId"
                 app:argType="string" />
+            <deepLink
+                android:id="@+id/deepLink"
+                app:uri="museumexplore.com/artWork/{artWorkId}" />
         </fragment>
         <action
-            android:id="@+id/action_global_autenticationNavigation"
-            app:destination="@id/autenticationNavigation" />
+            android:id="@+id/action_homeNavigation_to_autenticationNavigation"
+            app:destination="@id/autenticationNavigation"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
         <fragment
             android:id="@+id/eventDetailsFragment"
             android:name="com.example.museumexplore.ui.home.EventDetailsFragment"
@@ -66,16 +101,26 @@
             android:id="@+id/ticketFragment"
             android:name="com.example.museumexplore.ui.home.TicketFragment"
             android:label="fragment_ticket"
-            tools:layout="@layout/fragment_ticket" />
+            tools:layout="@layout/fragment_ticket" >
+            <action
+                android:id="@+id/action_ticketFragment_to_registerTicketFragment"
+                app:destination="@id/registerTicketFragment"
+                app:enterAnim="@android:anim/fade_in"
+                app:exitAnim="@android:anim/fade_out" />
+        </fragment>
         <action
             android:id="@+id/action_global_generateQrCodeFragment"
             app:destination="@id/generateQrCodeFragment" />
         <action
-            android:id="@+id/action_global_qrCodeReaderFragment"
-            app:destination="@id/qrCodeReaderFragment" />
+            android:id="@+id/action_homeNavigation_to_qrCodeReaderFragment"
+            app:destination="@id/qrCodeReaderFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
         <action
-            android:id="@+id/action_global_settingsNavigation"
-            app:destination="@id/settingsNavigation" />
+            android:id="@+id/action_homeNavigation_to_settingsNavigation"
+            app:destination="@id/settingsNavigation"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
     </navigation>
     <navigation android:id="@+id/autenticationNavigation"
         app:startDestination="@id/loginFragment">
@@ -96,14 +141,20 @@
             tools:layout="@layout/fragment_login">
             <action
                 android:id="@+id/action_loginFragment_to_registerFragment"
-                app:destination="@id/registerFragment" />
+                app:destination="@id/registerFragment"
+                app:enterAnim="@android:anim/fade_in"
+                app:exitAnim="@android:anim/fade_out" />
             <action
                 android:id="@+id/action_loginFragment_to_recoverPasswordFragment"
-                app:destination="@id/recoverPasswordFragment" />
+                app:destination="@id/recoverPasswordFragment"
+                app:enterAnim="@android:anim/fade_in"
+                app:exitAnim="@android:anim/fade_out" />
         </fragment>
         <action
-            android:id="@+id/action_global_homeNavigation"
-            app:destination="@id/homeNavigation" />
+            android:id="@+id/action_autenticationNavigation_to_homeNavigation"
+            app:destination="@id/homeNavigation"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
     </navigation>
     <fragment
         android:id="@+id/generateQrCodeFragment"
@@ -112,7 +163,18 @@
     <fragment
         android:id="@+id/qrCodeReaderFragment"
         android:name="com.example.museumexplore.ui.other.QrCodeReaderFragment"
-        android:label="QrCodeReaderFragment" />
+        android:label="QrCodeReaderFragment" >
+        <action
+            android:id="@+id/action_qrCodeReaderFragment_to_autenticationNavigation"
+            app:destination="@id/autenticationNavigation"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_qrCodeReaderFragment_to_homeNavigation"
+            app:destination="@id/homeNavigation"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
+    </fragment>
     <navigation android:id="@+id/settingsNavigation"
         app:startDestination="@id/settingsFragment">
         <fragment
@@ -121,12 +183,27 @@
             android:label="SettingsFragment">
             <action
                 android:id="@+id/action_settingsFragment_to_editProfileFragment"
-                app:destination="@id/editProfileFragment" />
+                app:destination="@id/editProfileFragment"
+                app:enterAnim="@android:anim/fade_in"
+                app:exitAnim="@android:anim/fade_out" />
         </fragment>
         <fragment
             android:id="@+id/editProfileFragment"
             android:name="com.example.museumexplore.ui.other.EditProfileFragment"
             android:label="fragment_edit_profile"
             tools:layout="@layout/fragment_edit_profile" />
+        <action
+            android:id="@+id/action_settingsNavigation_to_autenticationNavigation"
+            app:destination="@id/autenticationNavigation"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_settingsNavigation_to_homeNavigation"
+            app:destination="@id/homeNavigation"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_settingsNavigation_to_qrCodeReaderFragment"
+            app:destination="@id/qrCodeReaderFragment" />
     </navigation>
 </navigation>

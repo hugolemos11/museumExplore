@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -18,8 +17,6 @@ import com.example.museumexplore.databinding.FragmentArtWorksBinding
 import com.example.museumexplore.modules.ArtWork
 import com.example.museumexplore.modules.Category
 import com.example.museumexplore.setImage
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 
 
@@ -44,8 +41,6 @@ class ArtWorksFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Remove the title of fragment on the actionBar
-        (activity as AppCompatActivity).supportActionBar?.title = ""
         _binding = FragmentArtWorksBinding.inflate(inflater, container, false)
         return binding.root
     }

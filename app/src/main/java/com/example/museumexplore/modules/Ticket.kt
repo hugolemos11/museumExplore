@@ -41,7 +41,4 @@ interface TicketDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun add(ticket: Ticket)
-
-    @Delete
-    fun  delete(ticket: Ticket)
 }

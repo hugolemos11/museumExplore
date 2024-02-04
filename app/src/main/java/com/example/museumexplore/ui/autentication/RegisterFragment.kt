@@ -27,7 +27,7 @@ class RegisterFragment : Fragment() {
 
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
-    private var registerIsValid : Boolean? = null
+    private var registerIsValid: Boolean? = null
     private lateinit var navController: NavController
 
     private lateinit var auth: FirebaseAuth
@@ -135,12 +135,11 @@ class RegisterFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun validateAndRegisterUser() {
 
-        Log.d("RegisterFragment", "validateAndRegisterUser() called")
         val email = binding.editTextEmailAddress.text.toString().trim()
         val username = binding.editTextUsername.text.toString().trim()
         val password = binding.editTextPassword.text.toString().trim()
 
-        registerIsValid = if(email.isEmpty()){
+        registerIsValid = if (email.isEmpty()) {
             setErrorAndFocus(binding.textInputLayoutEmailAddress, "Required!")
             false
         } else {
@@ -149,39 +148,34 @@ class RegisterFragment : Fragment() {
         registerIsValid = if (!isValidEmail(email)) {
             binding.textInputLayoutEmailAddress.requestFocus()
             false
-        }else {
+        } else {
             true
         }
 
-        registerIsValid = if(username.isEmpty()){
+        registerIsValid = if (username.isEmpty()) {
             setErrorAndFocus(binding.textInputLayoutUsername, "Required!")
-            false
-        }else {
-            true
-        }
-        registerIsValid = if (!isValidUsername(username)) {
-            binding.textInputLayoutUsername.requestFocus()
             false
         } else {
             true
         }
-        registerIsValid = if(usernamesInUse.contains(username)){
-            binding.textInputLayoutUsername.requestFocus()
-            false
-        }else {
-            true
-        }
+        registerIsValid =
+            if (!isValidUsername(username) || usernamesInUse.contains(username)) {
+                binding.textInputLayoutUsername.requestFocus()
+                false
+            } else {
+                true
+            }
 
-        registerIsValid = if(password.isEmpty()){
+        registerIsValid = if (password.isEmpty()) {
             setErrorAndFocus(binding.textInputLayoutPassword, "Required!")
             false
-        }else {
+        } else {
             true
         }
-        registerIsValid = if (!isValidPassword(password)) {
+        registerIsValid = if (password.isEmpty() || !isValidPassword(password)) {
             binding.textInputLayoutPassword.requestFocus()
             false
-        }else {
+        } else {
             true
         }
 
@@ -195,29 +189,31 @@ class RegisterFragment : Fragment() {
         }
 
         if (registerIsValid == true) {
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(requireActivity()) {
-                if (it.isSuccessful) {
-                    val user = User(username, null, "userImages/default_user.png")
+            auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(requireActivity()) {
+                    if (it.isSuccessful) {
+                        auth.uid?.let { currentUid ->
+                            val user = User(currentUid, username, "userImages/default_user.png")
 
-                    db.collection("users")
-                        .document(auth.uid!!)
-                        .set(user).addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                showToast("User Registered Successfully!", requireContext())
-                                navController.navigate(R.id.action_global_homeNavigation)
-                            } else {
-                                showToast("User Failed to Registered!", requireContext())
-                            }
+                            db.collection("users")
+                                .document(currentUid)
+                                .set(user).addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        showToast("User Registered Successfully!", requireContext())
+                                        navController.navigate(R.id.action_global_homeNavigation)
+                                    } else {
+                                        showToast("User Failed to Registered!", requireContext())
+                                    }
+                                }
                         }
+                    }
                 }
-            }
-            .addOnFailureListener {
-                setErrorAndFocus(
-                    binding.textInputLayoutEmailAddress,
-                    "The Email is Already in Use!"
-                )
-            }
+                .addOnFailureListener {
+                    setErrorAndFocus(
+                        binding.textInputLayoutEmailAddress,
+                        "The Email is Already in Use!"
+                    )
+                }
         }
     }
 

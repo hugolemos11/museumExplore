@@ -36,4 +36,6 @@
     <string name="delete_account_message">Tem a certeza que deseja eliminar a sua conta?</string>
     <string name="repeat_password">Repeat Password</string>
     <string name="confirm">Confirm</string>
+    <string name="repeat_password_hint">Repeat Password</string>
+    <string name="old_password_hint">Old Password</string>
 </resources>

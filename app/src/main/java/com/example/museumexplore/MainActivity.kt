@@ -15,6 +15,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
@@ -24,12 +25,15 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.museumexplore.databinding.MainActivityBinding
+import com.example.museumexplore.modules.ArtWork
+import com.example.museumexplore.modules.Category
 import com.example.museumexplore.modules.User
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -42,8 +46,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private val requestCodeCameraPermission = 1001
 
     private val auth = FirebaseAuth.getInstance()
-    private val db = Firebase.firestore
-    private var uid : String? = null
+    private var uid: String? = null
     private var user: User? = null
 
     private lateinit var headerImage: ImageView
@@ -149,7 +152,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             uid = currentUser.uid
             val email = currentUser.email
 
-            fetchUserData(uid!!)
+            val appDatabase = AppDatabase.getInstance(this)
+            lifecycleScope.launch {
+                if (appDatabase != null) {
+                    uid?.let { currentUid ->
+                        val userData = User.fetchUserData(currentUid)
+                        appDatabase.userDao().add(userData)
+                        user = appDatabase.userDao().get(currentUid)
+                    }
+                }
+
+                user?.let { currentUser ->
+                    setImage(currentUser.pathToImage, headerImage, this@MainActivity)
+                    headerUserName.text = currentUser.username
+                }
+
+            }
 
             // Inflate the menu and set it for the NavigationView
             menuInflater.inflate(R.menu.nav_menu_autenticated, navigationView.menu)
@@ -161,8 +179,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             // Set navigation header with user data
             val headerView = navigationView.getHeaderView(0)
-            headerImage = headerView.findViewById<ImageView>(R.id.imageViewUserImage)
-            headerUserName = headerView.findViewById<TextView>(R.id.textViewUserName)
+            headerImage = headerView.findViewById(R.id.imageViewUserImage)
+            headerUserName = headerView.findViewById(R.id.textViewUserName)
             val headerUserEmail = headerView.findViewById<TextView>(R.id.textViewUserEmail)
 
             // Set text in the header (customize as needed)
@@ -264,22 +282,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         drawerLayout.closeDrawer(GravityCompat.END)
         return true
-    }
-
-    private fun fetchUserData(uid: String) {
-        db.collection("users")
-            .document(uid)
-            .get()
-            .addOnSuccessListener {
-                it.data?.let { data ->
-                    user = User.fromSnapshot(data)
-                    setImage(user?.pathToImage, headerImage, this)
-                    headerUserName.text = user?.username
-                }
-            }
-            .addOnFailureListener {
-                showToast("An error occurred: ${it.localizedMessage}", this)
-            }
     }
 
     private fun askForCameraPermission() {

@@ -16,8 +16,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.example.museumexplore.AppDatabase
 import com.example.museumexplore.R
 import com.example.museumexplore.databinding.FragmentSettingsBinding
 import com.example.museumexplore.modules.User
@@ -28,6 +30,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
 
 class SettingsFragment : Fragment() {
@@ -35,7 +38,6 @@ class SettingsFragment : Fragment() {
     private var _binding : FragmentSettingsBinding? = null
     private val binding get() = _binding!!
     private lateinit var navController: NavController
-    private val db = Firebase.firestore
     private var userId: String? = null
     private var user: User? = null
     private var notificationSwitch: Switch? = null
@@ -66,10 +68,25 @@ class SettingsFragment : Fragment() {
         }
 
         navController = Navigation.findNavController(view)
+
         notificationSwitch = binding.notificationSwitch
-        if (userId != null) {
-            fetchUserData(userId!!)
+
+        val appDatabase = AppDatabase.getInstance(requireContext())
+        lifecycleScope.launch {
+            if (appDatabase != null) {
+                userId?.let { currentUid ->
+                    val userData = User.fetchUserData(currentUid)
+                    appDatabase.userDao().add(userData)
+                    user = appDatabase.userDao().get(currentUid)
+                }
+            }
+
+            user?.let {currentUser ->
+                setImage(currentUser.pathToImage, binding.profileImage, requireContext())
+                binding.profileName.text = currentUser.username
+            }
         }
+
         if (ContextCompat.checkSelfPermission(
                 requireContext(), android.Manifest.permission.POST_NOTIFICATIONS
             ) == PackageManager.PERMISSION_GRANTED) {
@@ -162,20 +179,5 @@ class SettingsFragment : Fragment() {
                 showToast("No permission for Notifications", requireContext())
             }
         }
-    }
-    private fun fetchUserData(uid: String) {
-        db.collection("users")
-            .document(uid)
-            .get()
-            .addOnSuccessListener {
-                it.data?.let { data ->
-                    user = User.fromSnapshot(data)
-                    setImage(user?.pathToImage, binding.profileImage, requireContext())
-                    binding.profileName.text = user?.username
-                }
-            }
-            .addOnFailureListener {
-                showToast("An error occurred: ${it.localizedMessage}", requireContext())
-            }
     }
 }

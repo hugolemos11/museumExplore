@@ -94,12 +94,6 @@ interface ImageDao {
     @Query("SELECT * FROM image WHERE imageType = 'artWorkImage' AND museumId = :museumId")
     fun getAllArtWorksImages(museumId: String): LiveData<List<Image>>
 
-    @Query("SELECT * FROM image WHERE id = :id")
-    fun get(id: String): Image
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun add(image: Image)
-
-    @Delete
-    fun delete(image: Image)
 }

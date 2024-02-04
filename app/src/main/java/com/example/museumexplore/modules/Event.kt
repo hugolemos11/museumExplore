@@ -99,7 +99,4 @@ interface EventDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun add(event: Event)
-
-    @Delete
-    fun  delete(event: Event)
 }

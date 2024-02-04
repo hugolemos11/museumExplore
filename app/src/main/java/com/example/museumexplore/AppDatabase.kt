@@ -17,8 +17,10 @@ import com.example.museumexplore.modules.Museum
 import com.example.museumexplore.modules.MuseumDao
 import com.example.museumexplore.modules.Ticket
 import com.example.museumexplore.modules.TicketDao
+import com.example.museumexplore.modules.User
+import com.example.museumexplore.modules.UserDao
 
-@Database(entities = [Museum::class, ArtWork::class, Ticket::class, Event::class, Image::class, Category::class], version = 1)
+@Database(entities = [Museum::class, ArtWork::class, Ticket::class, Event::class, Image::class, Category::class, User::class], version = 1)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
@@ -28,6 +30,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun eventDao() : EventDao
     abstract fun imageDao() : ImageDao
     abstract fun categoryDao() : CategoryDao
+    abstract fun userDao() : UserDao
 
     companion object{
 

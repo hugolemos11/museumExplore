@@ -2,13 +2,16 @@ package com.example.museumexplore.ui.dialog
 
 import android.app.Dialog
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.example.museumexplore.R
 import com.example.museumexplore.databinding.TicketDialogBinding
+
 
 class TicketDialog : DialogFragment() {
     private var _binding: TicketDialogBinding? = null
@@ -42,7 +45,7 @@ class TicketDialog : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = Dialog(requireContext(), R.style.DialogFragment)
+        val dialog = Dialog(requireContext())
         dialog.setCancelable(true)
         return dialog
     }
@@ -55,7 +58,6 @@ class TicketDialog : DialogFragment() {
             museumName = bundle.getString("museumName")
             visitDate = bundle.getString("visitDate")
         }
-
         binding.textViewMuseumName.text = museumName
         binding.textViewVisitDate.text = visitDate
     }

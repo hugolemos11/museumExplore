@@ -90,7 +90,7 @@ class PaymentFragment : Fragment() {
             textViewVisitDate.text = "Date for Visit: $visitDate"
 
             button4.setOnClickListener {
-                if (!radioButtonMbWay.isChecked && !radioButtonMultiBanco.isChecked) {
+                if (radioButtonMbWay.isChecked || radioButtonMultiBanco.isChecked) {
                     val currentDateTime = getCurrentDateTime()
 
                     Ticket.addTicket(

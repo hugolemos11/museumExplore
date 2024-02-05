@@ -339,7 +339,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     R.id.qrCodeReaderFragment -> {
                         navController.navigate(
                             R.id.action_homeNavigation_to_settingsNavigation,
-                            bundle
                         )
                     }
 
@@ -395,28 +394,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == requestCodeCameraPermission && grantResults.isNotEmpty()) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                when (navController.currentDestination?.id) {
-                    R.id.homeFragment,
-                    R.id.museumDetailsFragment,
-                    R.id.artWorksFragment,
-                    R.id.artWorkDetailsFragment,
-                    R.id.eventDetailsFragment,
-                    R.id.ticketFragment -> {
-                        navController.navigate(R.id.action_homeNavigation_to_qrCodeReaderFragment)
-                    }
-
-                    R.id.qrCodeReaderFragment -> {
-                        // If the current destination is QrCodeReader, close the drawer
-                        drawerLayout.closeDrawer(GravityCompat.END)
-                    }
-
-                    R.id.settingsFragment,
-                    R.id.editProfileFragment -> {
-                        navController.navigate(R.id.action_settingsNavigation_to_qrCodeReaderFragment)
-                    }
-                }
-            } else {
+            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                 showToast("Didn't give permission to access the camara.", applicationContext)
             }
         }

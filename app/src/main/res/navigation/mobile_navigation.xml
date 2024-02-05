@@ -120,7 +120,9 @@
             app:exitAnim="@android:anim/fade_out" />
         <action
             android:id="@+id/action_homeNavigation_to_ticketsHistoryFragment"
-            app:destination="@id/ticketsHistoryFragment" />
+            app:destination="@id/ticketsHistoryFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
     </navigation>
     <navigation android:id="@+id/autenticationNavigation"
         app:startDestination="@id/loginFragment">
@@ -172,7 +174,14 @@
             app:exitAnim="@android:anim/fade_out" />
         <action
             android:id="@+id/action_qrCodeReaderFragment_to_ticketsHistoryFragment"
-            app:destination="@id/ticketsHistoryFragment" />
+            app:destination="@id/ticketsHistoryFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_qrCodeReaderFragment_to_settingsNavigation"
+            app:destination="@id/settingsNavigation"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
     </fragment>
     <navigation android:id="@+id/settingsNavigation"
         app:startDestination="@id/settingsFragment">
@@ -206,11 +215,29 @@
             app:destination="@id/qrCodeReaderFragment" />
         <action
             android:id="@+id/action_settingsNavigation_to_ticketsHistoryFragment"
-            app:destination="@id/ticketsHistoryFragment" />
+            app:destination="@id/ticketsHistoryFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
     </navigation>
     <fragment
         android:id="@+id/ticketsHistoryFragment"
         android:name="com.example.museumexplore.ui.other.TicketsHistoryFragment"
         android:label="fragment_tickets_history"
-        tools:layout="@layout/fragment_tickets_history" />
+        tools:layout="@layout/fragment_tickets_history" >
+        <action
+            android:id="@+id/action_ticketsHistoryFragment_to_settingsNavigation"
+            app:destination="@id/settingsNavigation"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_ticketsHistoryFragment_to_homeNavigation"
+            app:destination="@id/homeNavigation"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_ticketsHistoryFragment_to_qrCodeReaderFragment"
+            app:destination="@id/qrCodeReaderFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
+    </fragment>
 </navigation>

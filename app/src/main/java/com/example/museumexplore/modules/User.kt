@@ -1,6 +1,5 @@
 package com.example.museumexplore.modules
 
-import android.util.Log
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Entity
@@ -9,7 +8,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlin.coroutines.resume
@@ -60,7 +58,7 @@ data class User(
             }
         }
 
-        fun updateUserData(uid: String, userUpdates: Map<String, String>): Task<User> {
+        fun updateUserData(uid: String, userUpdates: Map<String, String?>): Task<User> {
             val db = Firebase.firestore
             val userDocumentRef = db.collection("users").document(uid)
 

@@ -7,7 +7,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
-import android.graphics.drawable.BitmapDrawable
 import android.media.ExifInterface
 import android.net.Uri
 import android.os.Bundle
@@ -32,16 +31,11 @@ import com.example.museumexplore.modules.User
 import com.example.museumexplore.setErrorAndFocus
 import com.example.museumexplore.setImage
 import com.example.museumexplore.showToast
-import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.NonCancellable.isActive
-import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.io.ByteArrayOutputStream
@@ -49,10 +43,8 @@ import java.io.File
 import java.io.IOException
 import java.lang.RuntimeException
 import java.util.UUID
-import kotlin.coroutines.cancellation.CancellationException
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
-import kotlin.math.log
 
 class EditProfileFragment : Fragment() {
 
@@ -60,7 +52,7 @@ class EditProfileFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var navController: NavController
     private var userId: String? = null
-    private var username: String? = null
+    private var usernameGlobal: String? = null
     private var pathToImage: String? = null
     private val user = Firebase.auth.currentUser
     private val db = Firebase.firestore
@@ -89,7 +81,7 @@ class EditProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         arguments?.let { bundle ->
             userId = bundle.getString("uid")
-            username = bundle.getString("username")
+            usernameGlobal = bundle.getString("username")
             pathToImage = bundle.getString("pathToImage")
         }
 
@@ -101,7 +93,8 @@ class EditProfileFragment : Fragment() {
         binding.imageViewEditPhoto.setOnClickListener {
             dispatchTakePictureIntent()
         }
-        binding.editTextUsername.text = Editable.Factory.getInstance().newEditable(username ?: "")
+        binding.editTextUsername.text =
+            Editable.Factory.getInstance().newEditable(usernameGlobal ?: "")
 
         binding.editTextUsername.doOnTextChanged { text, _, _, _ ->
             when {
@@ -122,7 +115,7 @@ class EditProfileFragment : Fragment() {
         binding.editTextUsername.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
                 // Checks that the username entered is not already in use, only if the username is not that of the user
-                if (username != binding.editTextUsername.text.toString().trim()) {
+                if (usernameGlobal != binding.editTextUsername.text.toString().trim()) {
                     for (username in usernamesInUse) {
                         if (username == binding.editTextUsername.text.toString().trim()) {
                             binding.textInputLayoutUsername.error =
@@ -174,13 +167,15 @@ class EditProfileFragment : Fragment() {
             val oldPassword = binding.editTextOldPassword.text.toString().trim()
             val newPassword = binding.editTextPassword.text.toString().trim()
 
-            updateImage()
-
-//            if ((username.isNotEmpty() && oldPassword.isEmpty()) || (username.isNotEmpty() && oldPassword.isNotEmpty() && newPassword.isEmpty())) {
-//                validateAndUpdateUsername()
-//            } else if (username.isNotEmpty() && oldPassword.isNotEmpty() && newPassword.isNotEmpty()) {
-//                validateAndUpdatePassword()
-//            }
+            if ((bitMap == null && username == usernameGlobal && oldPassword.isEmpty() && newPassword.isEmpty()) || (bitMap == null && username == usernameGlobal && oldPassword.isNotEmpty() && newPassword.isEmpty())) {
+                showToast("Change some data!", requireContext())
+            } else if ((bitMap != null && username.isNotEmpty() && username == usernameGlobal && oldPassword.isNotEmpty()) || (bitMap != null && username.isNotEmpty() && username == usernameGlobal && oldPassword.isEmpty() && newPassword.isEmpty())) {
+                updateImage()
+            } else if ((username.isNotEmpty() && oldPassword.isEmpty() && newPassword.isEmpty()) || (username.isNotEmpty() && oldPassword.isNotEmpty() && newPassword.isEmpty())) {
+                validateAndUpdateUsername()
+            } else if ((username.isNotEmpty() && oldPassword.isNotEmpty() && newPassword.isNotEmpty()) || (username.isNotEmpty() && oldPassword.isEmpty() && newPassword.isNotEmpty())) {
+                validateAndUpdatePassword()
+            }
         }
 
         fetchUsernamesData()
@@ -190,16 +185,16 @@ class EditProfileFragment : Fragment() {
         lifecycleScope.launch {
             val imageUploaded = bitMap?.let { addImageToStorage(it) }
             if (imageUploaded == true) {
-                fileName?.let { it1 ->
-                    updateUserImage(it1) { success ->
-                        if (success) {
-                            showToast("User Updated Successfully!", requireContext())
-                            navController.popBackStack()
-                        } else {
-                            showToast("Failed to Update User!", requireContext())
-                        }
+                updateUserData(fileName, null) { success ->
+                    if (success) {
+                        showToast("User Updated Successfully!", requireContext())
+                        navController.popBackStack()
+                    } else {
+                        showToast("Failed to Update User!", requireContext())
                     }
                 }
+            } else {
+                showToast("Something happened during the image upload!", requireContext())
             }
         }
     }
@@ -210,13 +205,24 @@ class EditProfileFragment : Fragment() {
             val storageRef = storage.reference
 
             // Convert Bitmap to byte array
-            val stream =
-                com.google.firebase.crashlytics.buildtools.reloc.org.apache.commons.io.output.ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-            val byteArray = stream.toByteArray()
+            val stream = ByteArrayOutputStream()
+            var quality = 100
+            var byteArray: ByteArray
+
+            do {
+                stream.reset() // Reset stream before each compression attempt
+                bitmap.compress(Bitmap.CompressFormat.JPEG, quality, stream)
+                byteArray = stream.toByteArray()
+                quality -= 10 // Adjust compression quality
+
+            } while (byteArray.size > 1 * 1024 * 1024 && quality > 0) // Check if the size exceeds 1MB
 
             // Create a unique filename (you may adjust this logic according to your requirements)
-            fileName = "userImages/${System.currentTimeMillis()}.jpg"
+            fileName = if (pathToImage != "userImages/default_user.png") {
+                pathToImage
+            } else {
+                "userImages/${System.currentTimeMillis()}.jpg"
+            }
 
             // Upload the byte array to Firebase Storage
             val photoRef = storageRef.child("$fileName")
@@ -233,11 +239,21 @@ class EditProfileFragment : Fragment() {
         }
     }
 
-    private suspend fun updateUserImage(
-        imagePath: String,
+    private suspend fun updateUserData(
+        imagePath: String?,
+        username: String?,
         callback: (Boolean) -> Unit
     ) {
-        val userUpdates = mapOf("pathToImage" to imagePath)
+        val userUpdates = mutableMapOf<String, String>()
+
+        if (username != null && username != usernameGlobal) {
+            userUpdates["username"] = username
+        }
+
+        if (imagePath != null) {
+            userUpdates["pathToImage"] = imagePath
+        }
+
         val appDatabase = AppDatabase.getInstance(requireContext())
 
         if (appDatabase != null) {
@@ -257,26 +273,42 @@ class EditProfileFragment : Fragment() {
     private fun validateAndUpdateUsername() {
         val username = binding.editTextUsername.text.toString().trim()
 
-        formIsValid = if (username.isEmpty() || !isValidUsername(username)) {
-            binding.textInputLayoutUsername.requestFocus()
-            false
-        } else {
-            true
+        if (username.isEmpty() || !isValidUsername(username)) {
+            setErrorAndFocus(binding.textInputLayoutUsername, "Invalid Username!")
+            formIsValid = false
         }
 
         if (formIsValid == true) {
-            lifecycleScope.launch {
-                if (username != this@EditProfileFragment.username) {
-                    updateUsername(username) { success ->
-                        if (success) {
-                            showToast("User Updated Successfully!", requireContext())
-                            navController.popBackStack()
+            val appDatabase = AppDatabase.getInstance(requireContext())
+            if (appDatabase != null) {
+                lifecycleScope.launch {
+                    if (bitMap != null) {
+                        val imageUploaded = addImageToStorage(bitMap!!)
+                        if (imageUploaded) {
+                            updateUserData(fileName, username) { success ->
+                                if (success) {
+                                    showToast("User Updated Successfully!", requireContext())
+                                    navController.popBackStack()
+                                } else {
+                                    showToast("Failed to Update User!", requireContext())
+                                }
+                            }
                         } else {
-                            showToast("Failed to Update User!", requireContext())
+                            showToast(
+                                "Something happened during the image upload!",
+                                requireContext()
+                            )
+                        }
+                    } else {
+                        updateUserData(null, username) { success ->
+                            if (success) {
+                                showToast("User Updated Successfully!", requireContext())
+                                navController.popBackStack()
+                            } else {
+                                showToast("Failed to Update User!", requireContext())
+                            }
                         }
                     }
-                } else {
-                    showToast("Change some data!", requireContext())
                 }
             }
         }
@@ -288,62 +320,31 @@ class EditProfileFragment : Fragment() {
         val newPassword = binding.editTextPassword.text.toString().trim()
         val repeatPassword = binding.editTextRepeatPassword.text.toString().trim()
 
-        formIsValid = if (oldPassword.isEmpty()) {
+        // Validate old password
+        if (oldPassword.isEmpty()) {
             setErrorAndFocus(binding.textInputLayoutOldPassword, "Required!")
-            false
-        } else {
-            true
+            formIsValid = false
+        } else if (!isValidPassword(oldPassword)) {
+            setErrorAndFocus(binding.textInputLayoutOldPassword, "Invalid Password!")
+            formIsValid = false
         }
 
-        formIsValid = if (!isValidPassword(oldPassword)) {
-            binding.textInputLayoutOldPassword.requestFocus()
-            false
-        } else {
-            true
-        }
-
-        formIsValid = if (newPassword.isEmpty()) {
+        // Validate new password
+        if (newPassword.isEmpty()) {
             setErrorAndFocus(binding.textInputLayoutPassword, "Required!")
-            false
-        } else {
-            true
+            formIsValid = false
+        } else if (!isValidPassword(newPassword)) {
+            setErrorAndFocus(binding.textInputLayoutPassword, "Invalid Password!")
+            formIsValid = false
         }
 
-        formIsValid = if (!isValidPassword(newPassword)) {
-            binding.textInputLayoutPassword.requestFocus()
-            false
-        } else {
-            true
-        }
-
-        formIsValid = if (repeatPassword.isEmpty()) {
+        // Validate repeat password
+        if (repeatPassword.isEmpty()) {
             setErrorAndFocus(binding.textInputLayoutRepeatPassword, "Required!")
-            false
-        } else {
-            true
-        }
-
-        formIsValid = if (!isValidPassword(repeatPassword)) {
-            binding.textInputLayoutRepeatPassword.requestFocus()
-            false
-        } else {
-            true
-        }
-
-        formIsValid = if (oldPassword == newPassword) {
-            setErrorAndFocus(binding.textInputLayoutOldPassword, "Passwords are the same!")
-            setErrorAndFocus(binding.textInputLayoutPassword, "Passwords are the same!")
-            false
-        } else {
-            true
-        }
-
-        formIsValid = if (newPassword != repeatPassword) {
-            setErrorAndFocus(binding.textInputLayoutPassword, "Passwords must match!")
-            setErrorAndFocus(binding.textInputLayoutRepeatPassword, "Passwords must match!")
-            false
-        } else {
-            true
+            formIsValid = false
+        } else if (!isValidPassword(repeatPassword)) {
+            setErrorAndFocus(binding.textInputLayoutRepeatPassword, "Invalid Password!")
+            formIsValid = false
         }
 
         if (formIsValid == true) {
@@ -357,36 +358,99 @@ class EditProfileFragment : Fragment() {
                             // User has been successfully re-authenticated
                             // Now you can update the password
                             lifecycleScope.launch {
-                                if (username != this@EditProfileFragment.username) {
-                                    updateUsername(username) { success ->
-                                        if (success) {
-                                            currentUser.updatePassword(newPassword)
-                                                .addOnCompleteListener { task ->
-                                                    if (task.isSuccessful) {
-                                                        showToast(
-                                                            "User data successfully updated!",
-                                                            requireContext()
-                                                        )
-                                                        navController.popBackStack()
-                                                    } else {
-                                                        showToast(
-                                                            "Error updating password!",
-                                                            requireContext()
-                                                        )
-                                                        Log.e(
-                                                            TAG,
-                                                            "User password update failed: ${task.exception?.message}"
-                                                        )
+                                if (username != usernameGlobal || bitMap != null) {
+                                    if (username != usernameGlobal && bitMap == null) {
+                                        updateUserData(null, username) { success ->
+                                            if (success) {
+                                                currentUser.updatePassword(newPassword)
+                                                    .addOnCompleteListener { task ->
+                                                        if (task.isSuccessful) {
+                                                            showToast(
+                                                                "User data successfully updated!",
+                                                                requireContext()
+                                                            )
+                                                            navController.popBackStack()
+                                                        } else {
+                                                            showToast(
+                                                                "Error updating password!",
+                                                                requireContext()
+                                                            )
+                                                        }
                                                     }
+                                            } else {
+                                                showToast(
+                                                    "Failed to Update User!",
+                                                    requireContext()
+                                                )
+                                            }
+                                        }
+                                    } else if (username == usernameGlobal && bitMap != null) {
+                                        val imageUploaded = addImageToStorage(bitMap!!)
+                                        if (imageUploaded) {
+                                            updateUserData(fileName, null) { success ->
+                                                if (success) {
+                                                    currentUser.updatePassword(newPassword)
+                                                        .addOnCompleteListener { task ->
+                                                            if (task.isSuccessful) {
+                                                                showToast(
+                                                                    "User data successfully updated!",
+                                                                    requireContext()
+                                                                )
+                                                                navController.popBackStack()
+                                                            } else {
+                                                                showToast(
+                                                                    "Error updating password!",
+                                                                    requireContext()
+                                                                )
+                                                            }
+                                                        }
+                                                } else {
+                                                    showToast(
+                                                        "Failed to Update User!",
+                                                        requireContext()
+                                                    )
                                                 }
+                                            }
                                         } else {
                                             showToast(
-                                                "Failed to Update User!",
+                                                "Something happened during the image upload!",
+                                                requireContext()
+                                            )
+                                        }
+                                    } else {
+                                        val imageUploaded = addImageToStorage(bitMap!!)
+                                        if (imageUploaded) {
+                                            updateUserData(fileName, username) { success ->
+                                                if (success) {
+                                                    currentUser.updatePassword(newPassword)
+                                                        .addOnCompleteListener { task ->
+                                                            if (task.isSuccessful) {
+                                                                showToast(
+                                                                    "User data successfully updated!",
+                                                                    requireContext()
+                                                                )
+                                                                navController.popBackStack()
+                                                            } else {
+                                                                showToast(
+                                                                    "Error updating password!",
+                                                                    requireContext()
+                                                                )
+                                                            }
+                                                        }
+                                                } else {
+                                                    showToast(
+                                                        "Failed to Update User!",
+                                                        requireContext()
+                                                    )
+                                                }
+                                            }
+                                        } else {
+                                            showToast(
+                                                "Something happened during the image upload!",
                                                 requireContext()
                                             )
                                         }
                                     }
-
                                 } else {
                                     currentUser.updatePassword(newPassword)
                                         .addOnCompleteListener { task ->
@@ -417,24 +481,6 @@ class EditProfileFragment : Fragment() {
                             )
                         }
                     }
-            }
-        }
-    }
-
-    private suspend fun updateUsername(username: String, callback: (Boolean) -> Unit) {
-        val userUpdates = mapOf("username" to username)
-        val appDatabase = AppDatabase.getInstance(requireContext())
-
-        if (appDatabase != null) {
-            userId?.let { currentUserId ->
-                try {
-                    val updatedUserData =
-                        User.updateUserData(currentUserId, userUpdates).await()
-                    appDatabase.userDao().add(updatedUserData)
-                    callback(true)
-                } catch (e: RuntimeException) {
-                    callback(false)
-                }
             }
         }
     }
@@ -475,7 +521,12 @@ class EditProfileFragment : Fragment() {
             REQUEST_PICK_IMAGE -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     if (data.data != null) {
-                        binding.imageViewUser.setImageURI(data.data)
+                        val inputStream =
+                            requireContext().contentResolver.openInputStream(data.data!!)
+                        bitMap = inputStream.use {
+                            BitmapFactory.decodeStream(it)
+                        }
+                        binding.imageViewUser.setImageBitmap(bitMap)
                     }
                 }
             }
@@ -583,7 +634,8 @@ class EditProfileFragment : Fragment() {
     }
 
     private fun pickFromGallery() {
-        val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        val galleryIntent =
+            Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(galleryIntent, REQUEST_PICK_IMAGE)
     }
 }

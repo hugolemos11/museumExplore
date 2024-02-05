@@ -252,6 +252,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         navController.popBackStack(R.id.homeFragment, false)
                     }
 
+                    R.id.ticketsHistoryFragment -> {
+                        navController.navigate(R.id.action_ticketsHistoryFragment_to_homeNavigation)
+                    }
+
                     R.id.qrCodeReaderFragment -> {
                         navController.navigate(R.id.action_qrCodeReaderFragment_to_homeNavigation)
                     }
@@ -274,6 +278,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         val bundle = Bundle()
                         bundle.putString("uid", auth.uid)
                         navController.navigate(R.id.action_homeNavigation_to_ticketsHistoryFragment, bundle)
+                    }
+
+                    R.id.ticketsHistoryFragment -> {
+                        // If the current destination is Tickets History, close the drawer
+                        drawerLayout.closeDrawer(GravityCompat.END)
                     }
 
                     R.id.qrCodeReaderFragment -> {
@@ -307,6 +316,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             navController.navigate(R.id.action_homeNavigation_to_qrCodeReaderFragment)
                         }
 
+                        R.id.ticketsHistoryFragment -> {
+                            navController.navigate(R.id.action_ticketsHistoryFragment_to_qrCodeReaderFragment)
+                        }
+
                         R.id.qrCodeReaderFragment -> {
                             // If the current destination is QrCodeReader, close the drawer
                             drawerLayout.closeDrawer(GravityCompat.END)
@@ -336,9 +349,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         )
                     }
 
+                    R.id.ticketsHistoryFragment -> {
+                        navController.navigate(R.id.action_ticketsHistoryFragment_to_settingsNavigation, bundle)
+                    }
+
                     R.id.qrCodeReaderFragment -> {
                         navController.navigate(
-                            R.id.action_homeNavigation_to_settingsNavigation,
+                            R.id.action_qrCodeReaderFragment_to_settingsNavigation,
+                            bundle
                         )
                     }
 

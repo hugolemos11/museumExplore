@@ -97,6 +97,7 @@ class ArtWorksFragment : Fragment() {
                             // Build the category map for efficient lookup
                             categoryMap =
                                 categoriesList.associateBy(Category::id, Category::descritpion)
+                            artWorksAdapter.notifyDataSetChanged()
                         }
                 }
             }
@@ -122,9 +123,15 @@ class ArtWorksFragment : Fragment() {
 
             rootView.textViewArtWorkName.text = artWorksList[position].name
 
-            // Look up category description using the categoryMap
-            val categoryDescription = categoryMap[artWorksList[position].categoryId]
-            rootView.textViewCategory.text = categoryDescription ?: ""
+            // Check if categoryMap is available
+            if (categoryMap.isNotEmpty()) {
+                // Look up category description using the categoryMap
+                val categoryDescription = categoryMap[artWorksList[position].categoryId]
+                rootView.textViewCategory.text = categoryDescription ?: ""
+            } else {
+                // Handle the case when categoryMap is not available
+                rootView.textViewCategory.text = "Loading..."  // or any default value
+            }
 
             setImage(
                 artWorksList[position].pathToImage,

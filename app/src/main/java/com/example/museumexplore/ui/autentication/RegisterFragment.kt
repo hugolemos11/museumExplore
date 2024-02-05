@@ -138,52 +138,39 @@ class RegisterFragment : Fragment() {
         val username = binding.editTextUsername.text.toString().trim()
         val password = binding.editTextPassword.text.toString().trim()
 
-        registerIsValid = if (email.isEmpty()) {
+        // Validate email
+        if (email.isEmpty()) {
             setErrorAndFocus(binding.textInputLayoutEmailAddress, "Required!")
-            false
-        } else {
-            true
-        }
-        registerIsValid = if (!isValidEmail(email)) {
+            registerIsValid = false
+        } else if (!isValidEmail(email)) {
             binding.textInputLayoutEmailAddress.requestFocus()
-            false
-        } else {
-            true
+            setErrorAndFocus(binding.textInputLayoutEmailAddress, "Invalid Email!")
+            registerIsValid = false
         }
 
-        registerIsValid = if (username.isEmpty()) {
+        // Validate username
+        if (username.isEmpty()) {
             setErrorAndFocus(binding.textInputLayoutUsername, "Required!")
-            false
-        } else {
-            true
+            registerIsValid = false
+        } else if (!isValidUsername(username) || usernamesInUse.contains(username)) {
+            setErrorAndFocus(binding.textInputLayoutUsername, "Invalid or Already in Use!")
+            registerIsValid = false
         }
-        registerIsValid =
-            if (!isValidUsername(username) || usernamesInUse.contains(username)) {
-                binding.textInputLayoutUsername.requestFocus()
-                false
-            } else {
-                true
-            }
 
-        registerIsValid = if (password.isEmpty()) {
+        // Validate password
+        if (password.isEmpty()) {
             setErrorAndFocus(binding.textInputLayoutPassword, "Required!")
-            false
-        } else {
-            true
-        }
-        registerIsValid = if (password.isEmpty() || !isValidPassword(password)) {
-            binding.textInputLayoutPassword.requestFocus()
-            false
-        } else {
-            true
+            registerIsValid = false
+        } else if (!isValidPassword(password)) {
+            setErrorAndFocus(binding.textInputLayoutPassword, "Invalid Password!")
+            registerIsValid = false
         }
 
+        // Validate checkbox
         if (!binding.checkBox.isChecked) {
             binding.errorTextView.visibility = View.VISIBLE
             binding.errorTextView.text = "Required!"
             registerIsValid = false
-        } else {
-            registerIsValid = true
         }
 
         if (registerIsValid == true) {

@@ -109,9 +109,6 @@
                 app:exitAnim="@android:anim/fade_out" />
         </fragment>
         <action
-            android:id="@+id/action_global_generateQrCodeFragment"
-            app:destination="@id/generateQrCodeFragment" />
-        <action
             android:id="@+id/action_homeNavigation_to_qrCodeReaderFragment"
             app:destination="@id/qrCodeReaderFragment"
             app:enterAnim="@android:anim/fade_in"
@@ -121,6 +118,9 @@
             app:destination="@id/settingsNavigation"
             app:enterAnim="@android:anim/fade_in"
             app:exitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_homeNavigation_to_ticketsHistoryFragment"
+            app:destination="@id/ticketsHistoryFragment" />
     </navigation>
     <navigation android:id="@+id/autenticationNavigation"
         app:startDestination="@id/loginFragment">
@@ -157,10 +157,6 @@
             app:exitAnim="@android:anim/fade_out" />
     </navigation>
     <fragment
-        android:id="@+id/generateQrCodeFragment"
-        android:name="com.example.museumexplore.ui.home.GenerateQrCodeFragment"
-        android:label="GenerateQrCodeFragment" />
-    <fragment
         android:id="@+id/qrCodeReaderFragment"
         android:name="com.example.museumexplore.ui.other.QrCodeReaderFragment"
         android:label="QrCodeReaderFragment" >
@@ -174,6 +170,9 @@
             app:destination="@id/homeNavigation"
             app:enterAnim="@android:anim/fade_in"
             app:exitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_qrCodeReaderFragment_to_ticketsHistoryFragment"
+            app:destination="@id/ticketsHistoryFragment" />
     </fragment>
     <navigation android:id="@+id/settingsNavigation"
         app:startDestination="@id/settingsFragment">
@@ -205,5 +204,13 @@
         <action
             android:id="@+id/action_settingsNavigation_to_qrCodeReaderFragment"
             app:destination="@id/qrCodeReaderFragment" />
+        <action
+            android:id="@+id/action_settingsNavigation_to_ticketsHistoryFragment"
+            app:destination="@id/ticketsHistoryFragment" />
     </navigation>
+    <fragment
+        android:id="@+id/ticketsHistoryFragment"
+        android:name="com.example.museumexplore.ui.other.TicketsHistoryFragment"
+        android:label="fragment_tickets_history"
+        tools:layout="@layout/fragment_tickets_history" />
 </navigation>

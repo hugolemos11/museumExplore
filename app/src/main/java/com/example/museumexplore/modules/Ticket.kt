@@ -7,9 +7,13 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.util.Date
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 @Entity
 data class Ticket(
@@ -29,10 +33,34 @@ data class Ticket(
                 snapshot["uid"] as String,
                 snapshot["typeId"] as String,
                 snapshot["museumId"] as String,
-                snapshot["amount"] as Int,
-                snapshot["purchaseDate"] as Date,
-                snapshot["visitDate"] as Date
+                (snapshot["amount"] as Long).toInt(),
+                (snapshot["purchaseDate"] as Timestamp).toDate(),
+                (snapshot["visitDate"] as Timestamp).toDate()
             )
+        }
+
+        suspend fun fetchTicketsData(uid: String): List<Ticket> {
+            return suspendCoroutine { continuation ->
+                val db = Firebase.firestore
+                db.collection("tickets")
+                    .whereEqualTo("uid", uid)
+                    .get()
+                    .addOnSuccessListener { documents ->
+                        val ticketsList = ArrayList<Ticket>()
+                        for (document in documents) {
+                            ticketsList.add(
+                                fromSnapshot(
+                                    document.id,
+                                    document.data
+                                )
+                            )
+                        }
+                        continuation.resume(ticketsList)
+                    }
+                    .addOnFailureListener {
+                        continuation.resumeWithException(it)
+                    }
+            }
         }
 
         fun addTicket(ticket: Ticket, callback: (Boolean) -> Unit) {

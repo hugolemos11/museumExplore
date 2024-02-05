@@ -271,15 +271,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     R.id.artWorkDetailsFragment,
                     R.id.eventDetailsFragment,
                     R.id.ticketFragment -> {
-                        navController.navigate(R.id.action_global_generateQrCodeFragment)
+                        val bundle = Bundle()
+                        bundle.putString("uid", auth.uid)
+                        navController.navigate(R.id.action_homeNavigation_to_ticketsHistoryFragment, bundle)
                     }
 
                     R.id.qrCodeReaderFragment -> {
-                        navController.navigate(R.id.action_qrCodeReaderFragment_to_homeNavigation)
+                        val bundle = Bundle()
+                        bundle.putString("uid", auth.uid)
+                        navController.navigate(R.id.action_qrCodeReaderFragment_to_ticketsHistoryFragment, bundle)
                     }
 
                     R.id.settingsFragment, R.id.editProfileFragment -> {
-                        navController.navigate(R.id.action_settingsNavigation_to_homeNavigation)
+                        val bundle = Bundle()
+                        bundle.putString("uid", auth.uid)
+                        navController.navigate(R.id.action_settingsNavigation_to_ticketsHistoryFragment, bundle)
                     }
                 }
             }
@@ -291,26 +297,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 ) {
                     askForCameraPermission()
                 } else {
-                    binding.navView.menu.findItem(R.id.navScan).isEnabled = false
-                }
-                when (navController.currentDestination?.id) {
-                    R.id.homeFragment,
-                    R.id.museumDetailsFragment,
-                    R.id.artWorksFragment,
-                    R.id.artWorkDetailsFragment,
-                    R.id.eventDetailsFragment,
-                    R.id.ticketFragment -> {
-                        navController.navigate(R.id.action_homeNavigation_to_qrCodeReaderFragment)
-                    }
+                    when (navController.currentDestination?.id) {
+                        R.id.homeFragment,
+                        R.id.museumDetailsFragment,
+                        R.id.artWorksFragment,
+                        R.id.artWorkDetailsFragment,
+                        R.id.eventDetailsFragment,
+                        R.id.ticketFragment -> {
+                            navController.navigate(R.id.action_homeNavigation_to_qrCodeReaderFragment)
+                        }
 
-                    R.id.qrCodeReaderFragment -> {
-                        // If the current destination is QrCodeReader, close the drawer
-                        drawerLayout.closeDrawer(GravityCompat.END)
-                    }
+                        R.id.qrCodeReaderFragment -> {
+                            // If the current destination is QrCodeReader, close the drawer
+                            drawerLayout.closeDrawer(GravityCompat.END)
+                        }
 
-                    R.id.settingsFragment,
-                    R.id.editProfileFragment -> {
-                        navController.navigate(R.id.action_settingsNavigation_to_qrCodeReaderFragment)
+                        R.id.settingsFragment,
+                        R.id.editProfileFragment -> {
+                            navController.navigate(R.id.action_settingsNavigation_to_qrCodeReaderFragment)
+                        }
                     }
                 }
             }
@@ -391,9 +396,28 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == requestCodeCameraPermission && grantResults.isNotEmpty()) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                binding.navView.menu.findItem(R.id.navScan).isEnabled = true
+                when (navController.currentDestination?.id) {
+                    R.id.homeFragment,
+                    R.id.museumDetailsFragment,
+                    R.id.artWorksFragment,
+                    R.id.artWorkDetailsFragment,
+                    R.id.eventDetailsFragment,
+                    R.id.ticketFragment -> {
+                        navController.navigate(R.id.action_homeNavigation_to_qrCodeReaderFragment)
+                    }
+
+                    R.id.qrCodeReaderFragment -> {
+                        // If the current destination is QrCodeReader, close the drawer
+                        drawerLayout.closeDrawer(GravityCompat.END)
+                    }
+
+                    R.id.settingsFragment,
+                    R.id.editProfileFragment -> {
+                        navController.navigate(R.id.action_settingsNavigation_to_qrCodeReaderFragment)
+                    }
+                }
             } else {
-                showToast("Não deu permissão para usar a camâra.", applicationContext)
+                showToast("Didn't give permission to access the camara.", applicationContext)
             }
         }
     }

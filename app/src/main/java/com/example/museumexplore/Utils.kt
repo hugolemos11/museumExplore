@@ -1,24 +1,16 @@
 package com.example.museumexplore
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.renderscript.ScriptGroup.Binding
-import android.widget.Adapter
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import com.bumptech.glide.Glide
-import com.example.museumexplore.modules.Image
-import com.example.museumexplore.modules.ImageAdapter
-import com.example.museumexplore.modules.Museum
 import com.google.android.material.textfield.TextInputLayout
-import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 
-val emailRegex = "^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}\$"
-val usernameRegex = "^[a-zA-Z0-9_.-]{6,20}\$"
-val passwordRegex =
+const val emailRegex = "^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}\$"
+const val usernameRegex = "^[a-zA-Z0-9_.-]{6,20}\$"
+const val passwordRegex =
     "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#\$%^&*()_+{}\\[\\]:;<>,.?~\\\\-]).{8,}\$"
 
 

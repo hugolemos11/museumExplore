@@ -108,6 +108,12 @@
         <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.Small</item>
     </style>
 
+    <style name="DialogFragment" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
+
 <!--    <style name="ImageViewMuseumsAndArtWorks">-->
 <!--        <item name="tint">#a68263</item>-->
 <!--        <item name="tintMode">multiply</item>-->

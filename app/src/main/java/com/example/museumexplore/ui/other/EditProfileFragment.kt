@@ -50,6 +50,8 @@ import java.io.IOException
 import java.lang.RuntimeException
 import java.util.UUID
 import kotlin.coroutines.cancellation.CancellationException
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 import kotlin.math.log
 
 class EditProfileFragment : Fragment() {
@@ -64,6 +66,10 @@ class EditProfileFragment : Fragment() {
     private val db = Firebase.firestore
     private var usernamesInUse: ArrayList<String> = ArrayList()
     private var formIsValid: Boolean? = null
+
+    private var fileName: String? = null
+
+    private var bitMap: Bitmap? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -116,10 +122,11 @@ class EditProfileFragment : Fragment() {
         binding.editTextUsername.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
                 // Checks that the username entered is not already in use, only if the username is not that of the user
-                if (username != binding.editTextUsername.text.toString().trim()){
+                if (username != binding.editTextUsername.text.toString().trim()) {
                     for (username in usernamesInUse) {
                         if (username == binding.editTextUsername.text.toString().trim()) {
-                            binding.textInputLayoutUsername.error = "The Username is Already in use!"
+                            binding.textInputLayoutUsername.error =
+                                "The Username is Already in use!"
                         }
                     }
                 }
@@ -169,11 +176,11 @@ class EditProfileFragment : Fragment() {
 
             updateImage()
 
-            if ((username.isNotEmpty() && oldPassword.isEmpty()) || (username.isNotEmpty() && oldPassword.isNotEmpty() && newPassword.isEmpty())) {
-                validateAndUpdateUsername()
-            } else if (username.isNotEmpty() && oldPassword.isNotEmpty() && newPassword.isNotEmpty()) {
-                validateAndUpdatePassword()
-            }
+//            if ((username.isNotEmpty() && oldPassword.isEmpty()) || (username.isNotEmpty() && oldPassword.isNotEmpty() && newPassword.isEmpty())) {
+//                validateAndUpdateUsername()
+//            } else if (username.isNotEmpty() && oldPassword.isNotEmpty() && newPassword.isNotEmpty()) {
+//                validateAndUpdatePassword()
+//            }
         }
 
         fetchUsernamesData()
@@ -181,87 +188,63 @@ class EditProfileFragment : Fragment() {
 
     private fun updateImage() {
         lifecycleScope.launch {
-            val userImagePath = uploadImageToFirebaseStorage()
-
-            Log.e("TESTE", userImagePath)
-
-                if (username != this@EditProfileFragment.username) {
-                    username?.let {
-                        updateUsernameAndImage(it, userImagePath) { success ->
-                            if (success) {
-                                showToast("User Updated Successfully!", requireContext())
-                                navController.popBackStack()
-                            } else {
-                                showToast("Failed to Update User!", requireContext())
-                            }
+            val imageUploaded = bitMap?.let { addImageToStorage(it) }
+            if (imageUploaded == true) {
+                fileName?.let { it1 ->
+                    updateUserImage(it1) { success ->
+                        if (success) {
+                            showToast("User Updated Successfully!", requireContext())
+                            navController.popBackStack()
+                        } else {
+                            showToast("Failed to Update User!", requireContext())
                         }
                     }
-                } else {
-                    showToast("Change some data!", requireContext())
                 }
-        }
-    }
-
-    private suspend fun uploadImageToFirebaseStorage(): String {
-        return try {
-            val storageReference = Firebase.storage.reference
-            val imageRef = storageReference.child("userImages/${UUID.randomUUID()}.jpg")
-
-            val userImageBitmap = (binding.imageViewUser.drawable as BitmapDrawable).bitmap
-            val outputStream = ByteArrayOutputStream()
-            userImageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
-            val data = outputStream.toByteArray()
-
-            val uploadTask = imageRef.putBytes(data).asDeferred()
-
-            try {
-                viewLifecycleOwner.lifecycleScope.coroutineContext.ensureActive()
-                uploadTask.await() // Wait for the upload task to complete
-
-                // Check if the coroutine job is still active before proceeding
-                if (!isActive) {
-                    "erro"
-                } else {
-                    // If no exception occurred during upload, consider it successful
-                    "success"
-                }
-            } catch (e: CancellationException) {
-                Log.e("TESTE", "Error uploading image to Firebase Storage: ${e.message}", e)
-                "erro"
             }
-        } catch (e: Exception) {
-            Log.e("TESTE", "Error uploading image to Firebase Storage: ${e.message}", e)
-            "erro"
         }
     }
 
-    // Extension function to convert Task to Deferred
-    private fun <T> Task<T>.asDeferred(): Deferred<T> {
-        val deferred = CompletableDeferred<T>()
+    private suspend fun addImageToStorage(bitmap: Bitmap): Boolean {
+        return suspendCoroutine { continuation ->
+            val storage = Firebase.storage
+            val storageRef = storage.reference
 
-        this.addOnSuccessListener { result ->
-            deferred.complete(result)
+            // Convert Bitmap to byte array
+            val stream =
+                com.google.firebase.crashlytics.buildtools.reloc.org.apache.commons.io.output.ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            val byteArray = stream.toByteArray()
+
+            // Create a unique filename (you may adjust this logic according to your requirements)
+            fileName = "userImages/${System.currentTimeMillis()}.jpg"
+
+            // Upload the byte array to Firebase Storage
+            val photoRef = storageRef.child("$fileName")
+            val uploadTask = photoRef.putBytes(byteArray)
+
+            // Monitor the upload task
+            uploadTask.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    continuation.resume(true)
+                } else {
+                    continuation.resume(false)
+                }
+            }
         }
-
-        this.addOnFailureListener { exception ->
-            deferred.completeExceptionally(exception)
-        }
-
-        return deferred
     }
 
-
-
-    private suspend fun updateUsernameAndImage(username: String, imagePath: String, callback: (Boolean) -> Unit) {
-        val userUpdates = mapOf("username" to username, "pathToImage" to imagePath)
+    private suspend fun updateUserImage(
+        imagePath: String,
+        callback: (Boolean) -> Unit
+    ) {
+        val userUpdates = mapOf("pathToImage" to imagePath)
         val appDatabase = AppDatabase.getInstance(requireContext())
-
-        Log.e("TESTE", userUpdates.toString())
 
         if (appDatabase != null) {
             userId?.let { currentUserId ->
                 try {
-                    val updatedUserData = User.updateUserData(currentUserId, userUpdates).await()
+                    val updatedUserData =
+                        User.updateUserData(currentUserId, userUpdates).await()
                     appDatabase.userDao().add(updatedUserData)
                     callback(true)
                 } catch (e: RuntimeException) {
@@ -292,8 +275,7 @@ class EditProfileFragment : Fragment() {
                             showToast("Failed to Update User!", requireContext())
                         }
                     }
-                }
-                else {
+                } else {
                     showToast("Change some data!", requireContext())
                 }
             }
@@ -474,7 +456,7 @@ class EditProfileFragment : Fragment() {
             }
     }
 
-    // take photos
+// take photos
 
     val REQUEST_IMAGE_CAPTURE = 1
     private val REQUEST_PICK_IMAGE = 2
@@ -485,10 +467,11 @@ class EditProfileFragment : Fragment() {
         when (requestCode) {
             REQUEST_IMAGE_CAPTURE -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    val rotatedBitmap = rotateBitmap(currentPhotoPath)
-                    binding.imageViewUser.setImageBitmap(rotatedBitmap)
+                    bitMap = rotateBitmap(currentPhotoPath)
+                    binding.imageViewUser.setImageBitmap(bitMap)
                 }
             }
+
             REQUEST_PICK_IMAGE -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     if (data.data != null) {
@@ -503,11 +486,20 @@ class EditProfileFragment : Fragment() {
         val options = BitmapFactory.Options()
         options.inPreferredConfig = Bitmap.Config.ARGB_8888
 
-        val originalBitmap = BitmapFactory.decodeFile(photoPath, options) ?: return Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
+        val originalBitmap =
+            BitmapFactory.decodeFile(photoPath, options) ?: return Bitmap.createBitmap(
+                1,
+                1,
+                Bitmap.Config.ARGB_8888
+            )
 
         try {
             val exif = ExifInterface(photoPath)
-            val orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED)
+            val orientation =
+                exif.getAttributeInt(
+                    ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_UNDEFINED
+                )
 
             val matrix = Matrix()
             when (orientation) {
@@ -516,7 +508,15 @@ class EditProfileFragment : Fragment() {
                 ExifInterface.ORIENTATION_ROTATE_270 -> matrix.postRotate(270f)
             }
 
-            return Bitmap.createBitmap(originalBitmap, 0, 0, originalBitmap.width, originalBitmap.height, matrix, true)
+            return Bitmap.createBitmap(
+                originalBitmap,
+                0,
+                0,
+                originalBitmap.width,
+                originalBitmap.height,
+                matrix,
+                true
+            )
         } catch (e: IOException) {
             e.printStackTrace()
             return originalBitmap
@@ -531,7 +531,8 @@ class EditProfileFragment : Fragment() {
     @Throws(IOException::class)
     private fun createImageFile(): File {
         val timeStamp: String = UUID.randomUUID().toString()
-        val storageDir: File = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
+        val storageDir: File =
+            requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
         return File.createTempFile(
             "JPEG_${timeStamp}_", /* prefix */
             ".jpg", /* suffix */
@@ -551,6 +552,7 @@ class EditProfileFragment : Fragment() {
                 items[item] == "Tirar Foto" -> {
                     takePhoto()
                 }
+
                 items[item] == "Escolher da Galeria" -> {
                     pickFromGallery()
                 }

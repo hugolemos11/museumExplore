@@ -26,7 +26,7 @@ class TicketDialog : DialogFragment() {
         }
 
         fun show(fm: FragmentManager, bundle: Bundle): TicketDialog {
-            val dialog = TicketDialog.newInstance(bundle)
+            val dialog = newInstance(bundle)
             dialog.show(fm, "fragment_ticket_dialog")
             return dialog
         }

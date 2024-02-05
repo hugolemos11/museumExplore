@@ -1,12 +1,24 @@
 package com.example.museumexplore.ui.other
 
+import android.app.Activity
+import android.app.AlertDialog
 import android.content.ContentValues.TAG
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.graphics.drawable.BitmapDrawable
+import android.media.ExifInterface
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.text.Editable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.FileProvider
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -20,13 +32,25 @@ import com.example.museumexplore.modules.User
 import com.example.museumexplore.setErrorAndFocus
 import com.example.museumexplore.setImage
 import com.example.museumexplore.showToast
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.NonCancellable.isActive
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.IOException
 import java.lang.RuntimeException
+import java.util.UUID
+import kotlin.coroutines.cancellation.CancellationException
+import kotlin.math.log
 
 class EditProfileFragment : Fragment() {
 
@@ -66,6 +90,11 @@ class EditProfileFragment : Fragment() {
         navController = Navigation.findNavController(view)
 
         setImage(pathToImage, binding.imageViewUser, requireContext())
+
+
+        binding.imageViewEditPhoto.setOnClickListener {
+            dispatchTakePictureIntent()
+        }
         binding.editTextUsername.text = Editable.Factory.getInstance().newEditable(username ?: "")
 
         binding.editTextUsername.doOnTextChanged { text, _, _, _ ->
@@ -138,6 +167,8 @@ class EditProfileFragment : Fragment() {
             val oldPassword = binding.editTextOldPassword.text.toString().trim()
             val newPassword = binding.editTextPassword.text.toString().trim()
 
+            updateImage()
+
             if ((username.isNotEmpty() && oldPassword.isEmpty()) || (username.isNotEmpty() && oldPassword.isNotEmpty() && newPassword.isEmpty())) {
                 validateAndUpdateUsername()
             } else if (username.isNotEmpty() && oldPassword.isNotEmpty() && newPassword.isNotEmpty()) {
@@ -146,6 +177,98 @@ class EditProfileFragment : Fragment() {
         }
 
         fetchUsernamesData()
+    }
+
+    private fun updateImage() {
+        lifecycleScope.launch {
+            val userImagePath = uploadImageToFirebaseStorage()
+
+            Log.e("TESTE", userImagePath)
+
+                if (username != this@EditProfileFragment.username) {
+                    username?.let {
+                        updateUsernameAndImage(it, userImagePath) { success ->
+                            if (success) {
+                                showToast("User Updated Successfully!", requireContext())
+                                navController.popBackStack()
+                            } else {
+                                showToast("Failed to Update User!", requireContext())
+                            }
+                        }
+                    }
+                } else {
+                    showToast("Change some data!", requireContext())
+                }
+        }
+    }
+
+    private suspend fun uploadImageToFirebaseStorage(): String {
+        return try {
+            val storageReference = Firebase.storage.reference
+            val imageRef = storageReference.child("userImages/${UUID.randomUUID()}.jpg")
+
+            val userImageBitmap = (binding.imageViewUser.drawable as BitmapDrawable).bitmap
+            val outputStream = ByteArrayOutputStream()
+            userImageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+            val data = outputStream.toByteArray()
+
+            val uploadTask = imageRef.putBytes(data).asDeferred()
+
+            try {
+                viewLifecycleOwner.lifecycleScope.coroutineContext.ensureActive()
+                uploadTask.await() // Wait for the upload task to complete
+
+                // Check if the coroutine job is still active before proceeding
+                if (!isActive) {
+                    "erro"
+                } else {
+                    // If no exception occurred during upload, consider it successful
+                    "success"
+                }
+            } catch (e: CancellationException) {
+                Log.e("TESTE", "Error uploading image to Firebase Storage: ${e.message}", e)
+                "erro"
+            }
+        } catch (e: Exception) {
+            Log.e("TESTE", "Error uploading image to Firebase Storage: ${e.message}", e)
+            "erro"
+        }
+    }
+
+    // Extension function to convert Task to Deferred
+    private fun <T> Task<T>.asDeferred(): Deferred<T> {
+        val deferred = CompletableDeferred<T>()
+
+        this.addOnSuccessListener { result ->
+            deferred.complete(result)
+        }
+
+        this.addOnFailureListener { exception ->
+            deferred.completeExceptionally(exception)
+        }
+
+        return deferred
+    }
+
+
+
+    private suspend fun updateUsernameAndImage(username: String, imagePath: String, callback: (Boolean) -> Unit) {
+        val userUpdates = mapOf("username" to username, "pathToImage" to imagePath)
+        val appDatabase = AppDatabase.getInstance(requireContext())
+
+        Log.e("TESTE", userUpdates.toString())
+
+        if (appDatabase != null) {
+            userId?.let { currentUserId ->
+                try {
+                    val updatedUserData = User.updateUserData(currentUserId, userUpdates).await()
+                    appDatabase.userDao().add(updatedUserData)
+                    callback(true)
+                } catch (e: RuntimeException) {
+                    callback(false)
+                }
+            }
+        }
     }
 
     private fun validateAndUpdateUsername() {
@@ -349,5 +472,116 @@ class EditProfileFragment : Fragment() {
             .addOnFailureListener {
                 showToast("An error occurred: ${it.localizedMessage}", requireContext())
             }
+    }
+
+    // take photos
+
+    val REQUEST_IMAGE_CAPTURE = 1
+    private val REQUEST_PICK_IMAGE = 2
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        when (requestCode) {
+            REQUEST_IMAGE_CAPTURE -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    val rotatedBitmap = rotateBitmap(currentPhotoPath)
+                    binding.imageViewUser.setImageBitmap(rotatedBitmap)
+                }
+            }
+            REQUEST_PICK_IMAGE -> {
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    if (data.data != null) {
+                        binding.imageViewUser.setImageURI(data.data)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun rotateBitmap(photoPath: String): Bitmap {
+        val options = BitmapFactory.Options()
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888
+
+        val originalBitmap = BitmapFactory.decodeFile(photoPath, options) ?: return Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
+
+        try {
+            val exif = ExifInterface(photoPath)
+            val orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED)
+
+            val matrix = Matrix()
+            when (orientation) {
+                ExifInterface.ORIENTATION_ROTATE_90 -> matrix.postRotate(90f)
+                ExifInterface.ORIENTATION_ROTATE_180 -> matrix.postRotate(180f)
+                ExifInterface.ORIENTATION_ROTATE_270 -> matrix.postRotate(270f)
+            }
+
+            return Bitmap.createBitmap(originalBitmap, 0, 0, originalBitmap.width, originalBitmap.height, matrix, true)
+        } catch (e: IOException) {
+            e.printStackTrace()
+            return originalBitmap
+        } catch (e: NullPointerException) {
+            e.printStackTrace()
+            return originalBitmap
+        }
+    }
+
+    lateinit var currentPhotoPath: String
+
+    @Throws(IOException::class)
+    private fun createImageFile(): File {
+        val timeStamp: String = UUID.randomUUID().toString()
+        val storageDir: File = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
+        return File.createTempFile(
+            "JPEG_${timeStamp}_", /* prefix */
+            ".jpg", /* suffix */
+            storageDir /* directory */
+        ).apply {
+            // Save a file: path for use with ACTION_VIEW intents
+            currentPhotoPath = absolutePath
+        }
+    }
+
+    private fun dispatchTakePictureIntent() {
+        val items = arrayOf<CharSequence>("Tirar Foto", "Escolher da Galeria")
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Escolher uma Opção")
+        builder.setItems(items) { _, item ->
+            when {
+                items[item] == "Tirar Foto" -> {
+                    takePhoto()
+                }
+                items[item] == "Escolher da Galeria" -> {
+                    pickFromGallery()
+                }
+            }
+        }
+        builder.show()
+    }
+
+    private fun takePhoto() {
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            takePictureIntent.resolveActivity(requireContext().packageManager)?.also {
+                val photoFile: File? = try {
+                    createImageFile()
+                } catch (ex: IOException) {
+                    null
+                }
+                photoFile?.also {
+                    val photoURI: Uri = FileProvider.getUriForFile(
+                        requireContext(),
+                        "com.example.museumexplore.fileprovider",
+                        it
+                    )
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+                }
+            }
+        }
+    }
+
+    private fun pickFromGallery() {
+        val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(galleryIntent, REQUEST_PICK_IMAGE)
     }
 }

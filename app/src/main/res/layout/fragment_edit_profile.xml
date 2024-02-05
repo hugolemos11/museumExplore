@@ -144,4 +144,12 @@
         app:layout_constraintEnd_toEndOf="@+id/textInputLayoutOldPassword"
         app:layout_constraintStart_toStartOf="@+id/textInputLayoutOldPassword" />
 
+    <ImageView
+        android:id="@+id/imageViewEditPhoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/add_photo"
+        app:layout_constraintBottom_toBottomOf="@+id/imageViewUser"
+        app:layout_constraintEnd_toEndOf="@+id/imageViewUser" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

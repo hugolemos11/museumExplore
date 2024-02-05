@@ -103,6 +103,9 @@ interface ArtWorkDao {
     @Query("SELECT * FROM artWork WHERE id = :id")
     fun get(id : String) : ArtWork
 
+    @Query("SELECT * FROM artWork WHERE museumId = :museumId AND categoryId = :categoryId")
+    fun filterByCategory(museumId: String, categoryId: String): LiveData<List<ArtWork>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun add(artWork: ArtWork)
 }

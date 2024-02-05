@@ -49,6 +49,8 @@ class PaymentFragment : Fragment() {
     private var visitDate: String? = null
     private var finalPrice: Double? = null
 
+    private var fileName: String? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -93,48 +95,47 @@ class PaymentFragment : Fragment() {
                 if (radioButtonMbWay.isChecked || radioButtonMultiBanco.isChecked) {
                     val currentDateTime = getCurrentDateTime()
 
-                    Ticket.addTicket(
-                        Ticket(
-                            "",
-                            auth.uid!!,
-                            ticketTypeId!!,
-                            museumId!!,
-                            ticketsAmount!!,
-                            convertStringToDate(currentDateTime),
-                            convertStringToDate(visitDate!!)
+                    val multiFormatWriter = MultiFormatWriter()
+
+                    val bitMatrix: BitMatrix =
+                        multiFormatWriter.encode(
+                            "$ticketsAmount for museum $museumName. Type: $ticketType",
+                            BarcodeFormat.QR_CODE,
+                            200,
+                            200
                         )
-                    ) { success ->
-                        if (success) {
-                            val multiFormatWriter = MultiFormatWriter()
+                    val barcodeEncoder = BarcodeEncoder()
+                    val bitmap: Bitmap = barcodeEncoder.createBitmap(bitMatrix)
 
-                            val bitMatrix: BitMatrix =
-                                multiFormatWriter.encode(
-                                    "$ticketsAmount for museum $museumName. Type: $ticketType",
-                                    BarcodeFormat.QR_CODE,
-                                    200,
-                                    200
+                    lifecycleScope.launch {
+                        val uploaded = addQrCodeToStorage(bitmap)
+
+                        if (uploaded) {
+                            Ticket.addTicket(
+                                Ticket(
+                                    "",
+                                    auth.uid!!,
+                                    ticketTypeId!!,
+                                    museumId!!,
+                                    ticketsAmount!!,
+                                    convertStringToDate(currentDateTime),
+                                    convertStringToDate(visitDate!!),
+                                    fileName!!
                                 )
-                            val barcodeEncoder = BarcodeEncoder()
-                            val bitmap: Bitmap = barcodeEncoder.createBitmap(bitMatrix)
-
-                            lifecycleScope.launch {
-                                val uploaded = addQrCodeToStorage(bitmap)
-
-                                if (uploaded) {
+                            ) { success ->
+                                if (success) {
                                     navController.navigate(R.id.action_paymentFragment_to_finishPaymentFragment)
                                 } else {
-                                    showToast(
-                                        "Something went wrong buying the ticket!",
-                                        requireContext()
-                                    )
+                                    showToast("Something went wrong buying the ticket!", requireContext())
                                 }
                             }
-
                         } else {
-                            showToast("Something went wrong buying the ticket!", requireContext())
+                            showToast(
+                                "Something went wrong buying the ticket!",
+                                requireContext()
+                            )
                         }
                     }
-
                 } else {
                     showToast("Choose the payment method!", requireContext())
                 }
@@ -169,24 +170,17 @@ class PaymentFragment : Fragment() {
             val byteArray = stream.toByteArray()
 
             // Create a unique filename (you may adjust this logic according to your requirements)
-            val filename = "qrCode_${System.currentTimeMillis()}.png"
+            fileName = "qrCodes/qrCode_${System.currentTimeMillis()}.png"
 
             // Upload the byte array to Firebase Storage
-            val photoRef = storageRef.child("qrCodes/$filename")
+            val photoRef = storageRef.child("$fileName")
             val uploadTask = photoRef.putBytes(byteArray)
 
             // Monitor the upload task
             uploadTask.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    // The upload is successful
-                    showToast("QR Code uploaded successfully", requireContext())
                     continuation.resume(true)
                 } else {
-                    // Handle the error
-                    showToast(
-                        "Error uploading QR Code: ${task.exception?.message}",
-                        requireContext()
-                    )
                     continuation.resume(false)
                 }
             }

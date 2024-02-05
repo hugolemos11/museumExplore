@@ -2,6 +2,7 @@ package com.example.museumexplore.ui.dialog
 
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.example.museumexplore.R
 import com.example.museumexplore.databinding.TicketDialogBinding
+import com.example.museumexplore.setImage
 
 
 class TicketDialog : DialogFragment() {
@@ -20,6 +22,7 @@ class TicketDialog : DialogFragment() {
     private var ticketId: String? = null
     private var museumName: String? = null
     private var visitDate: String? = null
+    private var pathToImage: String? = null
 
     companion object {
         fun newInstance(bundle: Bundle): TicketDialog {
@@ -57,8 +60,11 @@ class TicketDialog : DialogFragment() {
             ticketId = bundle.getString("ticketId")
             museumName = bundle.getString("museumName")
             visitDate = bundle.getString("visitDate")
+            pathToImage = bundle.getString("pathToImage")
         }
         binding.textViewMuseumName.text = museumName
         binding.textViewVisitDate.text = visitDate
+
+        setImage(pathToImage, binding.imageViewQrCode, requireContext())
     }
 }

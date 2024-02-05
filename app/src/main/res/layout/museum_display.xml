@@ -9,7 +9,7 @@
         android:layout_width="170dp"
         android:layout_height="170dp"
         app:cardCornerRadius="10dp"
-        app:cardElevation="10dp"
+        app:cardElevation="0dp"
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="229dp">
 

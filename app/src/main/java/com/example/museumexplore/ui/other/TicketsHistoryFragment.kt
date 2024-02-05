@@ -74,10 +74,8 @@ class TicketsHistoryFragment : Fragment() {
                     }
                     appDatabase.ticketDao().getAll(currentUid).observe(viewLifecycleOwner) {
                         ticketsList = it as ArrayList<Ticket>
-                        Log.e("teste", ticketsList.toString())
                         ticketAdapter.notifyDataSetChanged()
                     }
-
                 }
             }
         }
@@ -122,16 +120,10 @@ class TicketsHistoryFragment : Fragment() {
                 bundle.putString("ticketId", ticketsList[position].id)
                 bundle.putString("museumName", museum?.name)
                 bundle.putString("visitDate", formattedDateTime.toString())
+                bundle.putString("pathToImage", ticketsList[position].pathToImage)
                 TicketDialog.show(fragmentManager, bundle)
-
-
-//                val bundle = Bundle()
-//                bundle.putString("ticketId", ticketsList[position].id)
-//                navController.navigate(R.id.action_homeFragment_to_museumDetailsFragment, bundle)
             }
-
             return rootView.root
         }
-
     }
 }

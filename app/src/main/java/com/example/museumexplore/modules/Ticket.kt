@@ -24,7 +24,8 @@ data class Ticket(
     var museumId: String,
     var amount: Int,
     var purchaseDate: Date,
-    var visitDate: Date
+    var visitDate: Date,
+    var pathToImage: String
 ) {
     companion object {
         fun fromSnapshot(id: String, snapshot: Map<String, Any>): Ticket {
@@ -35,7 +36,8 @@ data class Ticket(
                 snapshot["museumId"] as String,
                 (snapshot["amount"] as Long).toInt(),
                 (snapshot["purchaseDate"] as Timestamp).toDate(),
-                (snapshot["visitDate"] as Timestamp).toDate()
+                (snapshot["visitDate"] as Timestamp).toDate(),
+                snapshot["pathToImage"] as String
             )
         }
 
@@ -73,7 +75,8 @@ data class Ticket(
                 "museumId" to ticket.museumId,
                 "amount" to ticket.amount,
                 "purchaseDate" to ticket.purchaseDate,
-                "visitDate" to ticket.visitDate
+                "visitDate" to ticket.visitDate,
+                "pathToImage" to ticket.pathToImage
             )
 
             db.collection("tickets")

@@ -2,6 +2,7 @@ package com.example.museumexplore.ui.home
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +18,7 @@ import com.example.museumexplore.databinding.FragmentArtWorksBinding
 import com.example.museumexplore.modules.ArtWork
 import com.example.museumexplore.modules.Category
 import com.example.museumexplore.setImage
+import com.example.museumexplore.ui.dialog.CardFilterDialog
 import kotlinx.coroutines.launch
 
 
@@ -62,6 +64,15 @@ class ArtWorksFragment : Fragment() {
 
         binding.textViewMuseumName.text = museumName
         binding.gridViewArtWorks.adapter = artWorksAdapter
+
+        binding.imageViewFilter.setOnClickListener {
+            val fragmentManager = requireActivity().supportFragmentManager
+            val bundle = Bundle()
+            bundle.putString("museumId", museumId)
+            CardFilterDialog.show(fragmentManager, bundle) {
+                observeFilteredArtworks(it)
+            }
+        }
 
         val appDatabase = AppDatabase.getInstance(requireContext())
         lifecycleScope.launch {
@@ -132,5 +143,15 @@ class ArtWorksFragment : Fragment() {
 
             return rootView.root
         }
+    }
+
+    private fun observeFilteredArtworks(categoryId: String?) {
+        val appDatabase = AppDatabase.getInstance(requireContext())
+
+        appDatabase?.artWorkDao()?.filterByCategory(museumId ?: "", categoryId ?: "")
+            ?.observe(viewLifecycleOwner) { filteredArtWorks ->
+                artWorksList = filteredArtWorks as ArrayList<ArtWork>
+                artWorksAdapter.notifyDataSetChanged()
+            }
     }
 }

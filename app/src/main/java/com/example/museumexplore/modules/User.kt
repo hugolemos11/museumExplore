@@ -1,5 +1,6 @@
 package com.example.museumexplore.modules
 
+import android.util.Log
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Entity
@@ -7,9 +8,12 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import com.example.museumexplore.R
+import com.example.museumexplore.showToast
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.tasks.await
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -46,10 +50,10 @@ data class User(
                             if (user != null) {
                                 continuation.resume(user)
                             } else {
-                                continuation.resumeWithException(NullPointerException("Category is null"))
+                                continuation.resumeWithException(NullPointerException("User is null"))
                             }
                         } else {
-                            continuation.resumeWithException(NoSuchElementException("Category not found"))
+                            continuation.resumeWithException(NoSuchElementException("User not found"))
                         }
                     }
                     .addOnFailureListener {
@@ -63,6 +67,30 @@ data class User(
             val userDocumentRef = db.collection("users").document(uid)
 
             return userDocumentRef.update(userUpdates)
+                .continueWithTask { task ->
+                    if (task.isSuccessful) {
+                        // Fetch the updated user data after the update
+                        userDocumentRef.get()
+                            .continueWith { documentSnapshotTask ->
+                                if (documentSnapshotTask.isSuccessful) {
+                                    fromSnapshot(uid, documentSnapshotTask.result!!.data!!)
+                                } else {
+                                    throw documentSnapshotTask.exception!!
+                                }
+                            }
+                    } else {
+                        throw task.exception!!
+                    }
+                }
+        }
+
+        fun createUser(uid: String, username: String): Task<User> {
+            val user = User(uid, username, "userImages/default_user.png")
+            Log.e("teste", user.toString())
+            val db = Firebase.firestore
+            val userDocumentRef = db.collection("users").document(uid)
+
+            return userDocumentRef.set(user)
                 .continueWithTask { task ->
                     if (task.isSuccessful) {
                         // Fetch the updated user data after the update

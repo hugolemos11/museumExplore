@@ -2,13 +2,16 @@ package com.example.museumexplore.ui.autentication
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.example.museumexplore.AppDatabase
 import com.example.museumexplore.R
 import com.example.museumexplore.databinding.FragmentRegisterBinding
 import com.example.museumexplore.isValidEmail
@@ -21,6 +24,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import java.lang.RuntimeException
 
 class RegisterFragment : Fragment() {
 
@@ -138,6 +144,8 @@ class RegisterFragment : Fragment() {
         val username = binding.editTextUsername.text.toString().trim()
         val password = binding.editTextPassword.text.toString().trim()
 
+        registerIsValid = true
+
         // Validate email
         if (email.isEmpty()) {
             setErrorAndFocus(binding.textInputLayoutEmailAddress, "Required!")
@@ -177,19 +185,27 @@ class RegisterFragment : Fragment() {
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(requireActivity()) {
                     if (it.isSuccessful) {
-                        auth.uid?.let { currentUid ->
-                            val user = User(currentUid, username, "userImages/default_user.png")
-
-                            db.collection("users")
-                                .document(currentUid)
-                                .set(user).addOnCompleteListener { task ->
-                                    if (task.isSuccessful) {
-                                        showToast("User Registered Successfully!", requireContext())
+                        val appDatabase = AppDatabase.getInstance(requireContext())
+                        if (appDatabase != null) {
+                            auth.uid?.let { currentUid ->
+                                lifecycleScope.launch {
+                                    try {
+                                        val updatedUserData =
+                                            User.createUser(currentUid, username).await()
+                                        appDatabase.userDao().add(updatedUserData)
+                                        showToast(
+                                            "User Registered Successfully!",
+                                            requireContext()
+                                        )
                                         navController.navigate(R.id.action_autenticationNavigation_to_homeNavigation)
-                                    } else {
-                                        showToast("User Failed to Registered!", requireContext())
+                                    } catch (e: RuntimeException) {
+                                        showToast(
+                                            "User Failed to Registered!",
+                                            requireContext()
+                                        )
                                     }
                                 }
+                            }
                         }
                     }
                 }

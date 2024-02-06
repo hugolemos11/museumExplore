@@ -273,6 +273,8 @@ class EditProfileFragment : Fragment() {
     private fun validateAndUpdateUsername() {
         val username = binding.editTextUsername.text.toString().trim()
 
+        formIsValid = true
+
         if (username.isEmpty() || !isValidUsername(username)) {
             setErrorAndFocus(binding.textInputLayoutUsername, "Invalid Username!")
             formIsValid = false
@@ -320,6 +322,8 @@ class EditProfileFragment : Fragment() {
         val newPassword = binding.editTextPassword.text.toString().trim()
         val repeatPassword = binding.editTextRepeatPassword.text.toString().trim()
 
+        formIsValid = true
+
         // Validate old password
         if (oldPassword.isEmpty()) {
             setErrorAndFocus(binding.textInputLayoutOldPassword, "Required!")
@@ -346,6 +350,19 @@ class EditProfileFragment : Fragment() {
             setErrorAndFocus(binding.textInputLayoutRepeatPassword, "Invalid Password!")
             formIsValid = false
         }
+
+        // Validate old password with new password and if the new password is the same as repeat password
+        if (oldPassword == newPassword) {
+            setErrorAndFocus(binding.textInputLayoutOldPassword, "Must be Different!")
+            setErrorAndFocus(binding.textInputLayoutPassword, "Must be Different!")
+            formIsValid = false
+        }
+        if (newPassword != repeatPassword) {
+            setErrorAndFocus(binding.textInputLayoutPassword, "Must be the same!")
+            setErrorAndFocus(binding.textInputLayoutRepeatPassword, "Must be the same!")
+            formIsValid = false
+        }
+
 
         if (formIsValid == true) {
             user?.let { currentUser ->

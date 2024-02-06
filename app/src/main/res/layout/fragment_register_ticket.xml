@@ -44,7 +44,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="40dp"
         android:layout_marginEnd="20dp"
-        android:text="Escolha o dia e hora da visita"
+        android:text="@string/Choose_the_day_and_time_of_the_visit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -57,7 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:text="Selected Date: "
+        android:text="@string/selected_date"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView21" />
 
@@ -79,7 +79,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
-        android:text="Selected Time: "
+        android:text="@string/selected_time"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewDate" />
 
@@ -101,7 +101,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="40dp"
-        android:text="Tickets Amount:"
+        android:text="@string/tickets_amount"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewTime" />
 
@@ -118,7 +118,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="+"
+            android:text="@string/plus"
             android:textColor="#ffffff"
             android:textSize="18sp" />
     </FrameLayout>
@@ -128,7 +128,7 @@
         style="@style/Theme.DescriptionTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="1"
+        android:text="@string/_1"
         app:layout_constraintBottom_toBottomOf="@+id/buttonIncrement"
         app:layout_constraintEnd_toStartOf="@+id/buttonIncrement"
         app:layout_constraintStart_toEndOf="@+id/buttonDecrement"
@@ -148,7 +148,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="-"
+            android:text="@string/minus"
             android:textColor="#ffffff"
             android:textSize="18sp" />
     </FrameLayout>
@@ -169,7 +169,7 @@
         style="@style/Theme.ButtonDefault"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
-        android:text="Buy"
+        android:text="@string/_buy"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonIncrement" />

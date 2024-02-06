@@ -110,7 +110,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:backgroundTint="@color/nav"
-                android:text="Discover our Collection" />
+                android:text="@string/discover_our_collection" />
 
         </RelativeLayout>
 

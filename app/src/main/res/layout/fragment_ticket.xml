@@ -46,7 +46,7 @@
         android:layout_marginTop="40dp"
         android:layout_marginEnd="60dp"
         android:buttonTint="#023859"
-        android:text="@string/ticket_terms"
+        android:text="@string/i_agree_to_the_terms"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/viewPager" />

@@ -104,7 +104,7 @@
         android:layout_height="17dp"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="10dp"
-        android:text="@string/register_label"
+        android:text="@string/dont_have_an_account_yet_create_one_here"
         app:layout_constraintBottom_toTopOf="@+id/textViewPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

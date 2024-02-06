@@ -38,4 +38,27 @@
     <string name="confirm">Confirm</string>
     <string name="repeat_password_hint">Repeat Password</string>
     <string name="old_password_hint">Old Password</string>
+    <string name="Choose_the_day_and_time_of_the_visit">Choose the day and time of the visit</string>
+    <string name="selected_date">Selected Date:</string>
+    <string name="selected_time">Selected Time:</string>
+    <string name="tickets_amount">Tickets Amount:</string>
+    <string name="_1">1</string>
+    <string name="_buy">Buy</string>
+    <string name="minus">-</string>
+    <string name="plus">+</string>
+    <string name="home">Home</string>
+    <string name="generate">Generate</string>
+    <string name="discover_our_collection">Discover our Collection</string>
+    <string name="choose_your_payment_method">Choose your payment method</string>
+    <string name="mb_way">MB Way</string>
+    <string name="multibanco">MULTIBANCO</string>
+    <string name="buy_payment">Buy</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="notification">Notification</string>
+    <string name="help">Help\n</string>
+    <string name="information">Information</string>
+    <string name="terms_of_use_and_privacy_policy">Terms of Use and Privacy Policy</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="i_agree_to_the_terms">I agree to the terms</string>
+    <string name="dont_have_an_account_yet_create_one_here">Don\'t have an account yet? Create one here</string>
 </resources>

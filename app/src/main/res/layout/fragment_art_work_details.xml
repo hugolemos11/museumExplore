@@ -6,14 +6,34 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.ArtWorkDetailsFragment">
 
-    <ImageView
-        android:id="@+id/imageViewArtWorkImage"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/artWorkSliderImages"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/slideDot"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
-        android:scaleType="centerCrop"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@+id/artWorkSliderImages"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!--    <ImageView-->
+<!--        android:id="@+id/imageViewArtWorkImage"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="350dp"-->
+<!--        android:scaleType="centerCrop"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
     <TextView
         android:id="@+id/textViewArtWorkName"
@@ -25,7 +45,7 @@
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewArtWorkImage" />
+        app:layout_constraintTop_toBottomOf="@+id/artWorkSliderImages" />
 
     <ImageView
         android:id="@+id/imageViewPlayIcon"

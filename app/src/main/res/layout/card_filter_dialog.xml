@@ -9,6 +9,7 @@
         android:id="@+id/cardView3"
         android:layout_width="212dp"
         android:layout_height="190dp"
+        android:backgroundTint="@color/background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

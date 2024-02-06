@@ -1,6 +1,7 @@
 package com.example.museumexplore.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,8 @@ import com.example.museumexplore.databinding.FragmentEventDetailsBinding
 import com.example.museumexplore.modules.Event
 import com.example.museumexplore.setImage
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 
 class EventDetailsFragment : Fragment() {
@@ -56,10 +59,22 @@ class EventDetailsFragment : Fragment() {
             }
 
             event?.let { currentEvent ->
+
+                Log.e("teste", currentEvent.toString())
+
+                val dateTimeFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+
                 setImage(currentEvent.pathToImage, binding.imageViewEventDetails, requireContext())
 
                 binding.apply {
                     textViewEventTitleDetails.text = currentEvent.title
+
+                    val formattedStartDate = dateTimeFormat.format(currentEvent.startDate.time)
+                    textViewStartDate.text = formattedStartDate
+
+                    val formattedFinishDate = dateTimeFormat.format(currentEvent.finishDate.time)
+                    textViewFinishDate.text = formattedFinishDate
+
                     textViewEventDescriptionDetails.text = currentEvent.description
                 }
 

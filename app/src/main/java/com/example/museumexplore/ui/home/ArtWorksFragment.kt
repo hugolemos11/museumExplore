@@ -32,6 +32,8 @@ class ArtWorksFragment : Fragment() {
     var artWorksList = arrayListOf<ArtWork>()
     private var artWorksAdapter = ArtWorksAdapter()
 
+    private var categoryId: String? = null
+
     private var categoriesList = arrayListOf<Category>()
     private var categoryMap = mapOf<String, String>() // Map for efficient category lookup
 
@@ -69,8 +71,10 @@ class ArtWorksFragment : Fragment() {
             val fragmentManager = requireActivity().supportFragmentManager
             val bundle = Bundle()
             bundle.putString("museumId", museumId)
+            bundle.putString("categoryId", categoryId)
             CardFilterDialog.show(fragmentManager, bundle) {
-                observeFilteredArtworks(it)
+                categoryId = it
+                observeFilteredArtworks()
             }
         }
 
@@ -152,13 +156,21 @@ class ArtWorksFragment : Fragment() {
         }
     }
 
-    private fun observeFilteredArtworks(categoryId: String?) {
+    private fun observeFilteredArtworks() {
         val appDatabase = AppDatabase.getInstance(requireContext())
 
-        appDatabase?.artWorkDao()?.filterByCategory(museumId ?: "", categoryId ?: "")
-            ?.observe(viewLifecycleOwner) { filteredArtWorks ->
-                artWorksList = filteredArtWorks as ArrayList<ArtWork>
-                artWorksAdapter.notifyDataSetChanged()
-            }
+        if (categoryId == "All") {
+            appDatabase?.artWorkDao()?.getAll(museumId ?: "")
+                ?.observe(viewLifecycleOwner) { filteredArtWorks ->
+                    artWorksList = filteredArtWorks as ArrayList<ArtWork>
+                    artWorksAdapter.notifyDataSetChanged()
+                }
+        } else {
+            appDatabase?.artWorkDao()?.filterByCategory(museumId ?: "", categoryId ?: "")
+                ?.observe(viewLifecycleOwner) { filteredArtWorks ->
+                    artWorksList = filteredArtWorks as ArrayList<ArtWork>
+                    artWorksAdapter.notifyDataSetChanged()
+                }
+        }
     }
 }

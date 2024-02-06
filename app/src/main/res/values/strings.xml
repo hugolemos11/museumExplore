@@ -20,7 +20,6 @@
     <string name="ticket_confirmation_label">Thank you for your preference</string>
     <string name="ticket_confirmation_button">Menu</string>
     <string name="search_hint">Search</string>
-    <string name="login">Login</string>
     <string name="email_hint">E-mail</string>
     <string name="password_hint">Password</string>
     <string name="register_label">Don’t have account! Register here</string>
@@ -38,4 +37,6 @@
     <string name="confirm">Confirm</string>
     <string name="repeat_password_hint">Repeat Password</string>
     <string name="old_password_hint">Old Password</string>
+    <string name="login">Login</string>
+    <string name="filter">Filter</string>
 </resources>

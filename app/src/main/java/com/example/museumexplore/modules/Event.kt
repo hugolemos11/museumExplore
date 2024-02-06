@@ -8,8 +8,10 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.util.Date
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -21,6 +23,8 @@ data class Event(
     var title: String,
     var description: String,
     var museumId: String,
+    var startDate: Date,
+    var finishDate: Date,
     var pathToImage: String?
 ) {
     companion object {
@@ -30,6 +34,8 @@ data class Event(
                 snapshot["title"] as String,
                 snapshot["description"] as String,
                 snapshot["museumId"] as String,
+                (snapshot["startDate"] as Timestamp).toDate(),
+                (snapshot["finishDate"] as Timestamp).toDate(),
                 snapshot["pathToImage"] as? String?
             )
         }

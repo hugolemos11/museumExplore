@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginEnd="12dp"
-                android:text="Museumxyz"
+                android:text="@string/museumxyz"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@+id/imageView5"

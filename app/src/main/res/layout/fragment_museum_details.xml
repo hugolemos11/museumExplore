@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:text="@string/museum_details_label"
+            android:text="@string/buy_your_ticket_now"
             app:layout_constraintBottom_toTopOf="@+id/buttonTicket"
             app:layout_constraintEnd_toEndOf="@+id/textViewMuseumName"
             app:layout_constraintStart_toStartOf="@+id/textViewMuseumName" />

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_header_desc">Cabeçalho de navegação</string>
+    <string name="action_settings">Configurações</string>
+    <string name="app_name">Museum Explore</string>
+    <string name="ticket_office">Bilheteira</string>
+    <string name="buy">Comprar</string>
+    <string name="ticket_terms">Concordo com os termos de uso e política de privacidade</string>
+    <string name="digital_ticket_office">Bilheteira Digital</string>
+    <string name="search_hint">Procurar</string>
+    <string name="login">Conecte-se</string>
+    <string name="forgot_password_label">Esqueceu sua senha</string>
+    <string name="events">Eventos</string>
+    <string name="location">Localização</string>
+    <string name="recover_password">Recuperar senha</string>
+    <string name="register">Registro</string>
+    <string name="service_terms">Termos de serviço</string>
+    <string name="eliminar_conta">Eliminar conta</string>
+    <string name="delete_account_message">Tem a certeza que deseja eliminar a sua conta?</string>
+    <string name="repeat_password">Repita a senha</string>
+    <string name="confirm">confirme</string>
+    <string name="repeat_password_hint">Repita a senha</string>
+    <string name="old_password_hint">Senha Antiga</string>
+    <string name="Choose_the_day_and_time_of_the_visit">Escolha o dia e horário da visita</string>
+    <string name="selected_date">Data selecionada:</string>
+    <string name="selected_time">Horário selecionado:</string>
+    <string name="tickets_amount">Quantidade de bilhetes:</string>
+    <string name="home">Inicio</string>
+    <string name="generate">Gerar</string>
+    <string name="discover_our_collection">Conheça nossa coleção</string>
+    <string name="choose_your_payment_method">Escolha o seu método de pagamento</string>
+    <string name="mb_way">MB Way</string>
+    <string name="multibanco">MULTIBANCO</string>
+    <string name="edit_profile">Editar Perfil</string>
+    <string name="notification">Notificação</string>
+    <string name="help">Ajuda</string>
+    <string name="information">Informação</string>
+    <string name="terms_of_use_and_privacy_policy">Termos de uso e politica de privacidade</string>
+    <string name="delete_account">Eliminar conta</string>
+    <string name="buy_your_ticket_now">Compre seu bilhete agora</string>
+    <string name="dont_have_account_register_here">Não tenho conta! Registre-se aqui</string>
+    <string name="your_ticket_has_been_registered">seu bilhete foi registrado</string>
+    <string name="thank_you_for_your_preference">obrigado pela sua preferência</string>
+    <string name="assessment">Avaliação</string>
+    <string name="thank_you_for_your">Obrigado pela sua preferência</string>
+    <string name="forgot_password">"Esqueceu sua senha "</string>
+</resources>

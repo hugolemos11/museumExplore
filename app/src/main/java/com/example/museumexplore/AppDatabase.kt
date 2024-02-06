@@ -24,7 +24,7 @@ import com.example.museumexplore.modules.TicketTypeDao
 import com.example.museumexplore.modules.User
 import com.example.museumexplore.modules.UserDao
 
-@Database(entities = [Museum::class, ArtWork::class, TicketType::class, Event::class, Image::class, ImageArtWork::class, Category::class, User::class, Ticket::class], version = 4)
+@Database(entities = [Museum::class, ArtWork::class, TicketType::class, Event::class, Image::class, ImageArtWork::class, Category::class, User::class, Ticket::class], version = 5)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 

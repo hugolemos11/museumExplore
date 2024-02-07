@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.ContentValues.TAG
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
@@ -17,6 +18,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
@@ -58,9 +61,8 @@ class EditProfileFragment : Fragment() {
     private val db = Firebase.firestore
     private var usernamesInUse: ArrayList<String> = ArrayList()
     private var formIsValid: Boolean? = null
-
+    private val requestCodeCameraPermission = 1001
     private var fileName: String? = null
-
     private var bitMap: Bitmap? = null
 
     override fun onCreateView(
@@ -527,6 +529,7 @@ class EditProfileFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
+
         when (requestCode) {
             REQUEST_IMAGE_CAPTURE -> {
                 if (resultCode == Activity.RESULT_OK) {
@@ -548,6 +551,14 @@ class EditProfileFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun askForCameraPermission() {
+        ActivityCompat.requestPermissions(
+            requireActivity(),
+            arrayOf(android.Manifest.permission.CAMERA),
+            requestCodeCameraPermission
+        )
     }
 
     private fun rotateBitmap(photoPath: String): Bitmap {
@@ -597,7 +608,7 @@ class EditProfileFragment : Fragment() {
     lateinit var currentPhotoPath: String
 
     @Throws(IOException::class)
-    private fun createImageFile(): File {
+    fun createImageFile(): File {
         val timeStamp: String = UUID.randomUUID().toString()
         val storageDir: File =
             requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
@@ -614,13 +625,20 @@ class EditProfileFragment : Fragment() {
     private fun dispatchTakePictureIntent() {
         val items = arrayOf<CharSequence>("Tirar Foto", "Escolher da Galeria")
         val builder = AlertDialog.Builder(requireContext())
+
         builder.setTitle("Escolher uma Opção")
         builder.setItems(items) { _, item ->
             when {
                 items[item] == "Tirar Foto" -> {
-                    takePhoto()
+                    if (ContextCompat.checkSelfPermission(
+                            requireContext(), android.Manifest.permission.CAMERA
+                        ) == PackageManager.PERMISSION_GRANTED
+                    ) {
+                        takePhoto()
+                    } else {
+                        askForCameraPermission()
+                    }
                 }
-
                 items[item] == "Escolher da Galeria" -> {
                     pickFromGallery()
                 }

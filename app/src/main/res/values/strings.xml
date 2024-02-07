@@ -1,42 +1,66 @@
 <resources>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_drawer">DrawerActivity</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="title_activity_drawer" translatable="false">DrawerActivity</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+    <string name="nav_header_title" translatable="false">Android Studio</string>
+    <string name="nav_header_subtitle" translatable="false">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
     <string name="app_name">Museum Explore</string>
-    <string name="museum_details_label">Buy your ticket now</string>
     <string name="ticket_office">Ticket Office</string>
-    <string name="open_nav">Open Navigation Drawer</string>
-    <string name="close_nav">Close Navigation Drawer</string>
+    <string name="open_nav" translatable="false">Open Navigation Drawer</string>
+    <string name="close_nav" translatable="false">Close Navigation Drawer</string>
     <string name="buy">Buy</string>
     <string name="ticket_terms">I agree to the terms of use and privacy policy</string>
     <string name="digital_ticket_office">Digital Ticket Office</string>
-    <string name="ticket_confirmation_title">Your ticket has been registered</string>
-    <string name="ticket_confirmation_label">Thank you for your preference</string>
-    <string name="ticket_confirmation_button">Menu</string>
+    <string name="ticket_confirmation_title" translatable="false">Your ticket has been registered</string>
+    <string name="ticket_confirmation_label" translatable="false">Thank you for your preference</string>
+    <string name="ticket_confirmation_button" translatable="false">Menu</string>
     <string name="search_hint">Search</string>
-    <string name="email_hint">E-mail</string>
-    <string name="password_hint">Password</string>
-    <string name="register_label">Don’t have account! Register here</string>
+    <string name="login">Login</string>
+    <string name="email_hint" translatable="false">E-mail</string>
+    <string name="password_hint" translatable="false">Password</string>
+    <string name="register_label" translatable="false">Don’t have account! Register here</string>
     <string name="forgot_password_label">Forgot Password</string>
     <string name="events">Events</string>
     <string name="location">Location</string>
     <string name="recover_password">Recover Password</string>
     <string name="register">Register</string>
     <string name="username_hint" translatable="false">Username</string>
-    <string name="service_terms" translatable="false">Service Terms</string>
-    <string name="eliminar_conta">Eliminar Conta</string>
-    <string name="delete_account_confirm">Eliminar conta</string>
-    <string name="delete_account_message">Tem a certeza que deseja eliminar a sua conta?</string>
+    <string name="service_terms">Service Terms</string>
+    <string name="delete_account_confirm" translatable="false">Delete account</string>
+    <string name="delete_account_message">Are you sure you want to delete your account?</string>
     <string name="repeat_password">Repeat Password</string>
     <string name="confirm">Confirm</string>
     <string name="repeat_password_hint">Repeat Password</string>
     <string name="old_password_hint">Old Password</string>
-    <string name="login">Login</string>
-    <string name="filter">Filter</string>
+    <string name="Choose_the_day_and_time_of_the_visit">Choose the day and time of the visit</string>
+    <string name="selected_date">Selected Date:</string>
+    <string name="selected_time">Selected Time:</string>
+    <string name="tickets_amount">Tickets Amount:</string>
+    <string name="_1" translatable="false">1</string>
+    <string name="minus" translatable="false">-</string>
+    <string name="plus" translatable="false">+</string>
+    <string name="home">Home</string>
+    <string name="generate">Generate</string>
+    <string name="discover_our_collection">Discover our Collection</string>
+    <string name="choose_your_payment_method">Choose your payment method</string>
+    <string name="mb_way">MB Way</string>
+    <string name="multibanco">MULTIBANCO</string>
+    <string name="edit_profile" translatable="false">Edit profile</string>
+    <string name="notification">Notification</string>
+    <string name="help">Help\n</string>
+    <string name="information">Information</string>
+    <string name="terms_of_use_and_privacy_policy">Terms of Use and Privacy Policy</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="museumxyz" translatable="false">Museumxyz</string>
+    <string name="buy_your_ticket_now">Buy your ticket now</string>
+    <string name="your_ticket_has_been_registered">your ticket has been registered</string>
+    <string name="thank_you_for_your_preference">thank you for your preference</string>
+    <string name="assessment">Assessment</string>
+    <string name="thank_you_for_your">thank you for your preference</string>
+    <string name="menu" translatable="false">Menu\n</string>
+    <string name="forgot_password">Forgot password</string>
+    <string name="filter">filter</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.example.museumexplore.modules
 
+import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.room.Dao
 import androidx.room.Delete
@@ -105,6 +106,18 @@ data class User(
                     } else {
                         throw task.exception!!
                     }
+                }
+        }
+
+        fun deleteUserFromFirestore(uid: String) {
+            val db = Firebase.firestore
+            db.collection("users").document(uid)
+                .delete()
+                .addOnSuccessListener {
+                    Log.d("TESTE", "DocumentSnapshot successfully deleted from Firestore!")
+                }
+                .addOnFailureListener { e ->
+                    Log.w(TAG, "Error deleting document from Firestore", e)
                 }
         }
     }

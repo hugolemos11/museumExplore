@@ -21,11 +21,13 @@ import com.example.museumexplore.AppDatabase
 import com.example.museumexplore.R
 import com.example.museumexplore.databinding.FragmentSettingsBinding
 import com.example.museumexplore.modules.User
+import com.example.museumexplore.modules.User.Companion.deleteUserFromFirestore
 import com.example.museumexplore.setImage
 import com.example.museumexplore.showToast
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
@@ -40,6 +42,8 @@ class SettingsFragment : Fragment() {
     private var notificationSwitch: Switch? = null
     private val requestCodeNotificationPermission = 1001
     private var snackBar: Snackbar? = null
+    private val db = Firebase.firestore
+    private val auth = FirebaseAuth.getInstance()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -104,34 +108,37 @@ class SettingsFragment : Fragment() {
         }
 
         binding.removeAccountButton.setOnClickListener {
-            val user = Firebase.auth.currentUser!!
-            val builder = AlertDialog.Builder(requireActivity())
-            builder.setTitle(getString(R.string.delete_account_confirm))
-            builder.setMessage(getString(R.string.delete_account_message))
-            builder.setPositiveButton("Yes") { dialog, _ ->
-                dialog.cancel()
-                showToast("Account Deleted!", requireContext())
-                user.delete()
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            Log.d(TAG, "User account deleted.")
-                            showToast("Account Deleted!", requireContext())
-                            navController.popBackStack()
+            val user = Firebase.auth.currentUser
+            if (user != null) {
+                val builder = AlertDialog.Builder(requireActivity())
+                builder.setTitle(getString(R.string.delete_account_confirm))
+                builder.setMessage(getString(R.string.delete_account_message))
+                builder.setPositiveButton("Yes") { dialog, _ ->
+                    dialog.dismiss()
+                    showToast("Account Deleted!", requireContext())
+
+                    user.delete()
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                val uid = user.uid
+                                deleteUserFromFirestore(uid)
+                                Log.d(TAG, "User account deleted.")
+                                showToast("Account Deleted!", requireContext())
+                                navController.popBackStack()
+                            } else {
+                                showToast("Error Deleting Account!", requireContext())
+                            }
                         }
-                    }
-                    .addOnFailureListener {
-                        showToast("Error Deleting Account!", requireContext())
-                    }
+                }
+                builder.setNegativeButton("No") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                val alert = builder.create()
+                alert.show()
             }
-            builder.setNegativeButton("No") { dialog, _ ->
-                dialog.cancel()
-            }
-            val alert = builder.create()
-            alert.show()
         }
 
         binding.editProfileTextView.setOnClickListener {
-            val auth = FirebaseAuth.getInstance()
             val bundle = Bundle()
             bundle.putString("uid", auth.currentUser?.uid)
             bundle.putString("username", user?.username)

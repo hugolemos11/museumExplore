@@ -2,6 +2,7 @@ package com.example.museumexplore
 
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -74,7 +75,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setupActionBarWithNavController(navController, appBarConfiguration)
         navigationView.setupWithNavController(navController)
 
-        navController.addOnDestinationChangedListener { _: NavController, nd: NavDestination, _: Bundle? ->
+        if (navController.currentDestination?.id == 2131296370) {
+            updateDrawerContent()
+        }
+
+        navController.addOnDestinationChangedListener { _, nd: NavDestination, _: Bundle? ->
             when (nd.id) {
                 R.id.homeFragment -> {
                     supportActionBar?.show()
@@ -97,8 +102,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     supportActionBar?.setDisplayShowTitleEnabled(false)
                 }
 
-                R.id.settingsFragment,
-                R.id.artWorkDetailsFragment -> {
+                R.id.settingsFragment, -> {
                     supportActionBar?.show()
                     supportActionBar?.setDisplayShowTitleEnabled(false)
                     updateDrawerContent()
@@ -158,6 +162,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navigationView.menu.clear()
 
         val currentUser = auth.currentUser
+
+        Log.e("teste", currentUser.toString())
 
         if (currentUser != null) {
             // User is signed in

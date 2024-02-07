@@ -83,12 +83,18 @@ class ArtWorksFragment : Fragment() {
             if (appDatabase != null) {
                 museumId?.let { currentMuseumId ->
                     val artWorksData = ArtWork.fetchArtWorksData(currentMuseumId)
-                    for (artWorkData in artWorksData) {
-                        appDatabase.artWorkDao().add(artWorkData)
+                    if (artWorksData.isNotEmpty()){
+                        appDatabase.artWorkDao().delete()
+                        for (artWorkData in artWorksData) {
+                            appDatabase.artWorkDao().add(artWorkData)
+                        }
                     }
                     val categoriesData = Category.fetchCategoriesData(currentMuseumId)
-                    for (categoryData in categoriesData) {
-                        appDatabase.categoryDao().add(categoryData)
+                    if (categoriesData.isNotEmpty()){
+                        appDatabase.categoryDao().delete()
+                        for (categoryData in categoriesData) {
+                            appDatabase.categoryDao().add(categoryData)
+                        }
                     }
                     appDatabase.artWorkDao().getAll(currentMuseumId)
                         .observe(viewLifecycleOwner) {

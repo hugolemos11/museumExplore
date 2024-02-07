@@ -96,4 +96,7 @@ interface ImageDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun add(image: Image)
+
+    @Query("DELETE FROM Image")
+    fun delete()
 }

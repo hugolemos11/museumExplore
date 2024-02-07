@@ -79,4 +79,7 @@ interface MuseumDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun add(museum: Museum)
+
+    @Query("DELETE FROM Museum")
+    fun delete()
 }

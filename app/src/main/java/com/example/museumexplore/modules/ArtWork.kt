@@ -108,4 +108,7 @@ interface ArtWorkDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun add(artWork: ArtWork)
+
+    @Query("DELETE FROM ArtWork")
+    fun delete()
 }

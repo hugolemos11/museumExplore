@@ -54,9 +54,13 @@ class HomeFragment : Fragment() {
         lifecycleScope.launch {
             if (appDatabase != null) {
                 val museumsData = Museum.fetchMuseumsData()
-                for (museumData in museumsData) {
-                    appDatabase.museumDao().add(museumData)
+                if (museumsData.isNotEmpty()){
+                    appDatabase.museumDao().delete()
+                    for (museumData in museumsData) {
+                        appDatabase.museumDao().add(museumData)
+                    }
                 }
+
                 appDatabase.museumDao().getAll().observe(viewLifecycleOwner) {
                     museumsList = it as ArrayList<Museum>
                     museumAdapter.notifyDataSetChanged()

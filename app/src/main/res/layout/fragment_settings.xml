@@ -19,7 +19,7 @@
 
     <TextView
         android:id="@+id/profileName"
-        style="@style/Theme.DescriptionTitle"
+        style="@style/Theme.Description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -29,7 +29,7 @@
 
     <TextView
         android:id="@+id/editProfileTextView"
-        style="@style/Theme.DescriptionTitle"
+        style="@style/Theme.Description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -40,7 +40,7 @@
 
     <TextView
         android:id="@+id/textView13"
-        style="@style/Theme.DescriptionTitle"
+        style="@style/Theme.Description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
@@ -50,7 +50,7 @@
 
     <TextView
         android:id="@+id/textView14"
-        style="@style/Theme.DescriptionTitle"
+        style="@style/Theme.Description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
@@ -62,7 +62,7 @@
 
     <TextView
         android:id="@+id/textView15"
-        style="@style/Theme.DescriptionTitle"
+        style="@style/Theme.Description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
@@ -74,7 +74,7 @@
 
     <TextView
         android:id="@+id/textView16"
-        style="@style/Theme.DescriptionTitle"
+        style="@style/Theme.Description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"

@@ -16,6 +16,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
+
 @Entity
 data class Event(
     @PrimaryKey
@@ -105,4 +106,7 @@ interface EventDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun add(event: Event)
+
+    @Query("DELETE FROM Event")
+    fun delete()
 }

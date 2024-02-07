@@ -2,6 +2,7 @@ package com.example.museumexplore.ui.home
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.renderscript.ScriptGroup.Binding
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.LayoutInflater
@@ -37,6 +38,8 @@ class ArtWorkDetailsFragment : Fragment() {
     private lateinit var viewPager2 : ViewPager2
     private lateinit var pageChangeListener : ViewPager2.OnPageChangeCallback
     private lateinit var imageArtWorkAdapter: ImageArtWorkAdapter
+
+    private lateinit var slideDot : LinearLayout
 
     private val params = LinearLayout.LayoutParams(
         LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -75,7 +78,7 @@ class ArtWorkDetailsFragment : Fragment() {
         }
 
         viewPager2 = binding.artWorkSliderImages
-        val slideDot = binding.slideDot
+        slideDot = binding.slideDot
 
         imageArtWorkAdapter = ImageArtWorkAdapter()
 
@@ -99,12 +102,16 @@ class ArtWorkDetailsFragment : Fragment() {
                     }
 
                     appDatabase.imageArtWorkDao().getAll(currentArtWorkId).observe(viewLifecycleOwner) {
+                        artWorkImagesList = arrayListOf()
                         artWorkImagesList.add(ImageArtWork("","", artWork!!.pathToImage))
                         for (imageArtWork in it) {
                             artWorkImagesList.add(imageArtWork)
                         }
+
                         viewPager2.adapter = imageArtWorkAdapter
                         imageArtWorkAdapter.submitList(artWorkImagesList)
+
+                        slideDot.removeAllViews()
 
                         val dotsImage = Array(artWorkImagesList.size) { ImageView(requireContext()) }
 

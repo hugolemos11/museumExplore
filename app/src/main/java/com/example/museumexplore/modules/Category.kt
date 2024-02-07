@@ -90,4 +90,7 @@ interface CategoryDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun add(category: Category)
+
+    @Query("DELETE FROM Category")
+    fun delete()
 }

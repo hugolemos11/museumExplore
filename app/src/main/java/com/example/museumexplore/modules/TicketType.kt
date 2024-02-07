@@ -71,4 +71,7 @@ interface TicketTypeDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun add(ticketType: TicketType)
+
+    @Query("DELETE FROM TicketType")
+    fun delete()
 }

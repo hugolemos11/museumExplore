@@ -92,17 +92,25 @@ class MuseumDetailsFragment : Fragment() {
                 museumId?.let { currentMuseumId ->
                     museum = appDatabase.museumDao().get(currentMuseumId)
                     val museumImagesData = Image.fetchMuseumImagesData(currentMuseumId)
-                    for (museumImageData in museumImagesData) {
-                        appDatabase.imageDao().add(museumImageData)
-                    }
                     val artWorksImagesData = Image.fetchArtWorksImagesData(currentMuseumId)
-                    for (artWorkImageData in artWorksImagesData) {
-                        appDatabase.imageDao().add(artWorkImageData)
+                    if (museumImagesData.isNotEmpty() && artWorksImagesData.isNotEmpty()){
+                        appDatabase.imageDao().delete()
+                        for (museumImageData in museumImagesData) {
+                            appDatabase.imageDao().add(museumImageData)
+                        }
+                        for (artWorkImageData in artWorksImagesData) {
+                            appDatabase.imageDao().add(artWorkImageData)
+                        }
                     }
+
                     val eventsData = Event.fetchEventsData(currentMuseumId)
-                    for (eventData in eventsData) {
-                        appDatabase.eventDao().add(eventData)
+                    if (eventsData.isNotEmpty()) {
+                        appDatabase.eventDao().delete()
+                        for (eventData in eventsData) {
+                            appDatabase.eventDao().add(eventData)
+                        }
                     }
+
                     appDatabase.imageDao().getAllMuseumImages(currentMuseumId)
                         .observe(viewLifecycleOwner) {
                             museumImagesList = it as ArrayList<Image>

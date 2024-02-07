@@ -8,8 +8,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:overScrollMode="always">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/museumImage"

@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.home.ArtWorkDetailsFragment">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/artWorkSliderImages"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/artWorkSliderImages"
             android:layout_width="match_parent"
             android:layout_height="350dp"
             android:scaleType="centerCrop"
@@ -15,91 +18,83 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/slideDot"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="@+id/artWorkSliderImages"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <!--    <ImageView-->
-<!--        android:id="@+id/imageViewArtWorkImage"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="350dp"-->
-<!--        android:scaleType="centerCrop"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
-
-    <TextView
-        android:id="@+id/textViewArtWorkName"
-        style="@style/Theme.TitleExtraLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:width="250dp"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/artWorkSliderImages" />
-
-    <ImageView
-        android:id="@+id/imageViewPlayIcon"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:contentDescription="Play"
-        app:layout_constraintBottom_toBottomOf="@+id/textViewArtWorkName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textViewArtWorkName"
-        app:layout_constraintTop_toTopOf="@+id/textViewArtWorkName"
-        app:srcCompat="@drawable/play" />
-
-    <TextView
-        android:id="@+id/textViewArtistNameYear"
-        style="@style/Theme.DescriptionTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="@+id/textViewArtWorkName"
-        app:layout_constraintStart_toStartOf="@+id/textViewArtWorkName"
-        app:layout_constraintTop_toBottomOf="@+id/textViewArtWorkName" />
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardViewArtWorkCategory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        app:cardBackgroundColor="@color/nav"
-        app:cardCornerRadius="10dp"
-        app:layout_constraintEnd_toEndOf="@+id/textViewArtistNameYear"
-        app:layout_constraintStart_toStartOf="@+id/textViewArtistNameYear"
-        app:layout_constraintTop_toBottomOf="@+id/textViewArtistNameYear">
+        <LinearLayout
+            android:id="@+id/slideDot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="@+id/artWorkSliderImages"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:id="@+id/textViewArtWorkCategory"
-            style="@style/Theme.TitleBackGroundColorSmall"
+            android:id="@+id/textViewArtWorkName"
+            style="@style/Theme.TitleExtraLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp"
-            android:paddingBottom="2dp" />
-    </androidx.cardview.widget.CardView>
+            android:layout_marginTop="15dp"
+            android:width="250dp"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/artWorkSliderImages" />
 
-    <TextView
-        android:id="@+id/textViewArtWorkDescription"
-        style="@style/Theme.Description"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardViewArtWorkCategory" />
+        <ImageView
+            android:id="@+id/imageViewPlayIcon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:contentDescription="Play"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewArtWorkName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textViewArtWorkName"
+            app:layout_constraintTop_toTopOf="@+id/textViewArtWorkName"
+            app:srcCompat="@drawable/play" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/textViewArtistNameYear"
+            style="@style/Theme.DescriptionTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@+id/textViewArtWorkName"
+            app:layout_constraintStart_toStartOf="@+id/textViewArtWorkName"
+            app:layout_constraintTop_toBottomOf="@+id/textViewArtWorkName" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewArtWorkCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            app:cardBackgroundColor="@color/nav"
+            app:cardCornerRadius="10dp"
+            app:layout_constraintEnd_toEndOf="@+id/textViewArtistNameYear"
+            app:layout_constraintStart_toStartOf="@+id/textViewArtistNameYear"
+            app:layout_constraintTop_toBottomOf="@+id/textViewArtistNameYear">
+
+            <TextView
+                android:id="@+id/textViewArtWorkCategory"
+                style="@style/Theme.TitleBackGroundColorSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="2dp" />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/textViewArtWorkDescription"
+            style="@style/Theme.Description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardViewArtWorkCategory" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

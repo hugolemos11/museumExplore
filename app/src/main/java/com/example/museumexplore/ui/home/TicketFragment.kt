@@ -92,8 +92,11 @@ class TicketFragment : Fragment() {
                 museumId?.let {currentMuseumId ->
                     museum = appDatabase.museumDao().get(currentMuseumId)
                     val ticketTypesData = TicketType.fetchTicketTypesData(currentMuseumId)
-                    for (ticketTypeData in ticketTypesData) {
-                        appDatabase.ticketTypesDao().add(ticketTypeData)
+                    if (ticketTypesData.isNotEmpty()) {
+                        appDatabase.ticketTypesDao().delete()
+                        for (ticketTypeData in ticketTypesData) {
+                            appDatabase.ticketTypesDao().add(ticketTypeData)
+                        }
                     }
                     appDatabase.ticketTypesDao().getAll(currentMuseumId).observe(viewLifecycleOwner) {
                         ticketTypesList = it as ArrayList<TicketType>

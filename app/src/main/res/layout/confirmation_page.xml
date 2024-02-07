@@ -26,7 +26,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="125dp"
         android:layout_marginBottom="11dp"
-        android:text="@string/your_ticket_has_been_registered_confirmation"
+        android:text="@string/your_ticket_has_been_registered"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/textView5"
         app:layout_constraintEnd_toEndOf="parent"

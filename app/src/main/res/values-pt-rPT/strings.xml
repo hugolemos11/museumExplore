@@ -15,7 +15,7 @@
     <string name="recover_password">Recuperar senha</string>
     <string name="register">Registro</string>
     <string name="service_terms">Termos de serviço</string>
-    <string name="eliminar_conta">Eliminar conta</string>
+    <!--<string name="eliminar_conta">Eliminar conta</string>-->
     <string name="delete_account_message">Tem a certeza que deseja eliminar a sua conta?</string>
     <string name="repeat_password">Repita a senha</string>
     <string name="confirm">confirme</string>
@@ -38,7 +38,7 @@
     <string name="terms_of_use_and_privacy_policy">Termos de uso e politica de privacidade</string>
     <string name="delete_account">Eliminar conta</string>
     <string name="buy_your_ticket_now">Compre seu bilhete agora</string>
-    <string name="dont_have_account_register_here">Não tenho conta! Registre-se aqui</string>
+    <!--<string name="dont_have_account_register_here">Não tenho conta! Registre-se aqui</string>-->
     <string name="your_ticket_has_been_registered">seu bilhete foi registrado</string>
     <string name="thank_you_for_your_preference">obrigado pela sua preferência</string>
     <string name="assessment">Avaliação</string>

@@ -48,7 +48,7 @@
     <string name="choose_your_payment_method">Choose your payment method</string>
     <string name="mb_way">MB Way</string>
     <string name="multibanco">MULTIBANCO</string>
-    <string name="edit_profile">Edit profile</string>
+    <string name="edit_profile" translatable="false">Edit profile</string>
     <string name="notification">Notification</string>
     <string name="help">Help\n</string>
     <string name="information">Information</string>
@@ -62,4 +62,5 @@
     <string name="thank_you_for_your">thank you for your preference</string>
     <string name="menu" translatable="false">Menu\n</string>
     <string name="forgot_password">Forgot password</string>
+    <string name="filter">filter</string>
 </resources>

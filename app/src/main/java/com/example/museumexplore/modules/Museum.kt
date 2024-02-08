@@ -23,7 +23,6 @@ data class Museum(
     var name: String,
     var nameSearch: String,
     var description: String,
-    var rate: Int,
     var location: Map<String, Double>,
     var pathToImage: String?
 ) {
@@ -34,7 +33,6 @@ data class Museum(
                 snapshot["name"] as? String ?: "",
                 snapshot["nameSearch"] as? String ?: "",
                 snapshot["description"] as? String ?: "",
-                (snapshot["rate"] as? Long)?.toInt() ?: 0,
                 snapshot["location"] as? Map<String, Double> ?: emptyMap(),
                 snapshot["pathToImage"] as? String?
             )

@@ -106,14 +106,23 @@ class LoginFragment : Fragment() {
                             if (task.isSuccessful) {
                                 Log.d(TAG, "signInWithEmail:success")
 
-                                val navOptions =
-                                    NavOptions.Builder().setPopUpTo(R.id.loginFragment, true)
-                                        .build()
-                                navController.navigate(
-                                    R.id.action_autenticationNavigation_to_homeNavigation,
-                                    null,
-                                    navOptions
-                                )
+                                val navOptions = NavOptions.Builder().setPopUpTo(R.id.loginFragment, true).build()
+
+                                val currentDestinationId = navController.currentDestination?.id
+
+                                when (currentDestinationId) {
+                                    R.id.registerFragment, R.id.recoverPasswordFragment -> {
+                                        navController.navigate(
+                                            R.id.action_autenticationNavigation_to_homeNavigation,
+                                            null,
+                                            navOptions
+                                        )
+                                    }
+                                    else -> {
+                                        // Pop the back stack
+                                        navController.popBackStack()
+                                    }
+                                }
                             } else {
                                 Toast.makeText(
                                     context,

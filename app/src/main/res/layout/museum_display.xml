@@ -6,8 +6,9 @@
     android:layout_height="match_parent">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="170dp"
+        android:layout_width="0dp"
         android:layout_height="170dp"
+        app:layout_constraintWidth_percent="1"
         app:cardCornerRadius="10dp"
         app:cardElevation="0dp"
         tools:layout_editor_absoluteX="16dp"
@@ -32,68 +33,18 @@
                 style="@style/Theme.TitleWhiteMedium"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+
                 android:layout_marginStart="12dp"
                 android:layout_marginEnd="12dp"
+                android:layout_marginBottom="12dp"
+                android:maxLines="1"
                 android:text="@string/museumxyz"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
-                app:layout_constraintBottom_toTopOf="@+id/imageView5"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/imageView3" />
 
-            <ImageView
-                android:id="@+id/imageView11"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_marginBottom="12dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imageView10"
-                app:srcCompat="@drawable/star"
-                app:tint="#FFFFFF" />
-
-            <ImageView
-                android:id="@+id/imageView10"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_marginBottom="12dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imageView5"
-                app:srcCompat="@drawable/star"
-                app:tint="#FFFFFF" />
-
-            <ImageView
-                android:id="@+id/imageView5"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_marginBottom="12dp"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView3"
-                app:layout_constraintEnd_toStartOf="@+id/imageView10"
-                app:layout_constraintStart_toEndOf="@+id/imageView8"
-                app:srcCompat="@drawable/star"
-                app:tint="#FFFFFF" />
-
-            <ImageView
-                android:id="@+id/imageView8"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_marginBottom="12dp"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView3"
-                app:layout_constraintEnd_toStartOf="@+id/imageView5"
-                app:layout_constraintStart_toEndOf="@+id/imageView4"
-                app:srcCompat="@drawable/star"
-                app:tint="#FFFFFF" />
-
-            <ImageView
-                android:id="@+id/imageView4"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginBottom="12dp"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView3"
-                app:layout_constraintEnd_toStartOf="@+id/imageView8"
-                app:layout_constraintStart_toStartOf="parent"
-                app:srcCompat="@drawable/star"
-                app:tint="#FFFFFF" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>

@@ -20,6 +20,7 @@ data class TicketType(
     var type: String,
     var price: Double,
     var description: String,
+    var maxTobuy: Int,
     var museumId: String,
     var pathToImage: String?
 ) {
@@ -28,8 +29,9 @@ data class TicketType(
             return TicketType(
                 id,
                 snapshot["type"] as String,
-                snapshot["price"] as Double,
+                (snapshot["price"] as Number).toDouble(),
                 snapshot["description"] as String,
+                (snapshot["maxToBuy"] as Number).toInt(),
                 snapshot["museumId"] as String,
                 snapshot["pathToImage"] as? String?
             )

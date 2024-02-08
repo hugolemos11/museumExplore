@@ -36,13 +36,16 @@ class RegisterTicketFragment : Fragment() {
     private var ticketTypeId: String? = null
     private var ticketType: String? = null
     private var ticketTypePrice: Double? = null
+    private var ticketTypeMaxToBuy: Int? = null
 
     private var ticketsAmount: Int
         get() = binding.textViewAmount.text.toString().toInt()
         set(value) {
-            if (value >= 1) {
-                binding.textViewAmount.text = value.toString()
-                finalPrice = ticketTypePrice!! * value
+            ticketTypeMaxToBuy?.let { currentTicketTypeMaxToBuy ->
+                if (value in 1..currentTicketTypeMaxToBuy) {
+                    binding.textViewAmount.text = value.toString()
+                    finalPrice = ticketTypePrice!! * value
+                }
             }
         }
 
@@ -79,6 +82,7 @@ class RegisterTicketFragment : Fragment() {
             ticketTypeId = bundle.getString("ticketTypeId")
             ticketType = bundle.getString("ticketType")
             ticketTypePrice = bundle.getDouble("ticketPrice")
+            ticketTypeMaxToBuy = bundle.getInt("ticketMaxToBuy")
         }
 
         navController = Navigation.findNavController(view)
@@ -91,9 +95,9 @@ class RegisterTicketFragment : Fragment() {
             textViewPrice.text = "$ticketTypePrice €"
 
             if (dateData != null && timeData != null) {
-                textViewDate.text = "Selected Date: $dateData"
+                textViewSelecteDate.text = dateData
 
-                textViewTime.text = "Selected Time: $timeData"
+                textViewSelectedTime.text = timeData
             }
 
             imageViewCalendar.setOnClickListener {

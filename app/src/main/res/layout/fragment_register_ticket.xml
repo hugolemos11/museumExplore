@@ -69,7 +69,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/textViewDate"
         app:layout_constraintEnd_toEndOf="@+id/textView21"
         app:layout_constraintHorizontal_bias="0.1"
-        app:layout_constraintStart_toEndOf="@+id/textViewDate"
+        app:layout_constraintStart_toEndOf="@+id/textViewSelecteDate"
         app:layout_constraintTop_toTopOf="@+id/textViewDate" />
 
     <TextView
@@ -91,7 +91,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/textViewTime"
         app:layout_constraintEnd_toEndOf="@+id/textView21"
         app:layout_constraintHorizontal_bias="0.1"
-        app:layout_constraintStart_toEndOf="@+id/textViewTime"
+        app:layout_constraintStart_toEndOf="@+id/textViewSelectedTime"
         app:layout_constraintTop_toTopOf="@+id/textViewTime" />
 
     <TextView
@@ -173,5 +173,23 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonIncrement" />
+
+    <TextView
+        android:id="@+id/textViewSelecteDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textViewDate"
+        app:layout_constraintStart_toEndOf="@+id/textViewDate"
+        app:layout_constraintTop_toTopOf="@+id/textViewDate" />
+
+    <TextView
+        android:id="@+id/textViewSelectedTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textViewTime"
+        app:layout_constraintStart_toEndOf="@+id/textViewTime"
+        app:layout_constraintTop_toTopOf="@+id/textViewTime" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

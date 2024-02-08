@@ -175,6 +175,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             lifecycleScope.launch {
                 if (appDatabase != null) {
                     uid?.let { currentUid ->
+                        Log.e("teste", currentUid)
                         val userData = User.fetchUserData(currentUid)
                         appDatabase.userDao().add(userData)
                         user = appDatabase.userDao().get(currentUid)

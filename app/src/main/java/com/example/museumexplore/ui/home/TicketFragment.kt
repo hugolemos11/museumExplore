@@ -82,6 +82,7 @@ class TicketFragment : Fragment() {
                 bundle.putString("ticketTypeId", ticketTypeSelected.id)
                 bundle.putString("ticketType", ticketTypeSelected.type)
                 bundle.putDouble("ticketPrice", ticketTypeSelected.price)
+                bundle.putInt("ticketMaxToBuy", ticketTypeSelected.maxTobuy)
                 navController.navigate(R.id.action_ticketFragment_to_registerTicketFragment, bundle)
             }
         }

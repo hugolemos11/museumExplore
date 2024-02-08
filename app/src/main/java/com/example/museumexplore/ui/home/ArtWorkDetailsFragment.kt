@@ -66,6 +66,7 @@ class ArtWorkDetailsFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         viewPager2.unregisterOnPageChangeCallback(pageChangeListener)
+        releaseTextToSpeech()
         _binding = null
     }
 
@@ -186,5 +187,10 @@ class ArtWorkDetailsFragment : Fragment() {
                 null
             )
         }
+    }
+
+    private fun releaseTextToSpeech() {
+        textToSpeech.stop()
+        textToSpeech.shutdown()
     }
 }

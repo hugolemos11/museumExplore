@@ -21,7 +21,6 @@ data class Museum(
     @PrimaryKey
     var id: String,
     var name: String,
-    var nameSearch: String,
     var description: String,
     var location: Map<String, Double>,
     var pathToImage: String?
@@ -31,7 +30,6 @@ data class Museum(
             return Museum(
                 id,
                 snapshot["name"] as? String ?: "",
-                snapshot["nameSearch"] as? String ?: "",
                 snapshot["description"] as? String ?: "",
                 snapshot["location"] as? Map<String, Double> ?: emptyMap(),
                 snapshot["pathToImage"] as? String?
@@ -74,7 +72,7 @@ interface MuseumDao {
     @Query("SELECT * FROM museum WHERE id = :id")
     fun get(id: String): Museum
 
-    @Query("SELECT * FROM museum WHERE nameSearch LIKE '%' || :name || '%'")
+    @Query("SELECT * FROM museum WHERE name LIKE '%' || :name || '%'")
     fun getFilteredByName(name: String?): LiveData<List<Museum>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

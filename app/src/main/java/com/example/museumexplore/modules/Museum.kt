@@ -31,14 +31,16 @@ data class Museum(
         fun fromSnapshot(id: String, snapshot: Map<String, Any>): Museum {
             return Museum(
                 id,
-                snapshot["name"] as String,
-                snapshot["nameSearch"] as String,
-                snapshot["description"] as String,
-                (snapshot["rate"] as Long).toInt(),
-                snapshot["location"] as Map<String, Double>,
+                snapshot["name"] as? String ?: "",
+                snapshot["nameSearch"] as? String ?: "",
+                snapshot["description"] as? String ?: "",
+                (snapshot["rate"] as? Long)?.toInt() ?: 0,
+                snapshot["location"] as? Map<String, Double> ?: emptyMap(),
                 snapshot["pathToImage"] as? String?
             )
         }
+
+
 
         suspend fun fetchMuseumsData(): List<Museum> {
             return suspendCoroutine { continuation ->

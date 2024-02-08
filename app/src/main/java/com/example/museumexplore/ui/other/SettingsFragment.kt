@@ -121,7 +121,7 @@ class SettingsFragment : Fragment() {
                         .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
                                 val uid = user.uid
-                                deleteUserFromFirestore(uid)
+                                deleteUserFromFirestore(uid, requireContext())
                                 Log.d(TAG, "User account deleted.")
                                 showToast("Account Deleted!", requireContext())
                                 navController.popBackStack()

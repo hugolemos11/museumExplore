@@ -1,7 +1,9 @@
 package com.example.museumexplore.modules
 
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.util.Log
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Entity
@@ -9,6 +11,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import com.example.museumexplore.AppDatabase
 import com.example.museumexplore.R
 import com.example.museumexplore.showToast
 import com.google.android.gms.tasks.Task
@@ -109,8 +112,12 @@ data class User(
                 }
         }
 
-        fun deleteUserFromFirestore(uid: String) {
+        fun deleteUserFromFirestore(uid: String, context: Context) {
             val db = Firebase.firestore
+
+            val appDatabase = AppDatabase.getInstance(context)
+
+            appDatabase?.userDao()?.delete(uid)
             db.collection("users").document(uid)
                 .delete()
                 .addOnSuccessListener {
@@ -131,6 +138,6 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun add(user: User)
 
-    @Delete
-    fun delete(user: User)
+    @Query("DELETE FROM user WHERE id = :uid")
+    fun delete(uid: String)
 }

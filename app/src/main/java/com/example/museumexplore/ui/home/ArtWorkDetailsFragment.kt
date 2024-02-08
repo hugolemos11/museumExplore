@@ -98,9 +98,13 @@ class ArtWorkDetailsFragment : Fragment() {
                     }
 
                     val artWorkImagesData = ImageArtWork.fetchArtWorksImagesData(currentArtWorkId)
-                    for (artWorkImageData in artWorkImagesData) {
-                        appDatabase.imageArtWorkDao().add(artWorkImageData)
+                    if (artWorkImagesData.isNotEmpty()){
+                        appDatabase.imageArtWorkDao().delete()
+                        for (artWorkImageData in artWorkImagesData) {
+                            appDatabase.imageArtWorkDao().add(artWorkImageData)
+                        }
                     }
+
 
                     appDatabase.imageArtWorkDao().getAll(currentArtWorkId).observe(viewLifecycleOwner) {
                         artWorkImagesList = arrayListOf()
